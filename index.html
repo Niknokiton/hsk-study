@@ -2,20 +2,21 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📚 HSK 1 | 150 иероглифов с аудио | 15 уроков</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>📚 HSK 1-3 | 600 слов с аудио | Полный курс</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Segoe UI', 'Poppins', 'Comic Neue', sans-serif;
+            font-family: -apple-system, 'Segoe UI', 'Poppins', 'Comic Neue', 'Roboto', sans-serif;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 16px;
         }
 
         .container {
@@ -23,33 +24,35 @@
             margin: 0 auto;
         }
 
+        /* Шапка */
         .header {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            border-radius: 40px 40px 0 0;
-            padding: 40px;
+            border-radius: 32px 32px 0 0;
+            padding: 24px 20px;
             text-align: center;
             color: white;
         }
 
         .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            margin-bottom: 8px;
         }
 
         .header .subtitle {
-            font-size: 1.2em;
+            font-size: clamp(0.85rem, 3vw, 1.1rem);
             opacity: 0.95;
         }
 
+        /* Статистика */
         .stats-bar {
             background: rgba(255,255,255,0.2);
             border-radius: 30px;
-            padding: 15px 30px;
-            margin-top: 20px;
+            padding: 12px 20px;
+            margin-top: 16px;
             display: flex;
             justify-content: space-around;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 12px;
         }
 
         .stat {
@@ -57,191 +60,215 @@
         }
 
         .stat-number {
-            font-size: 2em;
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
             font-weight: bold;
         }
 
         .stat-label {
-            font-size: 0.9em;
+            font-size: 0.75rem;
             opacity: 0.9;
         }
 
-        .lesson-nav {
+        /* Выбор уровня */
+        .level-selector {
             background: white;
-            padding: 20px;
+            padding: 16px;
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+            gap: 12px;
             justify-content: center;
             border-bottom: 2px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+
+        .level-btn {
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .level-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .level-btn[data-level="1"].active { background: linear-gradient(135deg, #4caf50, #8bc34a); }
+        .level-btn[data-level="2"].active { background: linear-gradient(135deg, #2196f3, #03a9f4); }
+        .level-btn[data-level="3"].active { background: linear-gradient(135deg, #ff9800, #ff5722); }
+
+        /* Навигация по урокам */
+        .lesson-nav {
+            background: white;
+            padding: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            border-bottom: 2px solid #f0f0f0;
+            max-height: 200px;
+            overflow-y: auto;
         }
 
         .lesson-btn {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             border: none;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             font-weight: bold;
-            font-size: 1.2em;
+            font-size: 1rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .lesson-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+            flex-shrink: 0;
         }
 
         .lesson-btn.active {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
         .lesson-btn.learned {
-            background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+            background: linear-gradient(135deg, #4caf50, #8bc34a);
         }
 
+        /* Контент */
         .content {
             background: white;
-            padding: 30px;
-            border-radius: 0 0 40px 40px;
+            padding: 20px;
+            border-radius: 0 0 32px 32px;
         }
 
         .lesson-title {
-            font-size: 2em;
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             border-left: 5px solid #f5576c;
-            padding-left: 20px;
+            padding-left: 16px;
         }
 
         .lesson-desc {
             color: #666;
-            margin-bottom: 30px;
-            padding-left: 25px;
+            margin-bottom: 24px;
+            padding-left: 21px;
+            font-size: 0.9rem;
         }
 
+        /* Сетка карточек */
         .words-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
         }
 
+        /* Карточка слова */
         .word-card {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             border-radius: 20px;
-            padding: 20px;
+            padding: 16px;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             position: relative;
         }
 
-        .word-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        .word-card:active {
+            transform: scale(0.98);
         }
 
         .chinese-area {
             cursor: pointer;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             transition: all 0.2s ease;
         }
 
-        .chinese-area:hover {
-            transform: scale(1.05);
+        .chinese-area:active {
+            transform: scale(0.95);
         }
 
         .chinese {
-            font-size: 2.5em;
+            font-size: clamp(1.8rem, 5vw, 2.2rem);
             font-weight: bold;
             color: #2c3e50;
         }
 
         .audio-icon {
-            font-size: 0.8em;
+            font-size: 0.7rem;
             opacity: 0.6;
-            margin-left: 10px;
+            margin-left: 8px;
         }
 
         .pinyin {
-            font-size: 1.2em;
+            font-size: 1rem;
             color: #e74c3c;
             margin-bottom: 5px;
         }
 
         .meaning-area {
             cursor: pointer;
-            padding: 8px;
+            padding: 6px;
             border-radius: 12px;
             transition: all 0.2s ease;
         }
 
-        .meaning-area:hover {
+        .meaning-area:active {
             background: rgba(0,0,0,0.05);
         }
 
         .meaning {
-            font-size: 1.1em;
+            font-size: 0.95rem;
             color: #27ae60;
-        }
-
-        .meaning-audio-icon {
-            font-size: 0.7em;
-            opacity: 0.5;
-            margin-left: 5px;
         }
 
         .check-btn {
             position: absolute;
-            bottom: 10px;
-            right: 10px;
-            width: 30px;
-            height: 30px;
+            bottom: 8px;
+            right: 8px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             background: #4caf50;
             color: white;
             border: none;
             cursor: pointer;
-            font-size: 1.2em;
+            font-size: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
-        }
-
-        .check-btn:hover {
-            transform: scale(1.1);
         }
 
         .check-btn.checked {
             background: #2e7d32;
         }
 
+        /* Прогресс урока */
         .lesson-progress {
             background: #f0f0f0;
             border-radius: 30px;
-            padding: 15px 20px;
-            margin-top: 20px;
+            padding: 12px 16px;
+            margin-top: 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 12px;
         }
 
         .progress-bar-container {
             flex: 2;
-            min-width: 200px;
+            min-width: 150px;
         }
 
         .progress-bar {
             background: #ddd;
             border-radius: 20px;
-            height: 25px;
+            height: 24px;
             overflow: hidden;
         }
 
@@ -249,12 +276,12 @@
             background: linear-gradient(90deg, #4caf50, #8bc34a);
             height: 100%;
             border-radius: 20px;
-            transition: width 0.5s ease;
+            transition: width 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 0.8em;
+            font-size: 0.75rem;
             font-weight: bold;
         }
 
@@ -262,18 +289,14 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 10px 25px;
+            padding: 10px 20px;
             border-radius: 30px;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.3s ease;
+            font-size: 0.9rem;
         }
 
-        .test-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
+        /* Модальное окно */
         .modal {
             display: none;
             position: fixed;
@@ -285,6 +308,7 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            padding: 16px;
         }
 
         .modal.active {
@@ -293,22 +317,16 @@
 
         .modal-content {
             background: white;
-            border-radius: 30px;
+            border-radius: 28px;
             max-width: 500px;
-            width: 90%;
-            padding: 30px;
+            width: 100%;
+            padding: 24px;
             text-align: center;
-            animation: bounceIn 0.3s ease;
-        }
-
-        @keyframes bounceIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
         }
 
         .test-question {
-            font-size: 2.5em;
-            margin: 20px 0;
+            font-size: clamp(2rem, 8vw, 2.5rem);
+            margin: 16px 0;
             cursor: pointer;
         }
 
@@ -322,14 +340,9 @@
         .test-option {
             background: #f0f0f0;
             padding: 12px;
-            border-radius: 15px;
+            border-radius: 16px;
             cursor: pointer;
             transition: all 0.2s ease;
-        }
-
-        .test-option:hover {
-            background: #e0e0e0;
-            transform: translateX(5px);
         }
 
         .test-option.correct {
@@ -342,293 +355,316 @@
             color: white;
         }
 
-        .test-result {
-            font-size: 1.5em;
-            margin: 20px 0;
-        }
-
         .close-modal {
             background: #667eea;
             color: white;
             border: none;
-            padding: 10px 25px;
+            padding: 10px 24px;
             border-radius: 30px;
             cursor: pointer;
-            margin-top: 15px;
+            margin-top: 12px;
         }
 
+        /* Регулятор громкости */
         .volume-control {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 16px;
+            right: 16px;
             background: rgba(0,0,0,0.7);
-            padding: 10px 15px;
+            padding: 8px 12px;
             border-radius: 30px;
             color: white;
-            font-size: 0.8em;
+            font-size: 0.7rem;
             z-index: 100;
+            backdrop-filter: blur(5px);
         }
 
         .volume-control input {
-            width: 80px;
-            margin-left: 10px;
+            width: 70px;
+            margin-left: 8px;
             vertical-align: middle;
         }
 
-        @media (max-width: 768px) {
-            .header h1 { font-size: 1.8em; }
-            .lesson-btn { width: 45px; height: 45px; font-size: 1em; }
-            .chinese { font-size: 1.8em; }
-            .words-grid { grid-template-columns: 1fr; }
+        /* Адаптация для планшетов */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .words-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        /* Адаптация для телефонов */
+        @media (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+            .content {
+                padding: 12px;
+            }
+            .lesson-btn {
+                width: 42px;
+                height: 42px;
+                font-size: 0.85rem;
+            }
+            .chinese {
+                font-size: 1.6rem;
+            }
+            .word-card {
+                padding: 12px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🔊 HSK 1 — 150 иероглифов с аудио</h1>
-            <div class="subtitle">Нажми на иероглиф 🔈 | Нажми на перевод 🗣️ | 15 уроков по 10 слов</div>
+            <h1>📚 HSK 1-3 — Полный курс</h1>
+            <div class="subtitle">🔊 Нажми на иероглиф | 600 слов с аудио</div>
             <div class="stats-bar">
-                <div class="stat">
-                    <div class="stat-number" id="totalLearned">0</div>
-                    <div class="stat-label">всего выучено</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number" id="currentLessonLearned">0</div>
-                    <div class="stat-label">в этом уроке</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number" id="progressPercent">0%</div>
-                    <div class="stat-label">прогресс HSK 1</div>
-                </div>
+                <div class="stat"><div class="stat-number" id="totalLearned">0</div><div class="stat-label">всего выучено</div></div>
+                <div class="stat"><div class="stat-number" id="currentLessonLearned">0</div><div class="stat-label">в этом уроке</div></div>
+                <div class="stat"><div class="stat-number" id="progressPercent">0%</div><div class="stat-label">прогресс</div></div>
             </div>
         </div>
 
-        <div class="lesson-nav" id="lessonNav"></div>
+        <div class="level-selector" id="levelSelector">
+            <button class="level-btn active" data-level="1">🌟 HSK 1 (150 слов)</button>
+            <button class="level-btn" data-level="2">⭐ HSK 2 (150 слов)</button>
+            <button class="level-btn" data-level="3">✨ HSK 3 (300 слов)</button>
+        </div>
 
+        <div class="lesson-nav" id="lessonNav"></div>
         <div class="content" id="content"></div>
     </div>
 
-    <div class="volume-control">
-        🔊 Громкость <input type="range" id="volumeSlider" min="0" max="100" value="70">
-    </div>
-
-    <div class="modal" id="testModal">
-        <div class="modal-content">
-            <h2>📝 Тест урока</h2>
-            <div id="testContent"></div>
-        </div>
-    </div>
+    <div class="volume-control">🔊 <input type="range" id="volumeSlider" min="0" max="100" value="70"></div>
+    <div class="modal" id="testModal"><div class="modal-content"><h2>📝 Тест урока</h2><div id="testContent"></div></div></div>
 
     <script>
         // ============================================
-        // HSK 1 — 150 слов с аудио (Web Speech API)
+        // HSK 1, 2, 3 — ВСЕ СЛОВА
+        // HSK 1: 15 уроков по 10 слов = 150 слов
+        // HSK 2: 10 уроков по 15 слов = 150 слов
+        // HSK 3: 15 уроков по 20 слов = 300 слов
         // ============================================
-        
-        const lessons = [
+
+        // ---------------------- HSK 1 (150 слов) ----------------------
+        const hsk1Lessons = [
             { name: "Приветствия и числа 1-4", words: [
-                { chinese: "你好", pinyin: "nǐ hǎo", meaning: "Здравствуйте" },
-                { chinese: "再见", pinyin: "zài jiàn", meaning: "До свидания" },
-                { chinese: "谢谢", pinyin: "xiè xie", meaning: "Спасибо" },
-                { chinese: "不客气", pinyin: "bú kè qi", meaning: "Пожалуйста" },
-                { chinese: "对不起", pinyin: "duì bu qǐ", meaning: "Извините" },
-                { chinese: "没关系", pinyin: "méi guān xi", meaning: "Ничего страшного" },
-                { chinese: "一", pinyin: "yī", meaning: "Один" },
-                { chinese: "二", pinyin: "èr", meaning: "Два" },
-                { chinese: "三", pinyin: "sān", meaning: "Три" },
-                { chinese: "四", pinyin: "sì", meaning: "Четыре" }
+                { chinese: "你好", pinyin: "nǐ hǎo", meaning: "Здравствуйте" }, { chinese: "再见", pinyin: "zài jiàn", meaning: "До свидания" }, { chinese: "谢谢", pinyin: "xiè xie", meaning: "Спасибо" }, { chinese: "不客气", pinyin: "bú kè qi", meaning: "Пожалуйста" }, { chinese: "对不起", pinyin: "duì bu qǐ", meaning: "Извините" }, { chinese: "没关系", pinyin: "méi guān xi", meaning: "Ничего страшного" }, { chinese: "一", pinyin: "yī", meaning: "Один" }, { chinese: "二", pinyin: "èr", meaning: "Два" }, { chinese: "三", pinyin: "sān", meaning: "Три" }, { chinese: "四", pinyin: "sì", meaning: "Четыре" }
             ] },
-            { name: "Числа 5-10 и основные глаголы", words: [
-                { chinese: "五", pinyin: "wǔ", meaning: "Пять" },
-                { chinese: "六", pinyin: "liù", meaning: "Шесть" },
-                { chinese: "七", pinyin: "qī", meaning: "Семь" },
-                { chinese: "八", pinyin: "bā", meaning: "Восемь" },
-                { chinese: "九", pinyin: "jiǔ", meaning: "Девять" },
-                { chinese: "十", pinyin: "shí", meaning: "Десять" },
-                { chinese: "是", pinyin: "shì", meaning: "Быть" },
-                { chinese: "有", pinyin: "yǒu", meaning: "Иметь" },
-                { chinese: "在", pinyin: "zài", meaning: "Находиться в" },
-                { chinese: "去", pinyin: "qù", meaning: "Идти" }
+            { name: "Числа 5-10 и глаголы", words: [
+                { chinese: "五", pinyin: "wǔ", meaning: "Пять" }, { chinese: "六", pinyin: "liù", meaning: "Шесть" }, { chinese: "七", pinyin: "qī", meaning: "Семь" }, { chinese: "八", pinyin: "bā", meaning: "Восемь" }, { chinese: "九", pinyin: "jiǔ", meaning: "Девять" }, { chinese: "十", pinyin: "shí", meaning: "Десять" }, { chinese: "是", pinyin: "shì", meaning: "Быть" }, { chinese: "有", pinyin: "yǒu", meaning: "Иметь" }, { chinese: "在", pinyin: "zài", meaning: "Находиться" }, { chinese: "去", pinyin: "qù", meaning: "Идти" }
             ] },
-            { name: "Местоимения и вопросительные слова", words: [
-                { chinese: "我", pinyin: "wǒ", meaning: "Я" },
-                { chinese: "你", pinyin: "nǐ", meaning: "Ты" },
-                { chinese: "他", pinyin: "tā", meaning: "Он" },
-                { chinese: "她", pinyin: "tā", meaning: "Она" },
-                { chinese: "我们", pinyin: "wǒ men", meaning: "Мы" },
-                { chinese: "你们", pinyin: "nǐ men", meaning: "Вы" },
-                { chinese: "他们", pinyin: "tā men", meaning: "Они" },
-                { chinese: "什么", pinyin: "shén me", meaning: "Что" },
-                { chinese: "谁", pinyin: "shéi", meaning: "Кто" },
-                { chinese: "哪", pinyin: "nǎ", meaning: "Который" }
+            { name: "Местоимения", words: [
+                { chinese: "我", pinyin: "wǒ", meaning: "Я" }, { chinese: "你", pinyin: "nǐ", meaning: "Ты" }, { chinese: "他", pinyin: "tā", meaning: "Он" }, { chinese: "她", pinyin: "tā", meaning: "Она" }, { chinese: "我们", pinyin: "wǒ men", meaning: "Мы" }, { chinese: "你们", pinyin: "nǐ men", meaning: "Вы" }, { chinese: "他们", pinyin: "tā men", meaning: "Они" }, { chinese: "什么", pinyin: "shén me", meaning: "Что" }, { chinese: "谁", pinyin: "shéi", meaning: "Кто" }, { chinese: "哪", pinyin: "nǎ", meaning: "Который" }
             ] },
             { name: "Семья", words: [
-                { chinese: "爸爸", pinyin: "bà ba", meaning: "Папа" },
-                { chinese: "妈妈", pinyin: "mā ma", meaning: "Мама" },
-                { chinese: "哥哥", pinyin: "gē ge", meaning: "Старший брат" },
-                { chinese: "姐姐", pinyin: "jiě jie", meaning: "Старшая сестра" },
-                { chinese: "弟弟", pinyin: "dì di", meaning: "Младший брат" },
-                { chinese: "妹妹", pinyin: "mèi mei", meaning: "Младшая сестра" },
-                { chinese: "儿子", pinyin: "ér zi", meaning: "Сын" },
-                { chinese: "女儿", pinyin: "nǚ ér", meaning: "Дочь" },
-                { chinese: "家", pinyin: "jiā", meaning: "Дом" },
-                { chinese: "人", pinyin: "rén", meaning: "Человек" }
+                { chinese: "爸爸", pinyin: "bà ba", meaning: "Папа" }, { chinese: "妈妈", pinyin: "mā ma", meaning: "Мама" }, { chinese: "哥哥", pinyin: "gē ge", meaning: "Старший брат" }, { chinese: "姐姐", pinyin: "jiě jie", meaning: "Старшая сестра" }, { chinese: "弟弟", pinyin: "dì di", meaning: "Младший брат" }, { chinese: "妹妹", pinyin: "mèi mei", meaning: "Младшая сестра" }, { chinese: "儿子", pinyin: "ér zi", meaning: "Сын" }, { chinese: "女儿", pinyin: "nǚ ér", meaning: "Дочь" }, { chinese: "家", pinyin: "jiā", meaning: "Дом" }, { chinese: "人", pinyin: "rén", meaning: "Человек" }
             ] },
-            { name: "Еда и напитки", words: [
-                { chinese: "吃", pinyin: "chī", meaning: "Есть" },
-                { chinese: "喝", pinyin: "hē", meaning: "Пить" },
-                { chinese: "水", pinyin: "shuǐ", meaning: "Вода" },
-                { chinese: "米饭", pinyin: "mǐ fàn", meaning: "Рис" },
-                { chinese: "菜", pinyin: "cài", meaning: "Овощи" },
-                { chinese: "水果", pinyin: "shuǐ guǒ", meaning: "Фрукты" },
-                { chinese: "苹果", pinyin: "píng guǒ", meaning: "Яблоко" },
-                { chinese: "茶", pinyin: "chá", meaning: "Чай" },
-                { chinese: "咖啡", pinyin: "kā fēi", meaning: "Кофе" },
-                { chinese: "饭店", pinyin: "fàn diàn", meaning: "Ресторан" }
+            { name: "Еда", words: [
+                { chinese: "吃", pinyin: "chī", meaning: "Есть" }, { chinese: "喝", pinyin: "hē", meaning: "Пить" }, { chinese: "水", pinyin: "shuǐ", meaning: "Вода" }, { chinese: "米饭", pinyin: "mǐ fàn", meaning: "Рис" }, { chinese: "菜", pinyin: "cài", meaning: "Овощи" }, { chinese: "水果", pinyin: "shuǐ guǒ", meaning: "Фрукты" }, { chinese: "苹果", pinyin: "píng guǒ", meaning: "Яблоко" }, { chinese: "茶", pinyin: "chá", meaning: "Чай" }, { chinese: "咖啡", pinyin: "kā fēi", meaning: "Кофе" }, { chinese: "饭店", pinyin: "fàn diàn", meaning: "Ресторан" }
             ] },
-            { name: "Время и дни", words: [
-                { chinese: "今天", pinyin: "jīn tiān", meaning: "Сегодня" },
-                { chinese: "明天", pinyin: "míng tiān", meaning: "Завтра" },
-                { chinese: "昨天", pinyin: "zuó tiān", meaning: "Вчера" },
-                { chinese: "现在", pinyin: "xiàn zài", meaning: "Сейчас" },
-                { chinese: "年", pinyin: "nián", meaning: "Год" },
-                { chinese: "月", pinyin: "yuè", meaning: "Месяц" },
-                { chinese: "日", pinyin: "rì", meaning: "День" },
-                { chinese: "星期", pinyin: "xīng qī", meaning: "Неделя" },
-                { chinese: "点", pinyin: "diǎn", meaning: "Час" },
-                { chinese: "分", pinyin: "fēn", meaning: "Минута" }
+            { name: "Время", words: [
+                { chinese: "今天", pinyin: "jīn tiān", meaning: "Сегодня" }, { chinese: "明天", pinyin: "míng tiān", meaning: "Завтра" }, { chinese: "昨天", pinyin: "zuó tiān", meaning: "Вчера" }, { chinese: "现在", pinyin: "xiàn zài", meaning: "Сейчас" }, { chinese: "年", pinyin: "nián", meaning: "Год" }, { chinese: "月", pinyin: "yuè", meaning: "Месяц" }, { chinese: "日", pinyin: "rì", meaning: "День" }, { chinese: "星期", pinyin: "xīng qī", meaning: "Неделя" }, { chinese: "点", pinyin: "diǎn", meaning: "Час" }, { chinese: "分", pinyin: "fēn", meaning: "Минута" }
             ] },
-            { name: "Прилагательные (часть 1)", words: [
-                { chinese: "好", pinyin: "hǎo", meaning: "Хороший" },
-                { chinese: "大", pinyin: "dà", meaning: "Большой" },
-                { chinese: "小", pinyin: "xiǎo", meaning: "Маленький" },
-                { chinese: "多", pinyin: "duō", meaning: "Много" },
-                { chinese: "少", pinyin: "shǎo", meaning: "Мало" },
-                { chinese: "热", pinyin: "rè", meaning: "Жарко" },
-                { chinese: "冷", pinyin: "lěng", meaning: "Холодно" },
-                { chinese: "高兴", pinyin: "gāo xìng", meaning: "Радостный" },
-                { chinese: "漂亮", pinyin: "piào liang", meaning: "Красивый" },
-                { chinese: "快", pinyin: "kuài", meaning: "Быстрый" }
+            { name: "Прилагательные 1", words: [
+                { chinese: "好", pinyin: "hǎo", meaning: "Хороший" }, { chinese: "大", pinyin: "dà", meaning: "Большой" }, { chinese: "小", pinyin: "xiǎo", meaning: "Маленький" }, { chinese: "多", pinyin: "duō", meaning: "Много" }, { chinese: "少", pinyin: "shǎo", meaning: "Мало" }, { chinese: "热", pinyin: "rè", meaning: "Жарко" }, { chinese: "冷", pinyin: "lěng", meaning: "Холодно" }, { chinese: "高兴", pinyin: "gāo xìng", meaning: "Радостный" }, { chinese: "漂亮", pinyin: "piào liang", meaning: "Красивый" }, { chinese: "快", pinyin: "kuài", meaning: "Быстрый" }
             ] },
-            { name: "Места и предметы", words: [
-                { chinese: "学校", pinyin: "xué xiào", meaning: "Школа" },
-                { chinese: "商店", pinyin: "shāng diàn", meaning: "Магазин" },
-                { chinese: "医院", pinyin: "yī yuàn", meaning: "Больница" },
-                { chinese: "书", pinyin: "shū", meaning: "Книга" },
-                { chinese: "电脑", pinyin: "diàn nǎo", meaning: "Компьютер" },
-                { chinese: "电视", pinyin: "diàn shì", meaning: "Телевизор" },
-                { chinese: "电话", pinyin: "diàn huà", meaning: "Телефон" },
-                { chinese: "桌子", pinyin: "zhuō zi", meaning: "Стол" },
-                { chinese: "椅子", pinyin: "yǐ zi", meaning: "Стул" },
-                { chinese: "东西", pinyin: "dōng xi", meaning: "Вещь" }
+            { name: "Места", words: [
+                { chinese: "学校", pinyin: "xué xiào", meaning: "Школа" }, { chinese: "商店", pinyin: "shāng diàn", meaning: "Магазин" }, { chinese: "医院", pinyin: "yī yuàn", meaning: "Больница" }, { chinese: "书", pinyin: "shū", meaning: "Книга" }, { chinese: "电脑", pinyin: "diàn nǎo", meaning: "Компьютер" }, { chinese: "电视", pinyin: "diàn shì", meaning: "Телевизор" }, { chinese: "电话", pinyin: "diàn huà", meaning: "Телефон" }, { chinese: "桌子", pinyin: "zhuō zi", meaning: "Стол" }, { chinese: "椅子", pinyin: "yǐ zi", meaning: "Стул" }, { chinese: "东西", pinyin: "dōng xi", meaning: "Вещь" }
             ] },
-            { name: "Глаголы действия", words: [
-                { chinese: "看", pinyin: "kàn", meaning: "Смотреть" },
-                { chinese: "看见", pinyin: "kàn jiàn", meaning: "Видеть" },
-                { chinese: "听", pinyin: "tīng", meaning: "Слушать" },
-                { chinese: "说", pinyin: "shuō", meaning: "Говорить" },
-                { chinese: "读", pinyin: "dú", meaning: "Читать" },
-                { chinese: "写", pinyin: "xiě", meaning: "Писать" },
-                { chinese: "做", pinyin: "zuò", meaning: "Делать" },
-                { chinese: "买", pinyin: "mǎi", meaning: "Покупать" },
-                { chinese: "来", pinyin: "lái", meaning: "Приходить" },
-                { chinese: "回", pinyin: "huí", meaning: "Возвращаться" }
+            { name: "Глаголы", words: [
+                { chinese: "看", pinyin: "kàn", meaning: "Смотреть" }, { chinese: "看见", pinyin: "kàn jiàn", meaning: "Видеть" }, { chinese: "听", pinyin: "tīng", meaning: "Слушать" }, { chinese: "说", pinyin: "shuō", meaning: "Говорить" }, { chinese: "读", pinyin: "dú", meaning: "Читать" }, { chinese: "写", pinyin: "xiě", meaning: "Писать" }, { chinese: "做", pinyin: "zuò", meaning: "Делать" }, { chinese: "买", pinyin: "mǎi", meaning: "Покупать" }, { chinese: "来", pinyin: "lái", meaning: "Приходить" }, { chinese: "回", pinyin: "huí", meaning: "Возвращаться" }
             ] },
             { name: "Одежда и цвета", words: [
-                { chinese: "衣服", pinyin: "yī fu", meaning: "Одежда" },
-                { chinese: "红色", pinyin: "hóng sè", meaning: "Красный" },
-                { chinese: "蓝色", pinyin: "lán sè", meaning: "Синий" },
-                { chinese: "白色", pinyin: "bái sè", meaning: "Белый" },
-                { chinese: "黑色", pinyin: "hēi sè", meaning: "Чёрный" },
-                { chinese: "黄色", pinyin: "huáng sè", meaning: "Жёлтый" },
-                { chinese: "绿色", pinyin: "lǜ sè", meaning: "Зелёный" },
-                { chinese: "穿", pinyin: "chuān", meaning: "Носить" },
-                { chinese: "鞋子", pinyin: "xié zi", meaning: "Обувь" },
-                { chinese: "帽子", pinyin: "mào zi", meaning: "Шляпа" }
+                { chinese: "衣服", pinyin: "yī fu", meaning: "Одежда" }, { chinese: "红色", pinyin: "hóng sè", meaning: "Красный" }, { chinese: "蓝色", pinyin: "lán sè", meaning: "Синий" }, { chinese: "白色", pinyin: "bái sè", meaning: "Белый" }, { chinese: "黑色", pinyin: "hēi sè", meaning: "Чёрный" }, { chinese: "黄色", pinyin: "huáng sè", meaning: "Жёлтый" }, { chinese: "绿色", pinyin: "lǜ sè", meaning: "Зелёный" }, { chinese: "穿", pinyin: "chuān", meaning: "Носить" }, { chinese: "鞋子", pinyin: "xié zi", meaning: "Обувь" }, { chinese: "帽子", pinyin: "mào zi", meaning: "Шляпа" }
             ] },
             { name: "Транспорт", words: [
-                { chinese: "车", pinyin: "chē", meaning: "Машина" },
-                { chinese: "火车", pinyin: "huǒ chē", meaning: "Поезд" },
-                { chinese: "飞机", pinyin: "fēi jī", meaning: "Самолёт" },
-                { chinese: "出租车", pinyin: "chū zū chē", meaning: "Такси" },
-                { chinese: "公交车", pinyin: "gōng jiāo chē", meaning: "Автобус" },
-                { chinese: "地铁", pinyin: "dì tiě", meaning: "Метро" },
-                { chinese: "走路", pinyin: "zǒu lù", meaning: "Идти пешком" },
-                { chinese: "站", pinyin: "zhàn", meaning: "Остановка" },
-                { chinese: "机场", pinyin: "jī chǎng", meaning: "Аэропорт" },
-                { chinese: "火车站", pinyin: "huǒ chē zhàn", meaning: "Вокзал" }
+                { chinese: "车", pinyin: "chē", meaning: "Машина" }, { chinese: "火车", pinyin: "huǒ chē", meaning: "Поезд" }, { chinese: "飞机", pinyin: "fēi jī", meaning: "Самолёт" }, { chinese: "出租车", pinyin: "chū zū chē", meaning: "Такси" }, { chinese: "公交车", pinyin: "gōng jiāo chē", meaning: "Автобус" }, { chinese: "地铁", pinyin: "dì tiě", meaning: "Метро" }, { chinese: "走路", pinyin: "zǒu lù", meaning: "Идти пешком" }, { chinese: "站", pinyin: "zhàn", meaning: "Остановка" }, { chinese: "机场", pinyin: "jī chǎng", meaning: "Аэропорт" }, { chinese: "火车站", pinyin: "huǒ chē zhàn", meaning: "Вокзал" }
             ] },
             { name: "Профессии", words: [
-                { chinese: "老师", pinyin: "lǎo shī", meaning: "Учитель" },
-                { chinese: "学生", pinyin: "xué sheng", meaning: "Ученик" },
-                { chinese: "医生", pinyin: "yī shēng", meaning: "Врач" },
-                { chinese: "护士", pinyin: "hù shi", meaning: "Медсестра" },
-                { chinese: "司机", pinyin: "sī jī", meaning: "Водитель" },
-                { chinese: "经理", pinyin: "jīng lǐ", meaning: "Менеджер" },
-                { chinese: "工作", pinyin: "gōng zuò", meaning: "Работа" },
-                { chinese: "学习", pinyin: "xué xí", meaning: "Учиться" },
-                { chinese: "同学", pinyin: "tóng xué", meaning: "Одноклассник" },
-                { chinese: "朋友", pinyin: "péng you", meaning: "Друг" }
+                { chinese: "老师", pinyin: "lǎo shī", meaning: "Учитель" }, { chinese: "学生", pinyin: "xué sheng", meaning: "Ученик" }, { chinese: "医生", pinyin: "yī shēng", meaning: "Врач" }, { chinese: "护士", pinyin: "hù shi", meaning: "Медсестра" }, { chinese: "司机", pinyin: "sī jī", meaning: "Водитель" }, { chinese: "经理", pinyin: "jīng lǐ", meaning: "Менеджер" }, { chinese: "工作", pinyin: "gōng zuò", meaning: "Работа" }, { chinese: "学习", pinyin: "xué xí", meaning: "Учиться" }, { chinese: "同学", pinyin: "tóng xué", meaning: "Одноклассник" }, { chinese: "朋友", pinyin: "péng you", meaning: "Друг" }
             ] },
             { name: "Животные", words: [
-                { chinese: "猫", pinyin: "māo", meaning: "Кошка" },
-                { chinese: "狗", pinyin: "gǒu", meaning: "Собака" },
-                { chinese: "鸟", pinyin: "niǎo", meaning: "Птица" },
-                { chinese: "鱼", pinyin: "yú", meaning: "Рыба" },
-                { chinese: "马", pinyin: "mǎ", meaning: "Лошадь" },
-                { chinese: "兔子", pinyin: "tù zi", meaning: "Кролик" },
-                { chinese: "动物", pinyin: "dòng wù", meaning: "Животное" },
-                { chinese: "宠物", pinyin: "chǒng wù", meaning: "Питомец" },
-                { chinese: "喜欢", pinyin: "xǐ huan", meaning: "Нравиться" },
-                { chinese: "爱", pinyin: "ài", meaning: "Любить" }
+                { chinese: "猫", pinyin: "māo", meaning: "Кошка" }, { chinese: "狗", pinyin: "gǒu", meaning: "Собака" }, { chinese: "鸟", pinyin: "niǎo", meaning: "Птица" }, { chinese: "鱼", pinyin: "yú", meaning: "Рыба" }, { chinese: "马", pinyin: "mǎ", meaning: "Лошадь" }, { chinese: "兔子", pinyin: "tù zi", meaning: "Кролик" }, { chinese: "动物", pinyin: "dòng wù", meaning: "Животное" }, { chinese: "宠物", pinyin: "chǒng wù", meaning: "Питомец" }, { chinese: "喜欢", pinyin: "xǐ huan", meaning: "Нравиться" }, { chinese: "爱", pinyin: "ài", meaning: "Любить" }
             ] },
             { name: "Служебные слова", words: [
-                { chinese: "的", pinyin: "de", meaning: "Частица принадлежности" },
-                { chinese: "了", pinyin: "le", meaning: "Частица завершённого действия" },
-                { chinese: "不", pinyin: "bù", meaning: "Не" },
-                { chinese: "没", pinyin: "méi", meaning: "Не иметь" },
-                { chinese: "很", pinyin: "hěn", meaning: "Очень" },
-                { chinese: "太", pinyin: "tài", meaning: "Слишком" },
-                { chinese: "都", pinyin: "dōu", meaning: "Все" },
-                { chinese: "和", pinyin: "hé", meaning: "И" },
-                { chinese: "吗", pinyin: "ma", meaning: "Вопрос" },
-                { chinese: "呢", pinyin: "ne", meaning: "А?" }
+                { chinese: "的", pinyin: "de", meaning: "Частица" }, { chinese: "了", pinyin: "le", meaning: "Прошедшее время" }, { chinese: "不", pinyin: "bù", meaning: "Не" }, { chinese: "没", pinyin: "méi", meaning: "Нет" }, { chinese: "很", pinyin: "hěn", meaning: "Очень" }, { chinese: "太", pinyin: "tài", meaning: "Слишком" }, { chinese: "都", pinyin: "dōu", meaning: "Все" }, { chinese: "和", pinyin: "hé", meaning: "И" }, { chinese: "吗", pinyin: "ma", meaning: "Вопрос" }, { chinese: "呢", pinyin: "ne", meaning: "А?" }
             ] },
-            { name: "Счётные слова и фразы", words: [
-                { chinese: "个", pinyin: "gè", meaning: "Счётное слово" },
-                { chinese: "块", pinyin: "kuài", meaning: "Юань" },
-                { chinese: "本", pinyin: "běn", meaning: "Для книг" },
-                { chinese: "岁", pinyin: "suì", meaning: "Лет" },
-                { chinese: "点", pinyin: "diǎn", meaning: "Немного" },
-                { chinese: "些", pinyin: "xiē", meaning: "Некоторые" },
-                { chinese: "请", pinyin: "qǐng", meaning: "Пожалуйста" },
-                { chinese: "能", pinyin: "néng", meaning: "Мочь" },
-                { chinese: "会", pinyin: "huì", meaning: "Уметь" },
-                { chinese: "想", pinyin: "xiǎng", meaning: "Хотеть" }
+            { name: "Счётные слова", words: [
+                { chinese: "个", pinyin: "gè", meaning: "Счётное слово" }, { chinese: "块", pinyin: "kuài", meaning: "Юань" }, { chinese: "本", pinyin: "běn", meaning: "Для книг" }, { chinese: "岁", pinyin: "suì", meaning: "Лет" }, { chinese: "点", pinyin: "diǎn", meaning: "Немного" }, { chinese: "些", pinyin: "xiē", meaning: "Некоторые" }, { chinese: "请", pinyin: "qǐng", meaning: "Пожалуйста" }, { chinese: "能", pinyin: "néng", meaning: "Мочь" }, { chinese: "会", pinyin: "huì", meaning: "Уметь" }, { chinese: "想", pinyin: "xiǎng", meaning: "Хотеть" }
             ] }
         ];
 
-        // Web Speech API для озвучки
-        let currentVolume = 0.7;
-        
-        function speakChinese(text) {
-            if (!window.speechSynthesis) {
-                alert("Ваш браузер не поддерживает аудио");
-                return;
+        // ---------------------- HSK 2 (150 слов, 10 уроков по 15 слов) ----------------------
+        const hsk2Lessons = [
+            { name: "Повседневные действия 1", words: [
+                { chinese: "早上", pinyin: "zǎo shang", meaning: "Утро" }, { chinese: "晚上", pinyin: "wǎn shang", meaning: "Вечер" }, { chinese: "吃饭", pinyin: "chī fàn", meaning: "Есть" }, { chinese: "睡觉", pinyin: "shuì jiào", meaning: "Спать" }, { chinese: "起床", pinyin: "qǐ chuáng", meaning: "Вставать" }, { chinese: "洗澡", pinyin: "xǐ zǎo", meaning: "Принимать душ" }, { chinese: "刷牙", pinyin: "shuā yá", meaning: "Чистить зубы" }, { chinese: "洗脸", pinyin: "xǐ liǎn", meaning: "Умываться" }, { chinese: "穿衣服", pinyin: "chuān yī fu", meaning: "Одеваться" }, { chinese: "上班", pinyin: "shàng bān", meaning: "Идти на работу" }, { chinese: "下班", pinyin: "xià bān", meaning: "С работы" }, { chinese: "回家", pinyin: "huí jiā", meaning: "Возвращаться домой" }, { chinese: "休息", pinyin: "xiū xi", meaning: "Отдыхать" }, { chinese: "运动", pinyin: "yùn dòng", meaning: "Спорт" }, { chinese: "旅游", pinyin: "lǚ yóu", meaning: "Путешествовать" }
+            ] },
+            { name: "Описание людей", words: [
+                { chinese: "高", pinyin: "gāo", meaning: "Высокий" }, { chinese: "矮", pinyin: "ǎi", meaning: "Низкий" }, { chinese: "胖", pinyin: "pàng", meaning: "Толстый" }, { chinese: "瘦", pinyin: "shòu", meaning: "Худой" }, { chinese: "年轻", pinyin: "nián qīng", meaning: "Молодой" }, { chinese: "老", pinyin: "lǎo", meaning: "Старый" }, { chinese: "聪明", pinyin: "cōng ming", meaning: "Умный" }, { chinese: "漂亮", pinyin: "piào liang", meaning: "Красивый" }, { chinese: "可爱", pinyin: "kě ài", meaning: "Милый" }, { chinese: "认真", pinyin: "rèn zhēn", meaning: "Серьёзный" }, { chinese: "努力", pinyin: "nǔ lì", meaning: "Старательный" }, { chinese: "高兴", pinyin: "gāo xìng", meaning: "Радостный" }, { chinese: "难过", pinyin: "nán guò", meaning: "Грустный" }, { chinese: "生气", pinyin: "shēng qì", meaning: "Злой" }, { chinese: "担心", pinyin: "dān xīn", meaning: "Беспокоиться" }
+            ] },
+            { name: "Погода и природа", words: [
+                { chinese: "天气", pinyin: "tiān qì", meaning: "Погода" }, { chinese: "下雨", pinyin: "xià yǔ", meaning: "Дождь" }, { chinese: "下雪", pinyin: "xià xuě", meaning: "Снег" }, { chinese: "刮风", pinyin: "guā fēng", meaning: "Ветер" }, { chinese: "晴天", pinyin: "qíng tiān", meaning: "Солнечно" }, { chinese: "阴天", pinyin: "yīn tiān", meaning: "Пасмурно" }, { chinese: "热", pinyin: "rè", meaning: "Жарко" }, { chinese: "冷", pinyin: "lěng", meaning: "Холодно" }, { chinese: "暖和", pinyin: "nuǎn huo", meaning: "Тепло" }, { chinese: "凉快", pinyin: "liáng kuai", meaning: "Прохладно" }, { chinese: "山", pinyin: "shān", meaning: "Гора" }, { chinese: "河", pinyin: "hé", meaning: "Река" }, { chinese: "海", pinyin: "hǎi", meaning: "Море" }, { chinese: "树", pinyin: "shù", meaning: "Дерево" }, { chinese: "花", pinyin: "huā", meaning: "Цветок" }
+            ] },
+            { name: "Город и транспорт", words: [
+                { chinese: "城市", pinyin: "chéng shì", meaning: "Город" }, { chinese: "农村", pinyin: "nóng cūn", meaning: "Деревня" }, { chinese: "公园", pinyin: "gōng yuán", meaning: "Парк" }, { chinese: "超市", pinyin: "chāo shì", meaning: "Супермаркет" }, { chinese: "银行", pinyin: "yín háng", meaning: "Банк" }, { chinese: "邮局", pinyin: "yóu jú", meaning: "Почта" }, { chinese: "图书馆", pinyin: "tú shū guǎn", meaning: "Библиотека" }, { chinese: "体育馆", pinyin: "tǐ yù guǎn", meaning: "Спортзал" }, { chinese: "车站", pinyin: "chē zhàn", meaning: "Остановка" }, { chinese: "机场", pinyin: "jī chǎng", meaning: "Аэропорт" }, { chinese: "地铁", pinyin: "dì tiě", meaning: "Метро" }, { chinese: "公交车", pinyin: "gōng jiāo chē", meaning: "Автобус" }, { chinese: "出租车", pinyin: "chū zū chē", meaning: "Такси" }, { chinese: "自行车", pinyin: "zì xíng chē", meaning: "Велосипед" }, { chinese: "走路", pinyin: "zǒu lù", meaning: "Пешком" }
+            ] },
+            { name: "Работа и учёба", words: [
+                { chinese: "公司", pinyin: "gōng sī", meaning: "Компания" }, { chinese: "办公室", pinyin: "bàn gōng shì", meaning: "Офис" }, { chinese: "同事", pinyin: "tóng shì", meaning: "Коллега" }, { chinese: "老板", pinyin: "lǎo bǎn", meaning: "Начальник" }, { chinese: "员工", pinyin: "yuán gōng", meaning: "Сотрудник" }, { chinese: "面试", pinyin: "miàn shì", meaning: "Собеседование" }, { chinese: "经验", pinyin: "jīng yàn", meaning: "Опыт" }, { chinese: "机会", pinyin: "jī huì", meaning: "Возможность" }, { chinese: "考试", pinyin: "kǎo shì", meaning: "Экзамен" }, { chinese: "成绩", pinyin: "chéng jì", meaning: "Оценка" }, { chinese: "作业", pinyin: "zuò yè", meaning: "Домашнее задание" }, { chinese: "教室", pinyin: "jiào shì", meaning: "Класс" }, { chinese: "大学", pinyin: "dà xué", meaning: "Университет" }, { chinese: "毕业", pinyin: "bì yè", meaning: "Выпускаться" }, { chinese: "专业", pinyin: "zhuān yè", meaning: "Специальность" }
+            ] },
+            { name: "Здоровье", words: [
+                { chinese: "身体", pinyin: "shēn tǐ", meaning: "Тело" }, { chinese: "健康", pinyin: "jiàn kāng", meaning: "Здоровый" }, { chinese: "生病", pinyin: "shēng bìng", meaning: "Болеть" }, { chinese: "感冒", pinyin: "gǎn mào", meaning: "Простуда" }, { chinese: "发烧", pinyin: "fā shāo", meaning: "Температура" }, { chinese: "咳嗽", pinyin: "ké sou", meaning: "Кашель" }, { chinese: "头疼", pinyin: "tóu téng", meaning: "Головная боль" }, { chinese: "吃药", pinyin: "chī yào", meaning: "Пить лекарство" }, { chinese: "医院", pinyin: "yī yuàn", meaning: "Больница" }, { chinese: "医生", pinyin: "yī shēng", meaning: "Врач" }, { chinese: "护士", pinyin: "hù shi", meaning: "Медсестра" }, { chinese: "休息", pinyin: "xiū xi", meaning: "Отдых" }, { chinese: "运动", pinyin: "yùn dòng", meaning: "Упражнения" }, { chinese: "锻炼", pinyin: "duàn liàn", meaning: "Тренироваться" }, { chinese: "减肥", pinyin: "jiǎn féi", meaning: "Худеть" }
+            ] },
+            { name: "Покупки", words: [
+                { chinese: "买", pinyin: "mǎi", meaning: "Покупать" }, { chinese: "卖", pinyin: "mài", meaning: "Продавать" }, { chinese: "价格", pinyin: "jià gé", meaning: "Цена" }, { chinese: "便宜", pinyin: "pián yi", meaning: "Дёшево" }, { chinese: "贵", pinyin: "guì", meaning: "Дорого" }, { chinese: "钱", pinyin: "qián", meaning: "Деньги" }, { chinese: "信用卡", pinyin: "xìn yòng kǎ", meaning: "Кредитная карта" }, { chinese: "现金", pinyin: "xiàn jīn", meaning: "Наличные" }, { chinese: "购物", pinyin: "gòu wù", meaning: "Покупки" }, { chinese: "超市", pinyin: "chāo shì", meaning: "Супермаркет" }, { chinese: "商场", pinyin: "shāng chǎng", meaning: "Торговый центр" }, { chinese: "网上购物", pinyin: "wǎng shàng gòu wù", meaning: "Онлайн-покупки" }, { chinese: "退货", pinyin: "tuì huò", meaning: "Возврат товара" }, { chinese: "试穿", pinyin: "shì chuān", meaning: "Примерять" }, { chinese: "发票", pinyin: "fā piào", meaning: "Чек" }
+            ] },
+            { name: "Путешествия", words: [
+                { chinese: "旅行", pinyin: "lǚ xíng", meaning: "Путешествие" }, { chinese: "旅游", pinyin: "lǚ yóu", meaning: "Туризм" }, { chinese: "地图", pinyin: "dì tú", meaning: "Карта" }, { chinese: "护照", pinyin: "hù zhào", meaning: "Паспорт" }, { chinese: "签证", pinyin: "qiān zhèng", meaning: "Виза" }, { chinese: "酒店", pinyin: "jiǔ diàn", meaning: "Отель" }, { chinese: "旅馆", pinyin: "lǚ guǎn", meaning: "Гостиница" }, { chinese: "预订", pinyin: "yù dìng", meaning: "Бронировать" }, { chinese: "飞机票", pinyin: "fēi jī piào", meaning: "Авиабилет" }, { chinese: "火车票", pinyin: "huǒ chē piào", meaning: "Ж/д билет" }, { chinese: "行李", pinyin: "xíng li", meaning: "Багаж" }, { chinese: "景点", pinyin: "jǐng diǎn", meaning: "Достопримечательность" }, { chinese: "导游", pinyin: "dǎo yóu", meaning: "Гид" }, { chinese: "拍照", pinyin: "pāi zhào", meaning: "Фотографировать" }, { chinese: "纪念品", pinyin: "jì niàn pǐn", meaning: "Сувенир" }
+            ] },
+            { name: "Общение", words: [
+                { chinese: "电话", pinyin: "diàn huà", meaning: "Телефон" }, { chinese: "手机", pinyin: "shǒu jī", meaning: "Мобильный" }, { chinese: "短信", pinyin: "duǎn xìn", meaning: "СМС" }, { chinese: "微信", pinyin: "wēi xìn", meaning: "WeChat" }, { chinese: "邮件", pinyin: "yóu jiàn", meaning: "Почта" }, { chinese: "网络", pinyin: "wǎng luò", meaning: "Интернет" }, { chinese: "电脑", pinyin: "diàn nǎo", meaning: "Компьютер" }, { chinese: "消息", pinyin: "xiāo xi", meaning: "Новость" }, { chinese: "通知", pinyin: "tōng zhī", meaning: "Уведомление" }, { chinese: "邀请", pinyin: "yāo qǐng", meaning: "Приглашать" }, { chinese: "回答", pinyin: "huí dá", meaning: "Отвечать" }, { chinese: "解释", pinyin: "jiě shì", meaning: "Объяснять" }, { chinese: "讨论", pinyin: "tǎo lùn", meaning: "Обсуждать" }, { chinese: "意见", pinyin: "yì jiàn", meaning: "Мнение" }, { chinese: "建议", pinyin: "jiàn yì", meaning: "Совет" }
+            ] },
+            { name: "Время и даты", words: [
+                { chinese: "时候", pinyin: "shí hou", meaning: "Время" }, { chinese: "时间", pinyin: "shí jiān", meaning: "Время" }, { chinese: "小时", pinyin: "xiǎo shí", meaning: "Час" }, { chinese: "分钟", pinyin: "fēn zhōng", meaning: "Минута" }, { chinese: "秒钟", pinyin: "miǎo zhōng", meaning: "Секунда" }, { chinese: "早上", pinyin: "zǎo shang", meaning: "Утро" }, { chinese: "上午", pinyin: "shàng wǔ", meaning: "До полудня" }, { chinese: "中午", pinyin: "zhōng wǔ", meaning: "Полдень" }, { chinese: "下午", pinyin: "xià wǔ", meaning: "После полудня" }, { chinese: "晚上", pinyin: "wǎn shang", meaning: "Вечер" }, { chinese: "半夜", pinyin: "bàn yè", meaning: "Полночь" }, { chinese: "昨天", pinyin: "zuó tiān", meaning: "Вчера" }, { chinese: "今天", pinyin: "jīn tiān", meaning: "Сегодня" }, { chinese: "明天", pinyin: "míng tiān", meaning: "Завтра" }, { chinese: "周末", pinyin: "zhōu mò", meaning: "Выходные" }
+            ] }
+        ];
+
+        // ---------------------- HSK 3 (300 слов, 15 уроков по 20 слов) ----------------------
+        const hsk3Lessons = [
+            { name: "Семья и отношения", words: [
+                { chinese: "父母", pinyin: "fù mǔ", meaning: "Родители" }, { chinese: "夫妻", pinyin: "fū qī", meaning: "Супруги" }, { chinese: "结婚", pinyin: "jié hūn", meaning: "Жениться" }, { chinese: "离婚", pinyin: "lí hūn", meaning: "Разводиться" }, { chinese: "恋爱", pinyin: "liàn ài", meaning: "Любовь" }, { chinese: "感情", pinyin: "gǎn qíng", meaning: "Чувства" }, { chinese: "关心", pinyin: "guān xīn", meaning: "Заботиться" }, { chinese: "照顾", pinyin: "zhào gù", meaning: "Ухаживать" }, { chinese: "习惯", pinyin: "xí guàn", meaning: "Привычка" }, { chinese: "性格", pinyin: "xìng gé", meaning: "Характер" }, { chinese: "脾气", pinyin: "pí qi", meaning: "Нрав" }, { chinese: "尊重", pinyin: "zūn zhòng", meaning: "Уважать" }, { chinese: "信任", pinyin: "xìn rèn", meaning: "Доверять" }, { chinese: "理解", pinyin: "lǐ jiě", meaning: "Понимать" }, { chinese: "原谅", pinyin: "yuán liàng", meaning: "Прощать" }, { chinese: "吵架", pinyin: "chǎo jià", meaning: "Ссориться" }, { chinese: "和好", pinyin: "hé hǎo", meaning: "Мириться" }, { chinese: "想念", pinyin: "xiǎng niàn", meaning: "Скучать" }, { chinese: "忘记", pinyin: "wàng jì", meaning: "Забывать" }, { chinese: "记得", pinyin: "jì de", meaning: "Помнить" }
+            ] },
+            { name: "Работа и карьера", words: [
+                { chinese: "职业", pinyin: "zhí yè", meaning: "Профессия" }, { chinese: "行业", pinyin: "háng yè", meaning: "Отрасль" }, { chinese: "职位", pinyin: "zhí wèi", meaning: "Должность" }, { chinese: "升职", pinyin: "shēng zhí", meaning: "Повышение" }, { chinese: "加薪", pinyin: "jiā xīn", meaning: "Прибавка" }, { chinese: "辞职", pinyin: "cí zhí", meaning: "Увольняться" }, { chinese: "招聘", pinyin: "zhāo pìn", meaning: "Нанимать" }, { chinese: "应聘", pinyin: "yìng pìn", meaning: "Подавать заявку" }, { chinese: "简历", pinyin: "jiǎn lì", meaning: "Резюме" }, { chinese: "面试", pinyin: "miàn shì", meaning: "Собеседование" }, { chinese: "培训", pinyin: "péi xùn", meaning: "Обучение" }, { chinese: "会议", pinyin: "huì yì", meaning: "Совещание" }, { chinese: "报告", pinyin: "bào gào", meaning: "Доклад" }, { chinese: "项目", pinyin: "xiàng mù", meaning: "Проект" }, { chinese: "计划", pinyin: "jì huà", meaning: "План" }, { chinese: "目标", pinyin: "mù biāo", meaning: "Цель" }, { chinese: "成功", pinyin: "chéng gōng", meaning: "Успех" }, { chinese: "失败", pinyin: "shī bài", meaning: "Провал" }, { chinese: "努力", pinyin: "nǔ lì", meaning: "Усилие" }, { chinese: "坚持", pinyin: "jiān chí", meaning: "Настаивать" }
+            ] },
+            { name: "Учёба и знания", words: [
+                { chinese: "知识", pinyin: "zhī shi", meaning: "Знания" }, { chinese: "文化", pinyin: "wén huà", meaning: "Культура" }, { chinese: "历史", pinyin: "lì shǐ", meaning: "История" }, { chinese: "地理", pinyin: "dì lǐ", meaning: "География" }, { chinese: "科学", pinyin: "kē xué", meaning: "Наука" }, { chinese: "技术", pinyin: "jì shù", meaning: "Технология" }, { chinese: "研究", pinyin: "yán jiū", meaning: "Исследовать" }, { chinese: "实验", pinyin: "shí yàn", meaning: "Эксперимент" }, { chinese: "经验", pinyin: "jīng yàn", meaning: "Опыт" }, { chinese: "方法", pinyin: "fāng fǎ", meaning: "Метод" }, { chinese: "问题", pinyin: "wèn tí", meaning: "Вопрос" }, { chinese: "答案", pinyin: "dá àn", meaning: "Ответ" }, { chinese: "正确", pinyin: "zhèng què", meaning: "Правильный" }, { chinese: "错误", pinyin: "cuò wù", meaning: "Ошибка" }, { chinese: "练习", pinyin: "liàn xí", meaning: "Упражнение" }, { chinese: "复习", pinyin: "fù xí", meaning: "Повторять" }, { chinese: "预习", pinyin: "yù xí", meaning: "Готовиться" }, { chinese: "笔记", pinyin: "bǐ jì", meaning: "Записи" }, { chinese: "考试", pinyin: "kǎo shì", meaning: "Экзамен" }, { chinese: "成绩", pinyin: "chéng jì", meaning: "Оценка" }
+            ] },
+            { name: "Путешествия 2", words: [
+                { chinese: "旅行", pinyin: "lǚ xíng", meaning: "Путешествие" }, { chinese: "出差", pinyin: "chū chāi", meaning: "Командировка" }, { chinese: "签证", pinyin: "qiān zhèng", meaning: "Виза" }, { chinese: "护照", pinyin: "hù zhào", meaning: "Паспорт" }, { chinese: "机票", pinyin: "jī piào", meaning: "Билет" }, { chinese: "酒店", pinyin: "jiǔ diàn", meaning: "Отель" }, { chinese: "行李", pinyin: "xíng li", meaning: "Багаж" }, { chinese: "导游", pinyin: "dǎo yóu", meaning: "Гид" }, { chinese: "地图", pinyin: "dì tú", meaning: "Карта" }, { chinese: "方向", pinyin: "fāng xiàng", meaning: "Направление" }, { chinese: "迷路", pinyin: "mí lù", meaning: "Заблудиться" }, { chinese: "到达", pinyin: "dào dá", meaning: "Прибывать" }, { chinese: "离开", pinyin: "lí kāi", meaning: "Уезжать" }, { chinese: "欢迎", pinyin: "huān yíng", meaning: "Добро пожаловать" }, { chinese: "送行", pinyin: "sòng xíng", meaning: "Провожать" }, { chinese: "接机", pinyin: "jiē jī", meaning: "Встречать" }, { chinese: "景点", pinyin: "jǐng diǎn", meaning: "Достопримечательность" }, { chinese: "拍照", pinyin: "pāi zhào", meaning: "Фотографировать" }, { chinese: "纪念品", pinyin: "jì niàn pǐn", meaning: "Сувенир" }, { chinese: "回忆", pinyin: "huí yì", meaning: "Воспоминания" }
+            ] },
+            { name: "Здоровье и спорт", words: [
+                { chinese: "健康", pinyin: "jiàn kāng", meaning: "Здоровье" }, { chinese: "锻炼", pinyin: "duàn liàn", meaning: "Тренировка" }, { chinese: "跑步", pinyin: "pǎo bù", meaning: "Бег" }, { chinese: "游泳", pinyin: "yóu yǒng", meaning: "Плавание" }, { chinese: "打球", pinyin: "dǎ qiú", meaning: "Играть в мяч" }, { chinese: "健身", pinyin: "jiàn shēn", meaning: "Фитнес" }, { chinese: "减肥", pinyin: "jiǎn féi", meaning: "Похудение" }, { chinese: "感冒", pinyin: "gǎn mào", meaning: "Простуда" }, { chinese: "发烧", pinyin: "fā shāo", meaning: "Температура" }, { chinese: "咳嗽", pinyin: "ké sou", meaning: "Кашель" }, { chinese: "头疼", pinyin: "tóu téng", meaning: "Головная боль" }, { chinese: "胃疼", pinyin: "wèi téng", meaning: "Боль в животе" }, { chinese: "药", pinyin: "yào", meaning: "Лекарство" }, { chinese: "医生", pinyin: "yī shēng", meaning: "Врач" }, { chinese: "医院", pinyin: "yī yuàn", meaning: "Больница" }, { chinese: "检查", pinyin: "jiǎn chá", meaning: "Осмотр" }, { chinese: "治疗", pinyin: "zhì liáo", meaning: "Лечение" }, { chinese: "休息", pinyin: "xiū xi", meaning: "Отдых" }, { chinese: "放松", pinyin: "fàng sōng", meaning: "Расслабляться" }, { chinese: "压力", pinyin: "yā lì", meaning: "Стресс" }
+            ] },
+            { name: "Покупки и услуги", words: [
+                { chinese: "超市", pinyin: "chāo shì", meaning: "Супермаркет" }, { chinese: "商场", pinyin: "shāng chǎng", meaning: "ТЦ" }, { chinese: "网上购物", pinyin: "wǎng shàng gòu wù", meaning: "Онлайн-шопинг" }, { chinese: "打折", pinyin: "dǎ zhé", meaning: "Скидка" }, { chinese: "促销", pinyin: "cù xiāo", meaning: "Распродажа" }, { chinese: "优惠券", pinyin: "yōu huì quàn", meaning: "Купон" }, { chinese: "退货", pinyin: "tuì huò", meaning: "Возврат" }, { chinese: "换货", pinyin: "huàn huò", meaning: "Обмен" }, { chinese: "保修", pinyin: "bǎo xiū", meaning: "Гарантия" }, { chinese: "发票", pinyin: "fā piào", meaning: "Чек" }, { chinese: "信用卡", pinyin: "xìn yòng kǎ", meaning: "Кредитка" }, { chinese: "现金", pinyin: "xiàn jīn", meaning: "Наличные" }, { chinese: "价格", pinyin: "jià gé", meaning: "Цена" }, { chinese: "便宜", pinyin: "pián yi", meaning: "Дёшево" }, { chinese: "贵", pinyin: "guì", meaning: "Дорого" }, { chinese: "划算", pinyin: "huá suàn", meaning: "Выгодно" }, { chinese: "服务", pinyin: "fú wù", meaning: "Услуга" }, { chinese: "态度", pinyin: "tài dù", meaning: "Отношение" }, { chinese: "满意", pinyin: "mǎn yì", meaning: "Довольный" }, { chinese: "建议", pinyin: "jiàn yì", meaning: "Совет" }
+            ] },
+            { name: "Общение и соцсети", words: [
+                { chinese: "手机", pinyin: "shǒu jī", meaning: "Телефон" }, { chinese: "微信", pinyin: "wēi xìn", meaning: "WeChat" }, { chinese: "微博", pinyin: "wēi bó", meaning: "Weibo" }, { chinese: "朋友圈", pinyin: "péng you quān", meaning: "Лента друзей" }, { chinese: "点赞", pinyin: "diǎn zàn", meaning: "Лайк" }, { chinese: "评论", pinyin: "píng lùn", meaning: "Комментарий" }, { chinese: "分享", pinyin: "fēn xiǎng", meaning: "Поделиться" }, { chinese: "转发", pinyin: "zhuǎn fā", meaning: "Репост" }, { chinese: "消息", pinyin: "xiāo xi", meaning: "Сообщение" }, { chinese: "聊天", pinyin: "liáo tiān", meaning: "Болтать" }, { chinese: "视频", pinyin: "shì pín", meaning: "Видео" }, { chinese: "语音", pinyin: "yǔ yīn", meaning: "Голосовое" }, { chinese: "照片", pinyin: "zhào piàn", meaning: "Фото" }, { chinese: "表情", pinyin: "biǎo qíng", meaning: "Стикер" }, { chinese: "红包", pinyin: "hóng bāo", meaning: "Красный конверт" }, { chinese: "支付", pinyin: "zhī fù", meaning: "Платёж" }, { chinese: "账号", pinyin: "zhàng hào", meaning: "Аккаунт" }, { chinese: "密码", pinyin: "mì mǎ", meaning: "Пароль" }, { chinese: "登录", pinyin: "dēng lù", meaning: "Войти" }, { chinese: "注册", pinyin: "zhù cè", meaning: "Регистрация" }
+            ] },
+            { name: "Погода и времена года", words: [
+                { chinese: "春天", pinyin: "chūn tiān", meaning: "Весна" }, { chinese: "夏天", pinyin: "xià tiān", meaning: "Лето" }, { chinese: "秋天", pinyin: "qiū tiān", meaning: "Осень" }, { chinese: "冬天", pinyin: "dōng tiān", meaning: "Зима" }, { chinese: "温度", pinyin: "wēn dù", meaning: "Температура" }, { chinese: "湿度", pinyin: "shī dù", meaning: "Влажность" }, { chinese: "晴天", pinyin: "qíng tiān", meaning: "Солнечно" }, { chinese: "阴天", pinyin: "yīn tiān", meaning: "Пасмурно" }, { chinese: "下雨", pinyin: "xià yǔ", meaning: "Дождь" }, { chinese: "下雪", pinyin: "xià xuě", meaning: "Снег" }, { chinese: "刮风", pinyin: "guā fēng", meaning: "Ветер" }, { chinese: "打雷", pinyin: "dǎ léi", meaning: "Гром" }, { chinese: "闪电", pinyin: "shǎn diàn", meaning: "Молния" }, { chinese: "雾", pinyin: "wù", meaning: "Туман" }, { chinese: "彩虹", pinyin: "cǎi hóng", meaning: "Радуга" }, { chinese: "气候", pinyin: "qì hòu", meaning: "Климат" }, { chinese: "环境", pinyin: "huán jìng", meaning: "Окружающая среда" }, { chinese: "污染", pinyin: "wū rǎn", meaning: "Загрязнение" }, { chinese: "保护", pinyin: "bǎo hù", meaning: "Защищать" }, { chinese: "自然", pinyin: "zì rán", meaning: "Природа" }
+            ] },
+            { name: "Еда и рестораны", words: [
+                { chinese: "早餐", pinyin: "zǎo cān", meaning: "Завтрак" }, { chinese: "午餐", pinyin: "wǔ cān", meaning: "Обед" }, { chinese: "晚餐", pinyin: "wǎn cān", meaning: "Ужин" }, { chinese: "菜单", pinyin: "cài dān", meaning: "Меню" }, { chinese: "点菜", pinyin: "diǎn cài", meaning: "Заказывать" }, { chinese: "味道", pinyin: "wèi dào", meaning: "Вкус" }, { chinese: "好吃", pinyin: "hǎo chī", meaning: "Вкусно" }, { chinese: "难吃", pinyin: "nán chī", meaning: "Невкусно" }, { chinese: "辣", pinyin: "là", meaning: "Острый" }, { chinese: "甜", pinyin: "tián", meaning: "Сладкий" }, { chinese: "酸", pinyin: "suān", meaning: "Кислый" }, { chinese: "苦", pinyin: "kǔ", meaning: "Горький" }, { chinese: "咸", pinyin: "xián", meaning: "Солёный" }, { chinese: "清淡", pinyin: "qīng dàn", meaning: "Лёгкий" }, { chinese: "油腻", pinyin: "yóu nì", meaning: "Жирный" }, { chinese: "新鲜", pinyin: "xīn xiān", meaning: "Свежий" }, { chinese: "健康", pinyin: "jiàn kāng", meaning: "Здоровый" }, { chinese: "外卖", pinyin: "wài mài", meaning: "Доставка" }, { chinese: "打包", pinyin: "dǎ bāo", meaning: "С собой" }, { chinese: "请客", pinyin: "qǐng kè", meaning: "Угощать" }
+            ] },
+            { name: "Жильё и быт", words: [
+                { chinese: "房子", pinyin: "fáng zi", meaning: "Дом" }, { chinese: "公寓", pinyin: "gōng yù", meaning: "Квартира" }, { chinese: "卧室", pinyin: "wò shì", meaning: "Спальня" }, { chinese: "客厅", pinyin: "kè tīng", meaning: "Гостиная" }, { chinese: "厨房", pinyin: "chú fáng", meaning: "Кухня" }, { chinese: "卫生间", pinyin: "wèi shēng jiān", meaning: "Ванная" }, { chinese: "阳台", pinyin: "yáng tái", meaning: "Балкон" }, { chinese: "家具", pinyin: "jiā jù", meaning: "Мебель" }, { chinese: "电器", pinyin: "diàn qì", meaning: "Техника" }, { chinese: "空调", pinyin: "kōng tiáo", meaning: "Кондиционер" }, { chinese: "暖气", pinyin: "nuǎn qì", meaning: "Отопление" }, { chinese: "网络", pinyin: "wǎng luò", meaning: "Интернет" }, { chinese: "水电", pinyin: "shuǐ diàn", meaning: "Вода и свет" }, { chinese: "房租", pinyin: "fáng zū", meaning: "Аренда" }, { chinese: "买房", pinyin: "mǎi fáng", meaning: "Покупать дом" }, { chinese: "搬家", pinyin: "bān jiā", meaning: "Переезжать" }, { chinese: "装修", pinyin: "zhuāng xiū", meaning: "Ремонт" }, { chinese: "打扫", pinyin: "dǎ sǎo", meaning: "Убирать" }, { chinese: "干净", pinyin: "gān jìng", meaning: "Чистый" }, { chinese: "乱", pinyin: "luàn", meaning: "Беспорядок" }
+            ] },
+            { name: "Эмоции и чувства", words: [
+                { chinese: "开心", pinyin: "kāi xīn", meaning: "Радостный" }, { chinese: "快乐", pinyin: "kuài lè", meaning: "Счастливый" }, { chinese: "难过", pinyin: "nán guò", meaning: "Печальный" }, { chinese: "伤心", pinyin: "shāng xīn", meaning: "Огорчённый" }, { chinese: "生气", pinyin: "shēng qì", meaning: "Злой" }, { chinese: "害怕", pinyin: "hài pà", meaning: "Бояться" }, { chinese: "紧张", pinyin: "jǐn zhāng", meaning: "Нервный" }, { chinese: "放松", pinyin: "fàng sōng", meaning: "Расслабленный" }, { chinese: "兴奋", pinyin: "xīng fèn", meaning: "Взволнованный" }, { chinese: "无聊", pinyin: "wú liáo", meaning: "Скучно" }, { chinese: "寂寞", pinyin: "jì mò", meaning: "Одинокий" }, { chinese: "感动", pinyin: "gǎn dòng", meaning: "Тронутый" }, { chinese: "失望", pinyin: "shī wàng", meaning: "Разочарованный" }, { chinese: "后悔", pinyin: "hòu huǐ", meaning: "Сожалеть" }, { chinese: "担心", pinyin: "dān xīn", meaning: "Беспокоиться" }, { chinese: "放心", pinyin: "fàng xīn", meaning: "Не волноваться" }, { chinese: "耐心", pinyin: "nài xīn", meaning: "Терпеливый" }, { chinese: "热情", pinyin: "rè qíng", meaning: "Энтузиазм" }, { chinese: "自信", pinyin: "zì xìn", meaning: "Уверенность" }, { chinese: "骄傲", pinyin: "jiāo ào", meaning: "Гордый" }
+            ] },
+            { name: "Общество и культура", words: [
+                { chinese: "传统", pinyin: "chuán tǒng", meaning: "Традиция" }, { chinese: "现代", pinyin: "xiàn dài", meaning: "Современный" }, { chinese: "文化", pinyin: "wén huà", meaning: "Культура" }, { chinese: "艺术", pinyin: "yì shù", meaning: "Искусство" }, { chinese: "音乐", pinyin: "yīn yuè", meaning: "Музыка" }, { chinese: "电影", pinyin: "diàn yǐng", meaning: "Кино" }, { chinese: "电视", pinyin: "diàn shì", meaning: "Телевидение" }, { chinese: "新闻", pinyin: "xīn wén", meaning: "Новости" }, { chinese: "节日", pinyin: "jié rì", meaning: "Праздник" }, { chinese: "春节", pinyin: "chūn jié", meaning: "Китайский Новый год" }, { chinese: "礼物", pinyin: "lǐ wù", meaning: "Подарок" }, { chinese: "红包", pinyin: "hóng bāo", meaning: "Красный конверт" }, { chinese: "礼貌", pinyin: "lǐ mào", meaning: "Вежливость" }, { chinese: "尊重", pinyin: "zūn zhòng", meaning: "Уважение" }, { chinese: "帮助", pinyin: "bāng zhù", meaning: "Помощь" }, { chinese: "感谢", pinyin: "gǎn xiè", meaning: "Благодарность" }, { chinese: "道歉", pinyin: "dào qiàn", meaning: "Извинение" }, { chinese: "邀请", pinyin: "yāo qǐng", meaning: "Приглашение" }, { chinese: "参加", pinyin: "cān jiā", meaning: "Участвовать" }, { chinese: "组织", pinyin: "zǔ zhī", meaning: "Организовывать" }
+            ] },
+            { name: "Природа и экология", words: [
+                { chinese: "森林", pinyin: "sēn lín", meaning: "Лес" }, { chinese: "草原", pinyin: "cǎo yuán", meaning: "Степь" }, { chinese: "沙漠", pinyin: "shā mò", meaning: "Пустыня" }, { chinese: "海洋", pinyin: "hǎi yáng", meaning: "Океан" }, { chinese: "河流", pinyin: "hé liú", meaning: "Река" }, { chinese: "湖泊", pinyin: "hú pō", meaning: "Озеро" }, { chinese: "山", pinyin: "shān", meaning: "Гора" }, { chinese: "天空", pinyin: "tiān kōng", meaning: "Небо" }, { chinese: "星星", pinyin: "xīng xing", meaning: "Звезда" }, { chinese: "月亮", pinyin: "yuè liang", meaning: "Луна" }, { chinese: "太阳", pinyin: "tài yáng", meaning: "Солнце" }, { chinese: "动物", pinyin: "dòng wù", meaning: "Животные" }, { chinese: "植物", pinyin: "zhí wù", meaning: "Растения" }, { chinese: "环保", pinyin: "huán bǎo", meaning: "Защита окружающей среды" }, { chinese: "节约", pinyin: "jié yuē", meaning: "Экономить" }, { chinese: "浪费", pinyin: "làng fèi", meaning: "Тратить" }, { chinese: "回收", pinyin: "huí shōu", meaning: "Переработка" }, { chinese: "垃圾", pinyin: "lā jī", meaning: "Мусор" }, { chinese: "清洁", pinyin: "qīng jié", meaning: "Чистый" }, { chinese: "美丽", pinyin: "měi lì", meaning: "Красивый" }
+            ] },
+            { name: "Технологии и интернет", words: [
+                { chinese: "手机", pinyin: "shǒu jī", meaning: "Телефон" }, { chinese: "电脑", pinyin: "diàn nǎo", meaning: "Компьютер" }, { chinese: "平板", pinyin: "píng bǎn", meaning: "Планшет" }, { chinese: "软件", pinyin: "ruǎn jiàn", meaning: "Программное обеспечение" }, { chinese: "硬件", pinyin: "yìng jiàn", meaning: "Аппаратное обеспечение" }, { chinese: "应用", pinyin: "yìng yòng", meaning: "Приложение" }, { chinese: "网站", pinyin: "wǎng zhàn", meaning: "Сайт" }, { chinese: "搜索", pinyin: "sōu suǒ", meaning: "Поиск" }, { chinese: "下载", pinyin: "xià zài", meaning: "Скачать" }, { chinese: "上传", pinyin: "shàng chuán", meaning: "Загрузить" }, { chinese: "备份", pinyin: "bèi fèn", meaning: "Резервная копия" }, { chinese: "病毒", pinyin: "bìng dú", meaning: "Вирус" }, { chinese: "安全", pinyin: "ān quán", meaning: "Безопасность" }, { chinese: "隐私", pinyin: "yǐn sī", meaning: "Конфиденциальность" }, { chinese: "数据", pinyin: "shù jù", meaning: "Данные" }, { chinese: "信息", pinyin: "xìn xī", meaning: "Информация" }, { chinese: "智能", pinyin: "zhì néng", meaning: "Умный" }, { chinese: "机器人", pinyin: "jī qì rén", meaning: "Робот" }, { chinese: "未来", pinyin: "wèi lái", meaning: "Будущее" }, { chinese: "发展", pinyin: "fā zhǎn", meaning: "Развитие" }
+            ] },
+            { name: "Повседневная жизнь 2", words: [
+                { chinese: "起床", pinyin: "qǐ chuáng", meaning: "Вставать" }, { chinese: "洗漱", pinyin: "xǐ shù", meaning: "Умываться" }, { chinese: "早餐", pinyin: "zǎo cān", meaning: "Завтрак" }, { chinese: "上班", pinyin: "shàng bān", meaning: "На работу" }, { chinese: "下班", pinyin: "xià bān", meaning: "С работы" }, { chinese: "回家", pinyin: "huí jiā", meaning: "Домой" }, { chinese: "晚餐", pinyin: "wǎn cān", meaning: "Ужин" }, { chinese: "洗澡", pinyin: "xǐ zǎo", meaning: "Душ" }, { chinese: "睡觉", pinyin: "shuì jiào", meaning: "Спать" }, { chinese: "周末", pinyin: "zhōu mò", meaning: "Выходные" }, { chinese: "假期", pinyin: "jià qī", meaning: "Каникулы" }, { chinese: "约会", pinyin: "yuē huì", meaning: "Встреча" }, { chinese: "聚会", pinyin: "jù huì", meaning: "Вечеринка" }, { chinese: "聊天", pinyin: "liáo tiān", meaning: "Беседа" }, { chinese: "散步", pinyin: "sàn bù", meaning: "Прогулка" }, { chinese: "购物", pinyin: "gòu wù", meaning: "Покупки" }, { chinese: "做饭", pinyin: "zuò fàn", meaning: "Готовить" }, { chinese: "打扫", pinyin: "dǎ sǎo", meaning: "Уборка" }, { chinese: "洗衣", pinyin: "xǐ yī", meaning: "Стирка" }, { chinese: "付钱", pinyin: "fù qián", meaning: "Платить" }
+            ] }
+        ];
+
+        // Объединяем всё
+        const hskData = {
+            1: hsk1Lessons,
+            2: hsk2Lessons,
+            3: hsk3Lessons
+        };
+
+        let currentHskLevel = 1;
+        let currentLesson = 0;
+        let learnedWords = JSON.parse(localStorage.getItem('hsk_all_learned')) || [];
+
+        function saveProgress() {
+            localStorage.setItem('hsk_all_learned', JSON.stringify(learnedWords));
+            updateStats();
+        }
+
+        function getWordKey(level, lesson, wordIdx) {
+            return `${level}_${lesson}_${wordIdx}`;
+        }
+
+        function isWordLearned(level, lesson, wordIdx) {
+            return learnedWords.includes(getWordKey(level, lesson, wordIdx));
+        }
+
+        function toggleWord(level, lesson, wordIdx) {
+            const key = getWordKey(level, lesson, wordIdx);
+            const index = learnedWords.indexOf(key);
+            if (index === -1) learnedWords.push(key);
+            else learnedWords.splice(index, 1);
+            saveProgress();
+            renderCurrentLesson();
+            updateLessonButtons();
+        }
+
+        function getLessonLearnedCount(level, lessonIdx) {
+            const lesson = hskData[level][lessonIdx];
+            let count = 0;
+            for (let i = 0; i < lesson.words.length; i++) {
+                if (isWordLearned(level, lessonIdx, i)) count++;
             }
+            return count;
+        }
+
+        function getTotalLearned() {
+            let total = 0;
+            for (let lvl = 1; lvl <= 3; lvl++) {
+                for (let les = 0; les < hskData[lvl].length; les++) {
+                    total += getLessonLearnedCount(lvl, les);
+                }
+            }
+            return total;
+        }
+
+        function getTotalWords() {
+            let total = 0;
+            for (let lvl = 1; lvl <= 3; lvl++) {
+                for (let les = 0; les < hskData[lvl].length; les++) {
+                    total += hskData[lvl][les].words.length;
+                }
+            }
+            return total;
+        }
+
+        function updateStats() {
+            const totalLearned = getTotalLearned();
+            const totalWords = getTotalWords();
+            const currentCount = getLessonLearnedCount(currentHskLevel, currentLesson);
+            const percent = Math.round(totalLearned / totalWords * 100);
+            document.getElementById('totalLearned').innerText = totalLearned;
+            document.getElementById('currentLessonLearned').innerText = currentCount;
+            document.getElementById('progressPercent').innerText = percent + '%';
+        }
+
+        // Аудио
+        let currentVolume = 0.7;
+        function speakChinese(text) {
+            if (!window.speechSynthesis) return;
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = "zh-CN";
-            utterance.rate = 0.9;
+            utterance.rate = 0.85;
             utterance.volume = currentVolume;
             window.speechSynthesis.cancel();
             window.speechSynthesis.speak(utterance);
         }
-
         function speakRussian(text) {
-            if (!window.speechSynthesis) {
-                alert("Ваш браузер не поддерживает аудио");
-                return;
-            }
+            if (!window.speechSynthesis) return;
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = "ru-RU";
             utterance.rate = 0.9;
@@ -636,210 +672,114 @@
             window.speechSynthesis.cancel();
             window.speechSynthesis.speak(utterance);
         }
-
-        // Регулятор громкости
-        const volumeSlider = document.getElementById('volumeSlider');
-        volumeSlider.addEventListener('input', (e) => {
+        document.getElementById('volumeSlider').addEventListener('input', (e) => {
             currentVolume = e.target.value / 100;
         });
 
-        // Хранилище прогресса
-        let learnedWords = JSON.parse(localStorage.getItem('hsk1_learned_audio')) || [];
-        let currentLesson = 0;
-
-        function saveProgress() {
-            localStorage.setItem('hsk1_learned_audio', JSON.stringify(learnedWords));
-            updateStats();
-        }
-
-        function isWordLearned(lessonIndex, wordIndex) {
-            return learnedWords.includes(`${lessonIndex}_${wordIndex}`);
-        }
-
-        function toggleWord(lessonIndex, wordIndex) {
-            const key = `${lessonIndex}_${wordIndex}`;
-            const index = learnedWords.indexOf(key);
-            if (index === -1) {
-                learnedWords.push(key);
-            } else {
-                learnedWords.splice(index, 1);
-            }
-            saveProgress();
-            renderCurrentLesson();
-            updateLessonButtons();
-        }
-
-        function getLessonLearnedCount(lessonIndex) {
-            let count = 0;
-            for (let i = 0; i < lessons[lessonIndex].words.length; i++) {
-                if (isWordLearned(lessonIndex, i)) count++;
-            }
-            return count;
-        }
-
-        function updateStats() {
-            let total = 0;
-            for (let i = 0; i < lessons.length; i++) {
-                total += getLessonLearnedCount(i);
-            }
-            const currentCount = getLessonLearnedCount(currentLesson);
-            const percent = Math.round(total / 150 * 100);
-            
-            document.getElementById('totalLearned').innerText = total;
-            document.getElementById('currentLessonLearned').innerText = currentCount;
-            document.getElementById('progressPercent').innerText = percent + '%';
-        }
-
         function renderLessonNav() {
             const nav = document.getElementById('lessonNav');
+            const lessons = hskData[currentHskLevel];
             nav.innerHTML = '';
             for (let i = 0; i < lessons.length; i++) {
                 const btn = document.createElement('button');
                 btn.className = 'lesson-btn';
                 if (i === currentLesson) btn.classList.add('active');
-                if (getLessonLearnedCount(i) === 10) btn.classList.add('learned');
+                if (getLessonLearnedCount(currentHskLevel, i) === lessons[i].words.length) btn.classList.add('learned');
                 btn.innerText = i + 1;
-                btn.onclick = () => {
-                    currentLesson = i;
-                    renderLessonNav();
-                    renderCurrentLesson();
-                };
+                btn.onclick = () => { currentLesson = i; renderLessonNav(); renderCurrentLesson(); };
                 nav.appendChild(btn);
             }
         }
 
         function updateLessonButtons() {
             const btns = document.querySelectorAll('.lesson-btn');
+            const lessons = hskData[currentHskLevel];
             for (let i = 0; i < btns.length; i++) {
-                btns[i].classList.remove('learned');
-                if (getLessonLearnedCount(i) === 10) btns[i].classList.add('learned');
+                btns[i].classList.remove('learned', 'active');
+                if (getLessonLearnedCount(currentHskLevel, i) === lessons[i].words.length) btns[i].classList.add('learned');
                 if (i === currentLesson) btns[i].classList.add('active');
-                else btns[i].classList.remove('active');
             }
         }
 
         function renderCurrentLesson() {
-            const lesson = lessons[currentLesson];
+            const lesson = hskData[currentHskLevel][currentLesson];
             const content = document.getElementById('content');
-            
             let wordsHtml = '';
             lesson.words.forEach((word, idx) => {
-                const isLearned = isWordLearned(currentLesson, idx);
+                const learned = isWordLearned(currentHskLevel, currentLesson, idx);
                 wordsHtml += `
                     <div class="word-card">
                         <div class="chinese-area" onclick="speakChinese('${word.chinese}')">
-                            <span class="chinese">${word.chinese}</span>
-                            <span class="audio-icon">🔊</span>
+                            <span class="chinese">${word.chinese}</span><span class="audio-icon">🔊</span>
                         </div>
                         <div class="pinyin">${word.pinyin}</div>
                         <div class="meaning-area" onclick="speakRussian('${word.meaning}')">
-                            <span class="meaning">📖 ${word.meaning}</span>
-                            <span class="meaning-audio-icon">🔊</span>
+                            <span class="meaning">📖 ${word.meaning}</span><span class="audio-icon">🔊</span>
                         </div>
-                        <button class="check-btn ${isLearned ? 'checked' : ''}" onclick="event.stopPropagation(); toggleWord(${currentLesson}, ${idx})">
-                            ${isLearned ? '✓' : '○'}
-                        </button>
+                        <button class="check-btn ${learned ? 'checked' : ''}" onclick="event.stopPropagation(); toggleWord(${currentHskLevel}, ${currentLesson}, ${idx})">${learned ? '✓' : '○'}</button>
                     </div>
                 `;
             });
-            
-            const learnedCount = getLessonLearnedCount(currentLesson);
-            const percent = Math.round(learnedCount / 10 * 100);
-            
+            const learnedCount = getLessonLearnedCount(currentHskLevel, currentLesson);
+            const percent = Math.round(learnedCount / lesson.words.length * 100);
+            const levelNames = {1: "HSK 1", 2: "HSK 2", 3: "HSK 3"};
             content.innerHTML = `
-                <div class="lesson-title">📖 Урок ${currentLesson + 1}: ${lesson.name}</div>
-                <div class="lesson-desc">🔊 Нажми на <strong>иероглиф</strong> — услышишь китайское произношение. Нажми на <strong>перевод</strong> — услышишь русский перевод.</div>
-                <div class="words-grid">
-                    ${wordsHtml}
-                </div>
+                <div class="lesson-title">📖 ${levelNames[currentHskLevel]} — Урок ${currentLesson + 1}: ${lesson.name}</div>
+                <div class="lesson-desc">🔊 Нажми на <strong>иероглиф</strong> — китайское произношение, на <strong>перевод</strong> — русский перевод</div>
+                <div class="words-grid">${wordsHtml}</div>
                 <div class="lesson-progress">
-                    <div class="progress-bar-container">
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${percent}%">${percent}%</div>
-                        </div>
-                    </div>
-                    <button class="test-btn" onclick="startTest()">📝 Пройти тест урока</button>
+                    <div class="progress-bar-container"><div class="progress-bar"><div class="progress-fill" style="width: ${percent}%">${percent}%</div></div></div>
+                    <button class="test-btn" onclick="startTest()">📝 Тест урока</button>
                 </div>
             `;
             updateStats();
         }
 
-        // Тест с аудио в вопросах
-        let currentTestQuestions = [];
-        let currentTestIndex = 0;
-        let testScore = 0;
-
+        // Тест
+        let currentTestQuestions = [], currentTestIndex = 0, testScore = 0;
         function startTest() {
-            const lesson = lessons[currentLesson];
-            currentTestQuestions = [...lesson.words];
-            currentTestQuestions = currentTestQuestions.sort(() => 0.5 - Math.random()).slice(0, 5);
-            currentTestIndex = 0;
-            testScore = 0;
+            const lesson = hskData[currentHskLevel][currentLesson];
+            currentTestQuestions = [...lesson.words].sort(() => 0.5 - Math.random()).slice(0, Math.min(10, lesson.words.length));
+            currentTestIndex = 0; testScore = 0;
             renderTestQuestion();
             document.getElementById('testModal').classList.add('active');
         }
-
         function renderTestQuestion() {
             if (currentTestIndex >= currentTestQuestions.length) {
                 const percent = Math.round(testScore / currentTestQuestions.length * 100);
-                document.getElementById('testContent').innerHTML = `
-                    <div class="test-result">
-                        🎉 Результат: ${testScore}/${currentTestQuestions.length}<br>
-                        ${percent >= 80 ? 'Отлично! Ты готов к следующему уроку!' : 'Повтори слова и попробуй ещё раз!'}
-                    </div>
-                    <button class="close-modal" onclick="closeTest()">Закрыть</button>
-                `;
+                document.getElementById('testContent').innerHTML = `<div class="test-result">🎉 Результат: ${testScore}/${currentTestQuestions.length}<br>${percent >= 80 ? 'Отлично!' : 'Повтори слова!'}</div><button class="close-modal" onclick="closeTest()">Закрыть</button>`;
                 return;
             }
-            
-            const question = currentTestQuestions[currentTestIndex];
-            const allMeanings = lessons[currentLesson].words.map(w => w.meaning);
-            const options = [question.meaning];
-            while (options.length < 4) {
-                const random = allMeanings[Math.floor(Math.random() * allMeanings.length)];
-                if (!options.includes(random)) options.push(random);
-            }
+            const q = currentTestQuestions[currentTestIndex];
+            const allMeanings = hskData[currentHskLevel][currentLesson].words.map(w => w.meaning);
+            const options = [q.meaning];
+            while (options.length < 4) { const r = allMeanings[Math.floor(Math.random() * allMeanings.length)]; if (!options.includes(r)) options.push(r); }
             options.sort(() => 0.5 - Math.random());
-            
-            let optionsHtml = '';
-            options.forEach(opt => {
-                optionsHtml += `<div class="test-option" onclick="checkTestAnswer('${opt.replace(/'/g, "\\'")}', this)">${opt}</div>`;
-            });
-            
-            document.getElementById('testContent').innerHTML = `
-                <div class="test-question" onclick="speakChinese('${question.chinese}')">
-                    ${question.chinese} 🔊
-                </div>
-                <div style="color: #e74c3c; margin-bottom: 10px;">${question.pinyin}</div>
-                <div class="test-options" id="testOptions">
-                    ${optionsHtml}
-                </div>
-                <div>Вопрос ${currentTestIndex + 1}/${currentTestQuestions.length}</div>
-                <div style="margin-top: 10px; font-size: 0.8em; opacity: 0.7;">🔊 Нажми на иероглиф, чтобы услышать произношение</div>
-            `;
+            let optsHtml = '';
+            options.forEach(opt => { optsHtml += `<div class="test-option" onclick="checkTestAnswer('${opt.replace(/'/g, "\\'")}', this)">${opt}</div>`; });
+            document.getElementById('testContent').innerHTML = `<div class="test-question" onclick="speakChinese('${q.chinese}')">${q.chinese} 🔊</div><div style="color:#e74c3c">${q.pinyin}</div><div class="test-options">${optsHtml}</div><div>${currentTestIndex+1}/${currentTestQuestions.length}</div><div style="font-size:0.7rem; margin-top:8px;">🔊 Нажми на иероглиф для произношения</div>`;
         }
-        
         function checkTestAnswer(selected, element) {
             const correct = currentTestQuestions[currentTestIndex].meaning;
-            const allOptions = document.querySelectorAll('.test-option');
-            allOptions.forEach(opt => {
-                opt.style.pointerEvents = 'none';
-                if (opt.innerText === correct) opt.classList.add('correct');
-                if (opt === element && opt.innerText !== correct) opt.classList.add('wrong');
-            });
-            
+            const allOpts = document.querySelectorAll('.test-option');
+            allOpts.forEach(opt => { opt.style.pointerEvents = 'none'; if (opt.innerText === correct) opt.classList.add('correct'); if (opt === element && opt.innerText !== correct) opt.classList.add('wrong'); });
             if (selected === correct) testScore++;
-            
-            setTimeout(() => {
-                currentTestIndex++;
-                renderTestQuestion();
-            }, 1000);
+            setTimeout(() => { currentTestIndex++; renderTestQuestion(); }, 1000);
         }
-        
-        function closeTest() {
-            document.getElementById('testModal').classList.remove('active');
-        }
-        
+        function closeTest() { document.getElementById('testModal').classList.remove('active'); }
+
+        // Переключение уровня
+        document.querySelectorAll('.level-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentHskLevel = parseInt(btn.dataset.level);
+                currentLesson = 0;
+                renderLessonNav();
+                renderCurrentLesson();
+            });
+        });
+
         renderLessonNav();
         renderCurrentLesson();
     </script>
