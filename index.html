@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📚 HSK 1 | 150 иероглифов | 15 уроков</title>
+    <title>📚 HSK 1 | 150 иероглифов с аудио | 15 уроков</title>
     <style>
         * {
             margin: 0;
@@ -23,7 +23,6 @@
             margin: 0 auto;
         }
 
-        /* Шапка */
         .header {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             border-radius: 40px 40px 0 0;
@@ -67,7 +66,6 @@
             opacity: 0.9;
         }
 
-        /* Навигация по урокам */
         .lesson-nav {
             background: white;
             padding: 20px;
@@ -100,14 +98,12 @@
         .lesson-btn.active {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             transform: scale(1.1);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
         }
 
         .lesson-btn.learned {
             background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
         }
 
-        /* Основной контент */
         .content {
             background: white;
             padding: 30px;
@@ -128,24 +124,20 @@
             padding-left: 25px;
         }
 
-        /* Сетка карточек */
         .words-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
 
-        /* Карточка слова */
         .word-card {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             border-radius: 20px;
             padding: 20px;
             text-align: center;
-            cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
-            overflow: hidden;
         }
 
         .word-card:hover {
@@ -153,15 +145,26 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         }
 
-        .word-card.revealed {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        .chinese-area {
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .chinese-area:hover {
+            transform: scale(1.05);
         }
 
         .chinese {
             font-size: 2.5em;
             font-weight: bold;
             color: #2c3e50;
-            margin-bottom: 10px;
+        }
+
+        .audio-icon {
+            font-size: 0.8em;
+            opacity: 0.6;
+            margin-left: 10px;
         }
 
         .pinyin {
@@ -170,17 +173,26 @@
             margin-bottom: 5px;
         }
 
+        .meaning-area {
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .meaning-area:hover {
+            background: rgba(0,0,0,0.05);
+        }
+
         .meaning {
             font-size: 1.1em;
             color: #27ae60;
-            display: none;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px dashed rgba(0,0,0,0.1);
         }
 
-        .word-card.revealed .meaning {
-            display: block;
+        .meaning-audio-icon {
+            font-size: 0.7em;
+            opacity: 0.5;
+            margin-left: 5px;
         }
 
         .check-btn {
@@ -209,7 +221,6 @@
             background: #2e7d32;
         }
 
-        /* Прогресс урока */
         .lesson-progress {
             background: #f0f0f0;
             border-radius: 30px;
@@ -263,7 +274,6 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        /* Модальное окно для теста */
         .modal {
             display: none;
             position: fixed;
@@ -292,19 +302,14 @@
         }
 
         @keyframes bounceIn {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         .test-question {
             font-size: 2.5em;
             margin: 20px 0;
+            cursor: pointer;
         }
 
         .test-options {
@@ -352,6 +357,24 @@
             margin-top: 15px;
         }
 
+        .volume-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            padding: 10px 15px;
+            border-radius: 30px;
+            color: white;
+            font-size: 0.8em;
+            z-index: 100;
+        }
+
+        .volume-control input {
+            width: 80px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
         @media (max-width: 768px) {
             .header h1 { font-size: 1.8em; }
             .lesson-btn { width: 45px; height: 45px; font-size: 1em; }
@@ -363,8 +386,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📚 HSK 1 — 150 иероглифов</h1>
-            <div class="subtitle">15 уроков по 10 слов | Нажми на карточку, чтобы увидеть перевод</div>
+            <h1>🔊 HSK 1 — 150 иероглифов с аудио</h1>
+            <div class="subtitle">Нажми на иероглиф 🔈 | Нажми на перевод 🗣️ | 15 уроков по 10 слов</div>
             <div class="stats-bar">
                 <div class="stat">
                     <div class="stat-number" id="totalLearned">0</div>
@@ -386,7 +409,10 @@
         <div class="content" id="content"></div>
     </div>
 
-    <!-- Модальное окно для теста -->
+    <div class="volume-control">
+        🔊 Громкость <input type="range" id="volumeSlider" min="0" max="100" value="70">
+    </div>
+
     <div class="modal" id="testModal">
         <div class="modal-content">
             <h2>📝 Тест урока</h2>
@@ -396,253 +422,240 @@
 
     <script>
         // ============================================
-        // HSK 1 — 150 слов, разделённых на 15 уроков
+        // HSK 1 — 150 слов с аудио (Web Speech API)
         // ============================================
         
         const lessons = [
-            { // Урок 1: Приветствия и числа 1-5
-                name: "Приветствия и числа 1-5",
-                words: [
-                    { chinese: "你好", pinyin: "nǐ hǎo", meaning: "Здравствуйте" },
-                    { chinese: "再见", pinyin: "zài jiàn", meaning: "До свидания" },
-                    { chinese: "谢谢", pinyin: "xiè xie", meaning: "Спасибо" },
-                    { chinese: "不客气", pinyin: "bú kè qi", meaning: "Пожалуйста (ответ на спасибо)" },
-                    { chinese: "对不起", pinyin: "duì bu qǐ", meaning: "Извините" },
-                    { chinese: "没关系", pinyin: "méi guān xi", meaning: "Ничего страшного" },
-                    { chinese: "一", pinyin: "yī", meaning: "Один" },
-                    { chinese: "二", pinyin: "èr", meaning: "Два" },
-                    { chinese: "三", pinyin: "sān", meaning: "Три" },
-                    { chinese: "四", pinyin: "sì", meaning: "Четыре" }
-                ]
-            },
-            { // Урок 2: Числа 5-10 и основные глаголы
-                name: "Числа 5-10 и основные глаголы",
-                words: [
-                    { chinese: "五", pinyin: "wǔ", meaning: "Пять" },
-                    { chinese: "六", pinyin: "liù", meaning: "Шесть" },
-                    { chinese: "七", pinyin: "qī", meaning: "Семь" },
-                    { chinese: "八", pinyin: "bā", meaning: "Восемь" },
-                    { chinese: "九", pinyin: "jiǔ", meaning: "Девять" },
-                    { chinese: "十", pinyin: "shí", meaning: "Десять" },
-                    { chinese: "是", pinyin: "shì", meaning: "Быть, являться" },
-                    { chinese: "有", pinyin: "yǒu", meaning: "Иметь, есть" },
-                    { chinese: "在", pinyin: "zài", meaning: "Находиться в" },
-                    { chinese: "去", pinyin: "qù", meaning: "Идти, ехать" }
-                ]
-            },
-            { // Урок 3: Местоимения и вопросов
-                name: "Местоимения и вопросительные слова",
-                words: [
-                    { chinese: "我", pinyin: "wǒ", meaning: "Я, меня" },
-                    { chinese: "你", pinyin: "nǐ", meaning: "Ты" },
-                    { chinese: "他", pinyin: "tā", meaning: "Он" },
-                    { chinese: "她", pinyin: "tā", meaning: "Она" },
-                    { chinese: "我们", pinyin: "wǒ men", meaning: "Мы" },
-                    { chinese: "你们", pinyin: "nǐ men", meaning: "Вы" },
-                    { chinese: "他们", pinyin: "tā men", meaning: "Они" },
-                    { chinese: "什么", pinyin: "shén me", meaning: "Что" },
-                    { chinese: "谁", pinyin: "shéi", meaning: "Кто" },
-                    { chinese: "哪", pinyin: "nǎ", meaning: "Который" }
-                ]
-            },
-            { // Урок 4: Семья
-                name: "Семья",
-                words: [
-                    { chinese: "爸爸", pinyin: "bà ba", meaning: "Папа" },
-                    { chinese: "妈妈", pinyin: "mā ma", meaning: "Мама" },
-                    { chinese: "哥哥", pinyin: "gē ge", meaning: "Старший брат" },
-                    { chinese: "姐姐", pinyin: "jiě jie", meaning: "Старшая сестра" },
-                    { chinese: "弟弟", pinyin: "dì di", meaning: "Младший брат" },
-                    { chinese: "妹妹", pinyin: "mèi mei", meaning: "Младшая сестра" },
-                    { chinese: "儿子", pinyin: "ér zi", meaning: "Сын" },
-                    { chinese: "女儿", pinyin: "nǚ ér", meaning: "Дочь" },
-                    { chinese: "家", pinyin: "jiā", meaning: "Дом, семья" },
-                    { chinese: "人", pinyin: "rén", meaning: "Человек" }
-                ]
-            },
-            { // Урок 5: Еда и напитки
-                name: "Еда и напитки",
-                words: [
-                    { chinese: "吃", pinyin: "chī", meaning: "Есть (принимать пищу)" },
-                    { chinese: "喝", pinyin: "hē", meaning: "Пить" },
-                    { chinese: "水", pinyin: "shuǐ", meaning: "Вода" },
-                    { chinese: "米饭", pinyin: "mǐ fàn", meaning: "Рис (варёный)" },
-                    { chinese: "菜", pinyin: "cài", meaning: "Овощи, блюдо" },
-                    { chinese: "水果", pinyin: "shuǐ guǒ", meaning: "Фрукты" },
-                    { chinese: "苹果", pinyin: "píng guǒ", meaning: "Яблоко" },
-                    { chinese: "茶", pinyin: "chá", meaning: "Чай" },
-                    { chinese: "咖啡", pinyin: "kā fēi", meaning: "Кофе" },
-                    { chinese: "饭店", pinyin: "fàn diàn", meaning: "Ресторан" }
-                ]
-            },
-            { // Урок 6: Время и дни
-                name: "Время и дни недели",
-                words: [
-                    { chinese: "今天", pinyin: "jīn tiān", meaning: "Сегодня" },
-                    { chinese: "明天", pinyin: "míng tiān", meaning: "Завтра" },
-                    { chinese: "昨天", pinyin: "zuó tiān", meaning: "Вчера" },
-                    { chinese: "现在", pinyin: "xiàn zài", meaning: "Сейчас" },
-                    { chinese: "年", pinyin: "nián", meaning: "Год" },
-                    { chinese: "月", pinyin: "yuè", meaning: "Месяц" },
-                    { chinese: "日", pinyin: "rì", meaning: "День (число)" },
-                    { chinese: "星期", pinyin: "xīng qī", meaning: "Неделя" },
-                    { chinese: "点", pinyin: "diǎn", meaning: "Час" },
-                    { chinese: "分", pinyin: "fēn", meaning: "Минута" }
-                ]
-            },
-            { // Урок 7: Прилагательные 1
-                name: "Прилагательные (часть 1)",
-                words: [
-                    { chinese: "好", pinyin: "hǎo", meaning: "Хороший" },
-                    { chinese: "大", pinyin: "dà", meaning: "Большой" },
-                    { chinese: "小", pinyin: "xiǎo", meaning: "Маленький" },
-                    { chinese: "多", pinyin: "duō", meaning: "Много" },
-                    { chinese: "少", pinyin: "shǎo", meaning: "Мало" },
-                    { chinese: "热", pinyin: "rè", meaning: "Горячий, жарко" },
-                    { chinese: "冷", pinyin: "lěng", meaning: "Холодный" },
-                    { chinese: "高兴", pinyin: "gāo xìng", meaning: "Радостный" },
-                    { chinese: "漂亮", pinyin: "piào liang", meaning: "Красивый" },
-                    { chinese: "快", pinyin: "kuài", meaning: "Быстрый" }
-                ]
-            },
-            { // Урок 8: Места и предметы
-                name: "Места и предметы",
-                words: [
-                    { chinese: "学校", pinyin: "xué xiào", meaning: "Школа" },
-                    { chinese: "商店", pinyin: "shāng diàn", meaning: "Магазин" },
-                    { chinese: "医院", pinyin: "yī yuàn", meaning: "Больница" },
-                    { chinese: "家", pinyin: "jiā", meaning: "Дом" },
-                    { chinese: "书", pinyin: "shū", meaning: "Книга" },
-                    { chinese: "电脑", pinyin: "diàn nǎo", meaning: "Компьютер" },
-                    { chinese: "电视", pinyin: "diàn shì", meaning: "Телевизор" },
-                    { chinese: "电话", pinyin: "diàn huà", meaning: "Телефон" },
-                    { chinese: "桌子", pinyin: "zhuō zi", meaning: "Стол" },
-                    { chinese: "椅子", pinyin: "yǐ zi", meaning: "Стул" }
-                ]
-            },
-            { // Урок 9: Глаголы действия
-                name: "Глаголы действия",
-                words: [
-                    { chinese: "看", pinyin: "kàn", meaning: "Смотреть" },
-                    { chinese: "看见", pinyin: "kàn jiàn", meaning: "Видеть" },
-                    { chinese: "听", pinyin: "tīng", meaning: "Слушать" },
-                    { chinese: "说", pinyin: "shuō", meaning: "Говорить" },
-                    { chinese: "读", pinyin: "dú", meaning: "Читать" },
-                    { chinese: "写", pinyin: "xiě", meaning: "Писать" },
-                    { chinese: "做", pinyin: "zuò", meaning: "Делать" },
-                    { chinese: "买", pinyin: "mǎi", meaning: "Покупать" },
-                    { chinese: "来", pinyin: "lái", meaning: "Приходить" },
-                    { chinese: "回", pinyin: "huí", meaning: "Возвращаться" }
-                ]
-            },
-            { // Урок 10: Одежда и цвета
-                name: "Одежда и цвета",
-                words: [
-                    { chinese: "衣服", pinyin: "yī fu", meaning: "Одежда" },
-                    { chinese: "红色", pinyin: "hóng sè", meaning: "Красный" },
-                    { chinese: "蓝色", pinyin: "lán sè", meaning: "Синий" },
-                    { chinese: "白色", pinyin: "bái sè", meaning: "Белый" },
-                    { chinese: "黑色", pinyin: "hēi sè", meaning: "Чёрный" },
-                    { chinese: "黄色", pinyin: "huáng sè", meaning: "Жёлтый" },
-                    { chinese: "绿色", pinyin: "lǜ sè", meaning: "Зелёный" },
-                    { chinese: "穿", pinyin: "chuān", meaning: "Носить (одежду)" },
-                    { chinese: "鞋子", pinyin: "xié zi", meaning: "Обувь" },
-                    { chinese: "帽子", pinyin: "mào zi", meaning: "Шляпа" }
-                ]
-            },
-            { // Урок 11: Транспорт
-                name: "Транспорт",
-                words: [
-                    { chinese: "车", pinyin: "chē", meaning: "Машина, транспорт" },
-                    { chinese: "火车", pinyin: "huǒ chē", meaning: "Поезд" },
-                    { chinese: "飞机", pinyin: "fēi jī", meaning: "Самолёт" },
-                    { chinese: "出租车", pinyin: "chū zū chē", meaning: "Такси" },
-                    { chinese: "公交车", pinyin: "gōng jiāo chē", meaning: "Автобус" },
-                    { chinese: "地铁", pinyin: "dì tiě", meaning: "Метро" },
-                    { chinese: "走路", pinyin: "zǒu lù", meaning: "Идти пешком" },
-                    { chinese: "站", pinyin: "zhàn", meaning: "Остановка" },
-                    { chinese: "机场", pinyin: "jī chǎng", meaning: "Аэропорт" },
-                    { chinese: "火车站", pinyin: "huǒ chē zhàn", meaning: "Вокзал" }
-                ]
-            },
-            { // Урок 12: Профессии
-                name: "Профессии",
-                words: [
-                    { chinese: "老师", pinyin: "lǎo shī", meaning: "Учитель" },
-                    { chinese: "学生", pinyin: "xué sheng", meaning: "Ученик" },
-                    { chinese: "医生", pinyin: "yī shēng", meaning: "Врач" },
-                    { chinese: "护士", pinyin: "hù shi", meaning: "Медсестра" },
-                    { chinese: "司机", pinyin: "sī jī", meaning: "Водитель" },
-                    { chinese: "经理", pinyin: "jīng lǐ", meaning: "Менеджер" },
-                    { chinese: "学生", pinyin: "xué sheng", meaning: "Студент" },
-                    { chinese: "工作", pinyin: "gōng zuò", meaning: "Работать, работа" },
-                    { chinese: "学习", pinyin: "xué xí", meaning: "Учиться" },
-                    { chinese: "同学", pinyin: "tóng xué", meaning: "Одноклассник" }
-                ]
-            },
-            { // Урок 13: Животные
-                name: "Животные",
-                words: [
-                    { chinese: "猫", pinyin: "māo", meaning: "Кошка" },
-                    { chinese: "狗", pinyin: "gǒu", meaning: "Собака" },
-                    { chinese: "鸟", pinyin: "niǎo", meaning: "Птица" },
-                    { chinese: "鱼", pinyin: "yú", meaning: "Рыба" },
-                    { chinese: "马", pinyin: "mǎ", meaning: "Лошадь" },
-                    { chinese: "兔子", pinyin: "tù zi", meaning: "Кролик" },
-                    { chinese: "动物", pinyin: "dòng wù", meaning: "Животное" },
-                    { chinese: "宠物", pinyin: "chǒng wù", meaning: "Домашний питомец" },
-                    { chinese: "喜欢", pinyin: "xǐ huan", meaning: "Нравиться" },
-                    { chinese: "爱", pinyin: "ài", meaning: "Любить" }
-                ]
-            },
-            { // Урок 14: Служебные слова
-                name: "Служебные слова",
-                words: [
-                    { chinese: "的", pinyin: "de", meaning: "Частица принадлежности" },
-                    { chinese: "了", pinyin: "le", meaning: "Частица завершённого действия" },
-                    { chinese: "不", pinyin: "bù", meaning: "Не" },
-                    { chinese: "没", pinyin: "méi", meaning: "Не (иметь)" },
-                    { chinese: "很", pinyin: "hěn", meaning: "Очень" },
-                    { chinese: "太", pinyin: "tài", meaning: "Слишком" },
-                    { chinese: "都", pinyin: "dōu", meaning: "Все, оба" },
-                    { chinese: "和", pinyin: "hé", meaning: "И" },
-                    { chinese: "吗", pinyin: "ma", meaning: "Вопросительная частица" },
-                    { chinese: "呢", pinyin: "ne", meaning: "Вопросительная частица" }
-                ]
-            },
-            { // Урок 15: Счётные слова и полезные фразы
-                name: "Счётные слова и полезные фразы",
-                words: [
-                    { chinese: "个", pinyin: "gè", meaning: "Универсальное счётное слово" },
-                    { chinese: "块", pinyin: "kuài", meaning: "Кусок, юань" },
-                    { chinese: "本", pinyin: "běn", meaning: "Счётное слово для книг" },
-                    { chinese: "岁", pinyin: "suì", meaning: "Лет (возраст)" },
-                    { chinese: "点", pinyin: "diǎn", meaning: "Немного, час" },
-                    { chinese: "些", pinyin: "xiē", meaning: "Немного, несколько" },
-                    { chinese: "请", pinyin: "qǐng", meaning: "Пожалуйста (просьба)" },
-                    { chinese: "能", pinyin: "néng", meaning: "Мочь" },
-                    { chinese: "会", pinyin: "huì", meaning: "Уметь" },
-                    { chinese: "想", pinyin: "xiǎng", meaning: "Хотеть, думать" }
-                ]
-            }
+            { name: "Приветствия и числа 1-4", words: [
+                { chinese: "你好", pinyin: "nǐ hǎo", meaning: "Здравствуйте" },
+                { chinese: "再见", pinyin: "zài jiàn", meaning: "До свидания" },
+                { chinese: "谢谢", pinyin: "xiè xie", meaning: "Спасибо" },
+                { chinese: "不客气", pinyin: "bú kè qi", meaning: "Пожалуйста" },
+                { chinese: "对不起", pinyin: "duì bu qǐ", meaning: "Извините" },
+                { chinese: "没关系", pinyin: "méi guān xi", meaning: "Ничего страшного" },
+                { chinese: "一", pinyin: "yī", meaning: "Один" },
+                { chinese: "二", pinyin: "èr", meaning: "Два" },
+                { chinese: "三", pinyin: "sān", meaning: "Три" },
+                { chinese: "四", pinyin: "sì", meaning: "Четыре" }
+            ] },
+            { name: "Числа 5-10 и основные глаголы", words: [
+                { chinese: "五", pinyin: "wǔ", meaning: "Пять" },
+                { chinese: "六", pinyin: "liù", meaning: "Шесть" },
+                { chinese: "七", pinyin: "qī", meaning: "Семь" },
+                { chinese: "八", pinyin: "bā", meaning: "Восемь" },
+                { chinese: "九", pinyin: "jiǔ", meaning: "Девять" },
+                { chinese: "十", pinyin: "shí", meaning: "Десять" },
+                { chinese: "是", pinyin: "shì", meaning: "Быть" },
+                { chinese: "有", pinyin: "yǒu", meaning: "Иметь" },
+                { chinese: "在", pinyin: "zài", meaning: "Находиться в" },
+                { chinese: "去", pinyin: "qù", meaning: "Идти" }
+            ] },
+            { name: "Местоимения и вопросительные слова", words: [
+                { chinese: "我", pinyin: "wǒ", meaning: "Я" },
+                { chinese: "你", pinyin: "nǐ", meaning: "Ты" },
+                { chinese: "他", pinyin: "tā", meaning: "Он" },
+                { chinese: "她", pinyin: "tā", meaning: "Она" },
+                { chinese: "我们", pinyin: "wǒ men", meaning: "Мы" },
+                { chinese: "你们", pinyin: "nǐ men", meaning: "Вы" },
+                { chinese: "他们", pinyin: "tā men", meaning: "Они" },
+                { chinese: "什么", pinyin: "shén me", meaning: "Что" },
+                { chinese: "谁", pinyin: "shéi", meaning: "Кто" },
+                { chinese: "哪", pinyin: "nǎ", meaning: "Который" }
+            ] },
+            { name: "Семья", words: [
+                { chinese: "爸爸", pinyin: "bà ba", meaning: "Папа" },
+                { chinese: "妈妈", pinyin: "mā ma", meaning: "Мама" },
+                { chinese: "哥哥", pinyin: "gē ge", meaning: "Старший брат" },
+                { chinese: "姐姐", pinyin: "jiě jie", meaning: "Старшая сестра" },
+                { chinese: "弟弟", pinyin: "dì di", meaning: "Младший брат" },
+                { chinese: "妹妹", pinyin: "mèi mei", meaning: "Младшая сестра" },
+                { chinese: "儿子", pinyin: "ér zi", meaning: "Сын" },
+                { chinese: "女儿", pinyin: "nǚ ér", meaning: "Дочь" },
+                { chinese: "家", pinyin: "jiā", meaning: "Дом" },
+                { chinese: "人", pinyin: "rén", meaning: "Человек" }
+            ] },
+            { name: "Еда и напитки", words: [
+                { chinese: "吃", pinyin: "chī", meaning: "Есть" },
+                { chinese: "喝", pinyin: "hē", meaning: "Пить" },
+                { chinese: "水", pinyin: "shuǐ", meaning: "Вода" },
+                { chinese: "米饭", pinyin: "mǐ fàn", meaning: "Рис" },
+                { chinese: "菜", pinyin: "cài", meaning: "Овощи" },
+                { chinese: "水果", pinyin: "shuǐ guǒ", meaning: "Фрукты" },
+                { chinese: "苹果", pinyin: "píng guǒ", meaning: "Яблоко" },
+                { chinese: "茶", pinyin: "chá", meaning: "Чай" },
+                { chinese: "咖啡", pinyin: "kā fēi", meaning: "Кофе" },
+                { chinese: "饭店", pinyin: "fàn diàn", meaning: "Ресторан" }
+            ] },
+            { name: "Время и дни", words: [
+                { chinese: "今天", pinyin: "jīn tiān", meaning: "Сегодня" },
+                { chinese: "明天", pinyin: "míng tiān", meaning: "Завтра" },
+                { chinese: "昨天", pinyin: "zuó tiān", meaning: "Вчера" },
+                { chinese: "现在", pinyin: "xiàn zài", meaning: "Сейчас" },
+                { chinese: "年", pinyin: "nián", meaning: "Год" },
+                { chinese: "月", pinyin: "yuè", meaning: "Месяц" },
+                { chinese: "日", pinyin: "rì", meaning: "День" },
+                { chinese: "星期", pinyin: "xīng qī", meaning: "Неделя" },
+                { chinese: "点", pinyin: "diǎn", meaning: "Час" },
+                { chinese: "分", pinyin: "fēn", meaning: "Минута" }
+            ] },
+            { name: "Прилагательные (часть 1)", words: [
+                { chinese: "好", pinyin: "hǎo", meaning: "Хороший" },
+                { chinese: "大", pinyin: "dà", meaning: "Большой" },
+                { chinese: "小", pinyin: "xiǎo", meaning: "Маленький" },
+                { chinese: "多", pinyin: "duō", meaning: "Много" },
+                { chinese: "少", pinyin: "shǎo", meaning: "Мало" },
+                { chinese: "热", pinyin: "rè", meaning: "Жарко" },
+                { chinese: "冷", pinyin: "lěng", meaning: "Холодно" },
+                { chinese: "高兴", pinyin: "gāo xìng", meaning: "Радостный" },
+                { chinese: "漂亮", pinyin: "piào liang", meaning: "Красивый" },
+                { chinese: "快", pinyin: "kuài", meaning: "Быстрый" }
+            ] },
+            { name: "Места и предметы", words: [
+                { chinese: "学校", pinyin: "xué xiào", meaning: "Школа" },
+                { chinese: "商店", pinyin: "shāng diàn", meaning: "Магазин" },
+                { chinese: "医院", pinyin: "yī yuàn", meaning: "Больница" },
+                { chinese: "书", pinyin: "shū", meaning: "Книга" },
+                { chinese: "电脑", pinyin: "diàn nǎo", meaning: "Компьютер" },
+                { chinese: "电视", pinyin: "diàn shì", meaning: "Телевизор" },
+                { chinese: "电话", pinyin: "diàn huà", meaning: "Телефон" },
+                { chinese: "桌子", pinyin: "zhuō zi", meaning: "Стол" },
+                { chinese: "椅子", pinyin: "yǐ zi", meaning: "Стул" },
+                { chinese: "东西", pinyin: "dōng xi", meaning: "Вещь" }
+            ] },
+            { name: "Глаголы действия", words: [
+                { chinese: "看", pinyin: "kàn", meaning: "Смотреть" },
+                { chinese: "看见", pinyin: "kàn jiàn", meaning: "Видеть" },
+                { chinese: "听", pinyin: "tīng", meaning: "Слушать" },
+                { chinese: "说", pinyin: "shuō", meaning: "Говорить" },
+                { chinese: "读", pinyin: "dú", meaning: "Читать" },
+                { chinese: "写", pinyin: "xiě", meaning: "Писать" },
+                { chinese: "做", pinyin: "zuò", meaning: "Делать" },
+                { chinese: "买", pinyin: "mǎi", meaning: "Покупать" },
+                { chinese: "来", pinyin: "lái", meaning: "Приходить" },
+                { chinese: "回", pinyin: "huí", meaning: "Возвращаться" }
+            ] },
+            { name: "Одежда и цвета", words: [
+                { chinese: "衣服", pinyin: "yī fu", meaning: "Одежда" },
+                { chinese: "红色", pinyin: "hóng sè", meaning: "Красный" },
+                { chinese: "蓝色", pinyin: "lán sè", meaning: "Синий" },
+                { chinese: "白色", pinyin: "bái sè", meaning: "Белый" },
+                { chinese: "黑色", pinyin: "hēi sè", meaning: "Чёрный" },
+                { chinese: "黄色", pinyin: "huáng sè", meaning: "Жёлтый" },
+                { chinese: "绿色", pinyin: "lǜ sè", meaning: "Зелёный" },
+                { chinese: "穿", pinyin: "chuān", meaning: "Носить" },
+                { chinese: "鞋子", pinyin: "xié zi", meaning: "Обувь" },
+                { chinese: "帽子", pinyin: "mào zi", meaning: "Шляпа" }
+            ] },
+            { name: "Транспорт", words: [
+                { chinese: "车", pinyin: "chē", meaning: "Машина" },
+                { chinese: "火车", pinyin: "huǒ chē", meaning: "Поезд" },
+                { chinese: "飞机", pinyin: "fēi jī", meaning: "Самолёт" },
+                { chinese: "出租车", pinyin: "chū zū chē", meaning: "Такси" },
+                { chinese: "公交车", pinyin: "gōng jiāo chē", meaning: "Автобус" },
+                { chinese: "地铁", pinyin: "dì tiě", meaning: "Метро" },
+                { chinese: "走路", pinyin: "zǒu lù", meaning: "Идти пешком" },
+                { chinese: "站", pinyin: "zhàn", meaning: "Остановка" },
+                { chinese: "机场", pinyin: "jī chǎng", meaning: "Аэропорт" },
+                { chinese: "火车站", pinyin: "huǒ chē zhàn", meaning: "Вокзал" }
+            ] },
+            { name: "Профессии", words: [
+                { chinese: "老师", pinyin: "lǎo shī", meaning: "Учитель" },
+                { chinese: "学生", pinyin: "xué sheng", meaning: "Ученик" },
+                { chinese: "医生", pinyin: "yī shēng", meaning: "Врач" },
+                { chinese: "护士", pinyin: "hù shi", meaning: "Медсестра" },
+                { chinese: "司机", pinyin: "sī jī", meaning: "Водитель" },
+                { chinese: "经理", pinyin: "jīng lǐ", meaning: "Менеджер" },
+                { chinese: "工作", pinyin: "gōng zuò", meaning: "Работа" },
+                { chinese: "学习", pinyin: "xué xí", meaning: "Учиться" },
+                { chinese: "同学", pinyin: "tóng xué", meaning: "Одноклассник" },
+                { chinese: "朋友", pinyin: "péng you", meaning: "Друг" }
+            ] },
+            { name: "Животные", words: [
+                { chinese: "猫", pinyin: "māo", meaning: "Кошка" },
+                { chinese: "狗", pinyin: "gǒu", meaning: "Собака" },
+                { chinese: "鸟", pinyin: "niǎo", meaning: "Птица" },
+                { chinese: "鱼", pinyin: "yú", meaning: "Рыба" },
+                { chinese: "马", pinyin: "mǎ", meaning: "Лошадь" },
+                { chinese: "兔子", pinyin: "tù zi", meaning: "Кролик" },
+                { chinese: "动物", pinyin: "dòng wù", meaning: "Животное" },
+                { chinese: "宠物", pinyin: "chǒng wù", meaning: "Питомец" },
+                { chinese: "喜欢", pinyin: "xǐ huan", meaning: "Нравиться" },
+                { chinese: "爱", pinyin: "ài", meaning: "Любить" }
+            ] },
+            { name: "Служебные слова", words: [
+                { chinese: "的", pinyin: "de", meaning: "Частица принадлежности" },
+                { chinese: "了", pinyin: "le", meaning: "Частица завершённого действия" },
+                { chinese: "不", pinyin: "bù", meaning: "Не" },
+                { chinese: "没", pinyin: "méi", meaning: "Не иметь" },
+                { chinese: "很", pinyin: "hěn", meaning: "Очень" },
+                { chinese: "太", pinyin: "tài", meaning: "Слишком" },
+                { chinese: "都", pinyin: "dōu", meaning: "Все" },
+                { chinese: "和", pinyin: "hé", meaning: "И" },
+                { chinese: "吗", pinyin: "ma", meaning: "Вопрос" },
+                { chinese: "呢", pinyin: "ne", meaning: "А?" }
+            ] },
+            { name: "Счётные слова и фразы", words: [
+                { chinese: "个", pinyin: "gè", meaning: "Счётное слово" },
+                { chinese: "块", pinyin: "kuài", meaning: "Юань" },
+                { chinese: "本", pinyin: "běn", meaning: "Для книг" },
+                { chinese: "岁", pinyin: "suì", meaning: "Лет" },
+                { chinese: "点", pinyin: "diǎn", meaning: "Немного" },
+                { chinese: "些", pinyin: "xiē", meaning: "Некоторые" },
+                { chinese: "请", pinyin: "qǐng", meaning: "Пожалуйста" },
+                { chinese: "能", pinyin: "néng", meaning: "Мочь" },
+                { chinese: "会", pinyin: "huì", meaning: "Уметь" },
+                { chinese: "想", pinyin: "xiǎng", meaning: "Хотеть" }
+            ] }
         ];
 
+        // Web Speech API для озвучки
+        let currentVolume = 0.7;
+        
+        function speakChinese(text) {
+            if (!window.speechSynthesis) {
+                alert("Ваш браузер не поддерживает аудио");
+                return;
+            }
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = "zh-CN";
+            utterance.rate = 0.9;
+            utterance.volume = currentVolume;
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function speakRussian(text) {
+            if (!window.speechSynthesis) {
+                alert("Ваш браузер не поддерживает аудио");
+                return;
+            }
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = "ru-RU";
+            utterance.rate = 0.9;
+            utterance.volume = currentVolume;
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // Регулятор громкости
+        const volumeSlider = document.getElementById('volumeSlider');
+        volumeSlider.addEventListener('input', (e) => {
+            currentVolume = e.target.value / 100;
+        });
+
         // Хранилище прогресса
-        let learnedWords = JSON.parse(localStorage.getItem('hsk1_learned')) || [];
+        let learnedWords = JSON.parse(localStorage.getItem('hsk1_learned_audio')) || [];
         let currentLesson = 0;
 
-        // Сохранение прогресса
         function saveProgress() {
-            localStorage.setItem('hsk1_learned', JSON.stringify(learnedWords));
+            localStorage.setItem('hsk1_learned_audio', JSON.stringify(learnedWords));
             updateStats();
         }
 
-        // Проверка, выучено ли слово
         function isWordLearned(lessonIndex, wordIndex) {
             return learnedWords.includes(`${lessonIndex}_${wordIndex}`);
         }
 
-        // Отметить слово как выученное
         function toggleWord(lessonIndex, wordIndex) {
             const key = `${lessonIndex}_${wordIndex}`;
             const index = learnedWords.indexOf(key);
@@ -656,7 +669,6 @@
             updateLessonButtons();
         }
 
-        // Подсчёт выученных слов в уроке
         function getLessonLearnedCount(lessonIndex) {
             let count = 0;
             for (let i = 0; i < lessons[lessonIndex].words.length; i++) {
@@ -665,7 +677,6 @@
             return count;
         }
 
-        // Общая статистика
         function updateStats() {
             let total = 0;
             for (let i = 0; i < lessons.length; i++) {
@@ -679,7 +690,6 @@
             document.getElementById('progressPercent').innerText = percent + '%';
         }
 
-        // Отрисовка кнопок уроков
         function renderLessonNav() {
             const nav = document.getElementById('lessonNav');
             nav.innerHTML = '';
@@ -687,8 +697,7 @@
                 const btn = document.createElement('button');
                 btn.className = 'lesson-btn';
                 if (i === currentLesson) btn.classList.add('active');
-                const learnedCount = getLessonLearnedCount(i);
-                if (learnedCount === 10) btn.classList.add('learned');
+                if (getLessonLearnedCount(i) === 10) btn.classList.add('learned');
                 btn.innerText = i + 1;
                 btn.onclick = () => {
                     currentLesson = i;
@@ -703,18 +712,12 @@
             const btns = document.querySelectorAll('.lesson-btn');
             for (let i = 0; i < btns.length; i++) {
                 btns[i].classList.remove('learned');
-                if (getLessonLearnedCount(i) === 10) {
-                    btns[i].classList.add('learned');
-                }
-                if (i === currentLesson) {
-                    btns[i].classList.add('active');
-                } else {
-                    btns[i].classList.remove('active');
-                }
+                if (getLessonLearnedCount(i) === 10) btns[i].classList.add('learned');
+                if (i === currentLesson) btns[i].classList.add('active');
+                else btns[i].classList.remove('active');
             }
         }
 
-        // Отрисовка текущего урока
         function renderCurrentLesson() {
             const lesson = lessons[currentLesson];
             const content = document.getElementById('content');
@@ -723,10 +726,16 @@
             lesson.words.forEach((word, idx) => {
                 const isLearned = isWordLearned(currentLesson, idx);
                 wordsHtml += `
-                    <div class="word-card" onclick="toggleReveal(this)">
-                        <div class="chinese">${word.chinese}</div>
+                    <div class="word-card">
+                        <div class="chinese-area" onclick="speakChinese('${word.chinese}')">
+                            <span class="chinese">${word.chinese}</span>
+                            <span class="audio-icon">🔊</span>
+                        </div>
                         <div class="pinyin">${word.pinyin}</div>
-                        <div class="meaning">${word.meaning}</div>
+                        <div class="meaning-area" onclick="speakRussian('${word.meaning}')">
+                            <span class="meaning">📖 ${word.meaning}</span>
+                            <span class="meaning-audio-icon">🔊</span>
+                        </div>
                         <button class="check-btn ${isLearned ? 'checked' : ''}" onclick="event.stopPropagation(); toggleWord(${currentLesson}, ${idx})">
                             ${isLearned ? '✓' : '○'}
                         </button>
@@ -739,7 +748,7 @@
             
             content.innerHTML = `
                 <div class="lesson-title">📖 Урок ${currentLesson + 1}: ${lesson.name}</div>
-                <div class="lesson-desc">Нажми на карточку, чтобы увидеть перевод. Нажми на кружок в правом нижнем углу, чтобы отметить слово как выученное.</div>
+                <div class="lesson-desc">🔊 Нажми на <strong>иероглиф</strong> — услышишь китайское произношение. Нажми на <strong>перевод</strong> — услышишь русский перевод.</div>
                 <div class="words-grid">
                     ${wordsHtml}
                 </div>
@@ -755,11 +764,7 @@
             updateStats();
         }
 
-        function toggleReveal(card) {
-            card.classList.toggle('revealed');
-        }
-
-        // Тест
+        // Тест с аудио в вопросах
         let currentTestQuestions = [];
         let currentTestIndex = 0;
         let testScore = 0;
@@ -802,12 +807,15 @@
             });
             
             document.getElementById('testContent').innerHTML = `
-                <div class="test-question">${question.chinese}</div>
+                <div class="test-question" onclick="speakChinese('${question.chinese}')">
+                    ${question.chinese} 🔊
+                </div>
                 <div style="color: #e74c3c; margin-bottom: 10px;">${question.pinyin}</div>
                 <div class="test-options" id="testOptions">
                     ${optionsHtml}
                 </div>
                 <div>Вопрос ${currentTestIndex + 1}/${currentTestQuestions.length}</div>
+                <div style="margin-top: 10px; font-size: 0.8em; opacity: 0.7;">🔊 Нажми на иероглиф, чтобы услышать произношение</div>
             `;
         }
         
@@ -832,7 +840,6 @@
             document.getElementById('testModal').classList.remove('active');
         }
         
-        // Инициализация
         renderLessonNav();
         renderCurrentLesson();
     </script>
