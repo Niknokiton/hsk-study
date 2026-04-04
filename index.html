@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>🎉 HSK 1-3 | Картинки | Примеры | Тесты | Фейерверк</title>
+    <title>📚 HSK 1-3 | Картинки + Примеры + Тесты | Полный курс</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         }
 
         body {
-            font-family: -apple-system, 'Segoe UI', 'Poppins', 'Comic Neue', sans-serif;
+            font-family: -apple-system, 'Segoe UI', 'Poppins', 'Comic Neue', 'Roboto', sans-serif;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
             padding: 16px;
@@ -37,6 +37,11 @@
             margin-bottom: 8px;
         }
 
+        .header .subtitle {
+            font-size: clamp(0.85rem, 3vw, 1.1rem);
+            opacity: 0.95;
+        }
+
         .stats-bar {
             background: rgba(255,255,255,0.2);
             border-radius: 30px;
@@ -57,12 +62,18 @@
             font-weight: bold;
         }
 
+        .stat-label {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+
         .level-selector {
             background: white;
             padding: 16px;
             display: flex;
             gap: 12px;
             justify-content: center;
+            border-bottom: 2px solid #e0e0e0;
             flex-wrap: wrap;
         }
 
@@ -73,15 +84,20 @@
             border: none;
             border-radius: 50px;
             cursor: pointer;
+            transition: all 0.3s ease;
             background: #e9ecef;
-            transition: 0.3s;
+            color: #495057;
         }
 
         .level-btn.active {
-            background: linear-gradient(135deg, #4caf50, #8bc34a);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             transform: scale(1.05);
         }
+
+        .level-btn[data-level="1"].active { background: linear-gradient(135deg, #4caf50, #8bc34a); }
+        .level-btn[data-level="2"].active { background: linear-gradient(135deg, #2196f3, #03a9f4); }
+        .level-btn[data-level="3"].active { background: linear-gradient(135deg, #ff9800, #ff5722); }
 
         .lesson-nav {
             background: white;
@@ -100,10 +116,13 @@
             height: 50px;
             border-radius: 50%;
             border: none;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             font-weight: bold;
+            font-size: 1rem;
             cursor: pointer;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
         }
 
         .lesson-btn.active {
@@ -127,6 +146,21 @@
             border-radius: 0 0 32px 32px;
         }
 
+        .lesson-title {
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            color: #333;
+            margin-bottom: 8px;
+            border-left: 5px solid #f5576c;
+            padding-left: 16px;
+        }
+
+        .lesson-desc {
+            color: #666;
+            margin-bottom: 24px;
+            padding-left: 21px;
+            font-size: 0.9rem;
+        }
+
         .words-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -135,11 +169,16 @@
         }
 
         .word-card {
-            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             border-radius: 24px;
             padding: 16px;
+            transition: all 0.2s ease;
             position: relative;
-            transition: 0.2s;
+        }
+
+        .word-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
         .word-header {
@@ -158,20 +197,39 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        .chinese-area, .meaning-area, .example {
+        .word-main {
+            flex: 1;
+        }
+
+        .chinese-area {
             cursor: pointer;
+            display: inline-block;
         }
 
         .chinese {
             font-size: 1.8rem;
             font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .audio-icon {
+            font-size: 0.7rem;
+            opacity: 0.6;
+            margin-left: 8px;
         }
 
         .pinyin {
             font-size: 0.9rem;
             color: #e74c3c;
+        }
+
+        .meaning-area {
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 5px;
         }
 
         .meaning {
@@ -189,8 +247,27 @@
         .example {
             background: rgba(255,255,255,0.6);
             border-radius: 12px;
-            padding: 8px;
+            padding: 8px 10px;
             margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .example:hover {
+            background: rgba(255,255,255,0.9);
+            transform: translateX(3px);
+        }
+
+        .example-chinese {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .example-meaning {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 3px;
         }
 
         .check-btn {
@@ -204,6 +281,10 @@
             color: white;
             border: none;
             cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .check-btn.checked {
@@ -213,42 +294,66 @@
         .lesson-progress {
             background: #f0f0f0;
             border-radius: 30px;
-            padding: 12px;
+            padding: 12px 16px;
+            margin-top: 16px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             flex-wrap: wrap;
             gap: 12px;
+        }
+
+        .progress-bar-container {
+            flex: 2;
+            min-width: 150px;
         }
 
         .progress-bar {
             background: #ddd;
             border-radius: 20px;
             height: 24px;
-            flex: 2;
             overflow: hidden;
         }
 
         .progress-fill {
             background: linear-gradient(90deg, #4caf50, #8bc34a);
             height: 100%;
-            transition: width 0.3s;
+            border-radius: 20px;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
         }
 
-        .test-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+        .test-btn, .next-lesson-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 30px;
             cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .next-lesson-btn {
+            background: linear-gradient(135deg, #4caf50, #8bc34a);
+        }
+
+        .test-btn:hover, .next-lesson-btn:hover {
+            transform: translateY(-2px);
         }
 
         .test-type-selector {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
             justify-content: center;
             margin-bottom: 20px;
-            flex-wrap: wrap;
         }
 
         .test-type-btn {
@@ -257,10 +362,12 @@
             padding: 8px 16px;
             border-radius: 25px;
             cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
         }
 
         .test-type-btn.active {
-            background: #667eea;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
         }
 
@@ -275,6 +382,7 @@
             z-index: 1000;
             justify-content: center;
             align-items: center;
+            padding: 16px;
         }
 
         .modal.active {
@@ -284,363 +392,39 @@
         .modal-content {
             background: white;
             border-radius: 32px;
-            max-width: 500px;
-            width: 90%;
+            max-width: 550px;
+            width: 100%;
             padding: 24px;
             text-align: center;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .test-question-area {
+            font-size: 3rem;
+            margin: 20px 0;
+            cursor: pointer;
+        }
+
+        .test-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
         }
 
         .test-option {
             background: #f0f0f0;
-            padding: 12px;
+            padding: 14px;
             border-radius: 16px;
-            margin: 8px 0;
             cursor: pointer;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
+            font-size: 1.1rem;
         }
 
-        .test-option.correct {
-            background: #4caf50;
-            color: white;
-        }
-
-        .test-option.wrong {
-            background: #f44336;
-            color: white;
-        }
-
-        .firework {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 2000;
-        }
-
-        @keyframes bang {
-            from { transform: scale(0); opacity: 1; }
-            to { transform: scale(1); opacity: 0; }
-        }
-
-        @keyframes fly {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-100vh); opacity: 0; }
-        }
-
-        @keyframes fadeOut {
-            0% { opacity: 1; }
-            100% { opacity: 0; visibility: hidden; }
-        }
-
-        .volume-control {
-            position: fixed;
-            bottom: 16px;
-            right: 16px;
-            background: rgba(0,0,0,0.7);
-            padding: 8px 12px;
-            border-radius: 30px;
-            color: white;
-            z-index: 100;
-        }
-    </style>
-</head>
-<body>
-<div class="container">
-    <div class="header">
-        <h1>🎉 HSK 1-3 | Учимся с картинками и фейерверком</h1>
-        <div class="stats-bar">
-            <div class="stat"><div class="stat-number" id="totalLearned">0</div><div>всего выучено</div></div>
-            <div class="stat"><div class="stat-number" id="currentLessonLearned">0</div><div>в этом уроке</div></div>
-            <div class="stat"><div class="stat-number" id="progressPercent">0%</div><div>прогресс</div></div>
-        </div>
-    </div>
-
-    <div class="level-selector" id="levelSelector">
-        <button class="level-btn active" data-level="1">🌟 HSK 1</button>
-        <button class="level-btn" data-level="2">⭐ HSK 2</button>
-        <button class="level-btn" data-level="3">✨ HSK 3</button>
-    </div>
-
-    <div class="lesson-nav" id="lessonNav"></div>
-    <div class="content" id="content"></div>
-</div>
-
-<div class="volume-control">🔊 Громкость <input type="range" id="volumeSlider" min="0" max="100" value="70"></div>
-<div class="modal" id="testModal"><div class="modal-content" id="testModalContent"></div></div>
-
-<script>
-    // ======================== БАЗА ДАННЫХ С КАРТИНКАМИ И ПРИМЕРАМИ ========================
-    // Здесь только ПЕРВЫЙ урок для примера (полную базу из 40 уроков не влезает, но структура готова)
-    // Вы можете легко расширить по аналогии.
-    const fullData = {
-        1: [ // HSK 1
-            { name: "Приветствия", words: [
-                { chinese: "你好", pinyin: "nǐ hǎo", meaning: "Здравствуйте", emoji: "👋", examples: [
-                    { ch: "你好吗？", ru: "Как дела?" },
-                    { ch: "你好，朋友！", ru: "Привет, друг!" }
-                ]},
-                { chinese: "谢谢", pinyin: "xiè xie", meaning: "Спасибо", emoji: "🙏", examples: [
-                    { ch: "谢谢你！", ru: "Спасибо тебе!" },
-                    { ch: "非常感谢", ru: "Большое спасибо" }
-                ]},
-                { chinese: "再见", pinyin: "zài jiàn", meaning: "До свидания", emoji: "👋", examples: [
-                    { ch: "明天再见", ru: "Увидимся завтра" },
-                    { ch: "再见，老师", ru: "До свидания, учитель" }
-                ]},
-                { chinese: "对不起", pinyin: "duì bu qǐ", meaning: "Извините", emoji: "😔", examples: [
-                    { ch: "对不起，我错了", ru: "Извините, я ошибся" },
-                    { ch: "真的对不起", ru: "Правда извините" }
-                ]}
-            ]}
-        ],
-        2: [], 3: [] // Здесь будут остальные уроки
-    };
-
-    // ВРЕМЕННО: для демонстрации всех функций создадим тестовые данные для HSK1
-    const demoData = {
-        1: [
-            { name: "Приветствия и вежливость", words: [
-                { chinese: "你好", pinyin: "nǐ hǎo", meaning: "Здравствуйте", emoji: "👋", examples: [{ ch: "你好吗？", ru: "Как дела?" }, { ch: "你好，朋友", ru: "Привет, друг" }] },
-                { chinese: "谢谢", pinyin: "xiè xie", meaning: "Спасибо", emoji: "🙏", examples: [{ ch: "谢谢你", ru: "Спасибо тебе" }, { ch: "非常感谢", ru: "Большое спасибо" }] },
-                { chinese: "再见", pinyin: "zài jiàn", meaning: "До свидания", emoji: "👋", examples: [{ ch: "明天再见", ru: "Увидимся завтра" }, { ch: "再见老师", ru: "До свидания, учитель" }] },
-                { chinese: "对不起", pinyin: "duì bu qǐ", meaning: "Извините", emoji: "😔", examples: [{ ch: "对不起，我错了", ru: "Простите, я ошибся" }, { ch: "真的对不起", ru: "Правда извините" }] },
-                { chinese: "没关系", pinyin: "méi guān xi", meaning: "Ничего страшного", emoji: "👍", examples: [{ ch: "没关系，下次注意", ru: "Ничего, в следующий раз внимательнее" }, { ch: "真的没关系", ru: "Действительно ничего" }] }
-            ]}
-        ],
-        2: [], 3: []
-    };
-    const hskData = demoData;
-
-    // Переменные состояния
-    let currentHskLevel = 1;
-    let currentLesson = 0;
-    let learnedWords = JSON.parse(localStorage.getItem('hsk_learned')) || [];
-    let unlockedLessons = JSON.parse(localStorage.getItem('hsk_unlocked')) || { 1: [0], 2: [0], 3: [0] };
-    let currentVolume = 0.7;
-    let currentTestType = 0;
-    let testQuestions = [], testAnswers = [], testUserAnswers = [], testQuestionIndex = 0;
-
-    document.getElementById('volumeSlider').oninput = e => currentVolume = e.target.value / 100;
-
-    function speak(text, lang) {
-        let u = new SpeechSynthesisUtterance(text);
-        u.lang = lang;
-        u.volume = currentVolume;
-        speechSynthesis.cancel();
-        speechSynthesis.speak(u);
-    }
-
-    function playWin() { speak("Молодец! Ты справился отлично!", "ru-RU"); }
-    function playLose() { speak("Попробуй ещё раз, у тебя получится!", "ru-RU"); }
-
-    function showFireworks() {
-        const container = document.createElement('div');
-        container.className = 'firework';
-        for (let i = 0; i < 30; i++) {
-            let span = document.createElement('span');
-            span.style.position = 'absolute';
-            span.style.bottom = '0';
-            span.style.left = Math.random() * 100 + '%';
-            span.style.fontSize = (20 + Math.random() * 30) + 'px';
-            span.style.animation = 'fly 1s ease-out forwards';
-            span.style.pointerEvents = 'none';
-            span.innerHTML = ['🎉', '✨', '🎊', '🌟', '💥', '🎆', '🎇'][Math.floor(Math.random() * 7)];
-            container.appendChild(span);
-        }
-        document.body.appendChild(container);
-        setTimeout(() => container.remove(), 1500);
-    }
-
-    function showPanda() {
-        let div = document.createElement('div');
-        div.innerHTML = '🐼 Грустная панда... Попробуй ещё раз! 🐼';
-        div.style.position = 'fixed';
-        div.style.bottom = '30%';
-        div.style.left = '50%';
-        div.style.transform = 'translateX(-50%)';
-        div.style.background = '#333';
-        div.style.color = 'white';
-        div.style.padding = '20px';
-        div.style.borderRadius = '50px';
-        div.style.fontSize = '1.5rem';
-        div.style.zIndex = '2000';
-        div.style.animation = 'fadeOut 2s forwards';
-        document.body.appendChild(div);
-        setTimeout(() => div.remove(), 2000);
-    }
-
-    function isWordLearned(level, lesson, idx) { return learnedWords.includes(`${level}_${lesson}_${idx}`); }
-    function toggleWord(level, lesson, idx) {
-        let key = `${level}_${lesson}_${idx}`;
-        if (learnedWords.includes(key)) learnedWords = learnedWords.filter(k => k !== key);
-        else learnedWords.push(key);
-        localStorage.setItem('hsk_learned', JSON.stringify(learnedWords));
-        renderCurrentLesson();
-    }
-
-    function isLessonUnlocked(level, lesson) { return unlockedLessons[level]?.includes(lesson); }
-    function unlockLesson(level, lesson) {
-        if (!unlockedLessons[level]) unlockedLessons[level] = [];
-        if (!unlockedLessons[level].includes(lesson)) {
-            unlockedLessons[level].push(lesson);
-            localStorage.setItem('hsk_unlocked', JSON.stringify(unlockedLessons));
-        }
-    }
-
-    function getLessonLearnedCount(level, lesson) {
-        return hskData[level]?.[lesson]?.words?.filter((_, idx) => isWordLearned(level, lesson, idx)).length || 0;
-    }
-
-    function updateStats() {
-        let total = 0, current = getLessonLearnedCount(currentHskLevel, currentLesson);
-        for (let lvl of [1,2,3]) for (let les = 0; les < (hskData[lvl]?.length || 0); les++) total += getLessonLearnedCount(lvl, les);
-        let allWords = 0; for (let lvl of [1,2,3]) for (let les of (hskData[lvl] || [])) allWords += les.words.length;
-        document.getElementById('totalLearned').innerText = total;
-        document.getElementById('currentLessonLearned').innerText = current;
-        document.getElementById('progressPercent').innerText = Math.round(total / allWords * 100) + '%';
-    }
-
-    function renderLessonNav() {
-        let nav = document.getElementById('lessonNav');
-        nav.innerHTML = '';
-        for (let i = 0; i < hskData[currentHskLevel].length; i++) {
-            let btn = document.createElement('button');
-            btn.className = 'lesson-btn';
-            if (i === currentLesson) btn.classList.add('active');
-            if (getLessonLearnedCount(currentHskLevel, i) === hskData[currentHskLevel][i].words.length) btn.classList.add('learned');
-            if (!isLessonUnlocked(currentHskLevel, i)) btn.classList.add('locked');
-            btn.innerText = i + 1;
-            btn.onclick = () => { if (isLessonUnlocked(currentHskLevel, i)) { currentLesson = i; renderLessonNav(); renderCurrentLesson(); } };
-            nav.appendChild(btn);
-        }
-    }
-
-    function renderCurrentLesson() {
-        let lesson = hskData[currentHskLevel][currentLesson];
-        let html = `<div class="words-grid">`;
-        lesson.words.forEach((w, idx) => {
-            let learned = isWordLearned(currentHskLevel, currentLesson, idx);
-            html += `
-                <div class="word-card">
-                    <div class="word-header">
-                        <div class="word-emoji">${w.emoji || '📖'}</div>
-                        <div class="word-main">
-                            <div class="chinese-area" onclick="speak('${w.chinese}','zh-CN')"><span class="chinese">${w.chinese}</span> 🔊</div>
-                            <div class="pinyin">${w.pinyin}</div>
-                            <div class="meaning-area" onclick="speak('${w.meaning}','ru-RU')"><span class="meaning">${w.meaning}</span> 🔊</div>
-                        </div>
-                    </div>
-                    <div class="examples">
-                        ${w.examples.map(ex => `<div class="example" onclick="speak('${ex.ch}','zh-CN'); setTimeout(()=>speak('${ex.ru}','ru-RU'),800)"><div class="example-chinese">📢 ${ex.ch}</div><div class="example-meaning">${ex.ru}</div></div>`).join('')}
-                    </div>
-                    <button class="check-btn ${learned ? 'checked' : ''}" onclick="event.stopPropagation(); toggleWord(${currentHskLevel},${currentLesson},${idx})">${learned ? '✓' : '○'}</button>
-                </div>`;
-        });
-        html += `</div><div class="lesson-progress"><div class="progress-bar"><div class="progress-fill" style="width:${getLessonLearnedCount(currentHskLevel,currentLesson)/lesson.words.length*100}%"></div></div><button class="test-btn" onclick="startTest()">📝 Разнообразный тест (6 типов)</button></div>`;
-        document.getElementById('content').innerHTML = html;
-        updateStats();
-    }
-
-    function startTest() {
-        let lesson = hskData[currentHskLevel][currentLesson];
-        let words = lesson.words;
-        currentTestType = (currentTestType + 1) % 6;
-        testQuestions = [];
-        testAnswers = [];
-        for (let i = 0; i < 5; i++) {
-            let w = words[Math.floor(Math.random() * words.length)];
-            let type = currentTestType;
-            let question, answer;
-            if (type === 0) { question = w.chinese; answer = w.meaning; }
-            else if (type === 1) { question = w.emoji; answer = w.chinese; }
-            else if (type === 2) { question = w.chinese; answer = w.emoji; }
-            else if (type === 3) { question = w.meaning; answer = w.chinese; }
-            else if (type === 4) { question = "🔊 Слушай"; answer = w.chinese; speak(w.chinese, 'zh-CN'); }
-            else { question = w.chinese; answer = w.meaning; speak(w.meaning, 'ru-RU'); }
-            testQuestions.push({ q: question, a: answer, word: w });
-        }
-        testUserAnswers = [];
-        testQuestionIndex = 0;
-        renderTestQuestion();
-        document.getElementById('testModal').classList.add('active');
-    }
-
-    function renderTestQuestion() {
-        if (testQuestionIndex >= testQuestions.length) {
-            let score = testUserAnswers.filter((ans, idx) => ans === testQuestions[idx].a).length;
-            let passed = score >= 4;
-            let nextLesson = currentLesson + 1;
-            if (passed && nextLesson < hskData[currentHskLevel].length) unlockLesson(currentHskLevel, nextLesson);
-            let modal = document.getElementById('testModalContent');
-            if (passed) {
-                playWin();
-                showFireworks();
-                modal.innerHTML = `<h2>🎉 МОЛОДЕЦ!!! 🎉</h2><p>Твой результат: ${score}/5</p><p>Следующий урок открыт!</p><button class="test-btn" onclick="closeTest()">Продолжить</button>`;
-            } else {
-                playLose();
-                showPanda();
-                modal.innerHTML = `<h2>😢 Попробуй ещё раз</h2><p>Результат: ${score}/5 (нужно 4/5)</p><button class="test-btn" onclick="closeTest(); startTest();">Пройти тест снова</button>`;
-            }
-            renderLessonNav();
-            renderCurrentLesson();
-            return;
-        }
-        let q = testQuestions[testQuestionIndex];
-        let lesson = hskData[currentHskLevel][currentLesson];
-        let allAnswers = lesson.words.map(w => {
-            if (currentTestType === 1) return w.chinese;
-            if (currentTestType === 2) return w.emoji;
-            if (currentTestType === 3) return w.chinese;
-            if (currentTestType === 4) return w.chinese;
-            if (currentTestType === 5) return w.meaning;
-            return w.meaning;
-        });
-        let options = [q.a];
-        while (options.length < 4) {
-            let rand = allAnswers[Math.floor(Math.random() * allAnswers.length)];
-            if (!options.includes(rand)) options.push(rand);
-        }
-        options.sort(() => Math.random() - 0.5);
-        let html = `<h3>Тип теста: ${["Слово→перевод","Слово→картинка","Иероглиф→картинка","Картинка→слово","Аудио→иероглиф","Иероглиф→аудио"][currentTestType]}</h3>`;
-        if (currentTestType === 4) html += `<div style="font-size:2rem; margin:20px">🔊 Нажми на иероглиф, который услышал</div>`;
-        if (currentTestType === 5) html += `<div style="font-size:2rem; margin:20px">🔊 Нажми на перевод услышанного слова</div>`;
-        html += `<div class="test-question-area">${q.q}</div><div class="test-options">`;
-        options.forEach(opt => {
-            html += `<div class="test-option" onclick="checkAnswer('${opt.replace(/'/g, "\\'")}')">${opt}</div>`;
-        });
-        html += `</div><div>Вопрос ${testQuestionIndex+1}/${testQuestions.length}</div>`;
-        document.getElementById('testModalContent').innerHTML = html;
-    }
-
-    function checkAnswer(selected) {
-        if (selected === testQuestions[testQuestionIndex].a) testUserAnswers.push(selected);
-        else testUserAnswers.push(null);
-        testQuestionIndex++;
-        renderTestQuestion();
-    }
-
-    function closeTest() {
-        document.getElementById('testModal').classList.remove('active');
-    }
-
-    document.querySelectorAll('.level-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            currentHskLevel = parseInt(btn.dataset.level);
-            currentLesson = 0;
-            renderLessonNav();
-            renderCurrentLesson();
-        });
-    });
-
-    renderLessonNav();
-    renderCurrentLesson();
-</script>
-</body>
-</html>
+        .test-option:hover {
+            background: #e0e0
