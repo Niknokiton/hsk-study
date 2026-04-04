@@ -480,14 +480,40 @@
     renderLessonNav();
     renderCurrentLesson();
 </script>
-     <!-- счётчик посетителей -->
-<div style="text-align: center; margin-top: 20px; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 30px; color: white; font-size: 0.9rem;">
-    👥 <strong>На сайте сейчас:</strong> 
-    <img src="https://hitwebcounter.com/counter/counter.php?page=12345678&style=0001&nbdigits=5&type=page&initCount=0" 
-         alt="счётчик" style="vertical-align: middle;">
-    <span style="margin-left: 10px;">📊 Всего просмотров: 
-        <img src="https://hitwebcounter.com/counter/counter.php?page=12345678&style=0001&nbdigits=6&type=ip&initCount=0" alt="счётчик">
-    </span>
+    <!-- Простой счётчик посетителей через localStorage -->
+<div style="text-align: center; margin-top: 20px; padding: 12px; background: rgba(0,0,0,0.6); border-radius: 30px; color: white; font-size: 0.9rem; backdrop-filter: blur(5px);">
+    <span>🌟 Всего изучено слов: <strong id="totalWordsCount">0</strong></span>
+    <span style="margin-left: 20px;">👥 Пользователей сегодня: <strong id="visitorCount">0</strong></span>
 </div>
+
+<script>
+    // Счётчик уникальных посетителей за сегодня
+    function updateVisitorCounter() {
+        let today = new Date().toDateString();
+        let visitorData = localStorage.getItem('hsk_visitor_data');
+        let visitorCount = localStorage.getItem('hsk_visitor_count');
+        
+        if (!visitorData || JSON.parse(visitorData).date !== today) {
+            // Новый день — сбрасываем счётчик
+            localStorage.setItem('hsk_visitor_data', JSON.stringify({ date: today, count: 1 }));
+            document.getElementById('visitorCount').innerText = '1';
+        } else {
+            let data = JSON.parse(visitorData);
+            // Если этот пользователь ещё не считан сегодня, увеличиваем
+            if (!sessionStorage.getItem('hsk_counted_today')) {
+                data.count++;
+                localStorage.setItem('hsk_visitor_data', JSON.stringify(data));
+                sessionStorage.setItem('hsk_counted_today', 'true');
+            }
+            document.getElementById('visitorCount').innerText = data.count;
+        }
+        
+        // Показываем общее количество выученных слов
+        let learned = JSON.parse(localStorage.getItem('hsk_learned_full')) || [];
+        document.getElementById('totalWordsCount').innerText = learned.length;
+    }
+    
+    updateVisitorCounter();
+</script>
 </body>
 </html>
