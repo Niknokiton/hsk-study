@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>📚 HSK 1-3 | 600 слов с аудио | Полный курс</title>
+    <title>📚 HSK 1-3 | 600 слов с аудио | Блокировка уроков</title>
     <style>
         * {
             margin: 0;
@@ -24,7 +24,6 @@
             margin: 0 auto;
         }
 
-        /* Шапка */
         .header {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             border-radius: 32px 32px 0 0;
@@ -43,7 +42,6 @@
             opacity: 0.95;
         }
 
-        /* Статистика */
         .stats-bar {
             background: rgba(255,255,255,0.2);
             border-radius: 30px;
@@ -69,7 +67,6 @@
             opacity: 0.9;
         }
 
-        /* Выбор уровня */
         .level-selector {
             background: white;
             padding: 16px;
@@ -102,7 +99,6 @@
         .level-btn[data-level="2"].active { background: linear-gradient(135deg, #2196f3, #03a9f4); }
         .level-btn[data-level="3"].active { background: linear-gradient(135deg, #ff9800, #ff5722); }
 
-        /* Навигация по урокам */
         .lesson-nav {
             background: white;
             padding: 16px;
@@ -138,7 +134,12 @@
             background: linear-gradient(135deg, #4caf50, #8bc34a);
         }
 
-        /* Контент */
+        .lesson-btn.locked {
+            background: #9e9e9e;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
         .content {
             background: white;
             padding: 20px;
@@ -160,7 +161,6 @@
             font-size: 0.9rem;
         }
 
-        /* Сетка карточек */
         .words-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -168,7 +168,6 @@
             margin-bottom: 24px;
         }
 
-        /* Карточка слова */
         .word-card {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             border-radius: 20px;
@@ -247,7 +246,6 @@
             background: #2e7d32;
         }
 
-        /* Прогресс урока */
         .lesson-progress {
             background: #f0f0f0;
             border-radius: 30px;
@@ -285,7 +283,7 @@
             font-weight: bold;
         }
 
-        .test-btn {
+        .test-btn, .next-lesson-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
@@ -294,9 +292,17 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 0.9rem;
+            transition: all 0.2s ease;
         }
 
-        /* Модальное окно */
+        .next-lesson-btn {
+            background: linear-gradient(135deg, #4caf50, #8bc34a);
+        }
+
+        .test-btn:hover, .next-lesson-btn:hover {
+            transform: translateY(-2px);
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -355,6 +361,11 @@
             color: white;
         }
 
+        .test-result {
+            font-size: 1.3rem;
+            margin: 20px 0;
+        }
+
         .close-modal {
             background: #667eea;
             color: white;
@@ -365,7 +376,12 @@
             margin-top: 12px;
         }
 
-        /* Регулятор громкости */
+        .fail-message {
+            color: #f44336;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
         .volume-control {
             position: fixed;
             bottom: 16px;
@@ -385,14 +401,12 @@
             vertical-align: middle;
         }
 
-        /* Адаптация для планшетов */
         @media (min-width: 768px) and (max-width: 1024px) {
             .words-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             }
         }
 
-        /* Адаптация для телефонов */
         @media (max-width: 480px) {
             body {
                 padding: 8px;
@@ -418,7 +432,7 @@
     <div class="container">
         <div class="header">
             <h1>📚 HSK 1-3 — Полный курс</h1>
-            <div class="subtitle">🔊 Нажми на иероглиф | 600 слов с аудио</div>
+            <div class="subtitle">🔊 Нажми на иероглиф | Чтобы открыть следующий урок, нужно сдать тест на 9/10</div>
             <div class="stats-bar">
                 <div class="stat"><div class="stat-number" id="totalLearned">0</div><div class="stat-label">всего выучено</div></div>
                 <div class="stat"><div class="stat-number" id="currentLessonLearned">0</div><div class="stat-label">в этом уроке</div></div>
@@ -437,17 +451,14 @@
     </div>
 
     <div class="volume-control">🔊 <input type="range" id="volumeSlider" min="0" max="100" value="70"></div>
-    <div class="modal" id="testModal"><div class="modal-content"><h2>📝 Тест урока</h2><div id="testContent"></div></div></div>
+    <div class="modal" id="testModal"><div class="modal-content"><h2>📝 Тест урока (10 вопросов)</h2><div id="testContent"></div></div></div>
 
     <script>
         // ============================================
         // HSK 1, 2, 3 — ВСЕ СЛОВА
-        // HSK 1: 15 уроков по 10 слов = 150 слов
-        // HSK 2: 10 уроков по 15 слов = 150 слов
-        // HSK 3: 15 уроков по 20 слов = 300 слов
         // ============================================
 
-        // ---------------------- HSK 1 (150 слов) ----------------------
+        // ---------------------- HSK 1 (150 слов, 15 уроков по 10) ----------------------
         const hsk1Lessons = [
             { name: "Приветствия и числа 1-4", words: [
                 { chinese: "你好", pinyin: "nǐ hǎo", meaning: "Здравствуйте" }, { chinese: "再见", pinyin: "zài jiàn", meaning: "До свидания" }, { chinese: "谢谢", pinyin: "xiè xie", meaning: "Спасибо" }, { chinese: "不客气", pinyin: "bú kè qi", meaning: "Пожалуйста" }, { chinese: "对不起", pinyin: "duì bu qǐ", meaning: "Извините" }, { chinese: "没关系", pinyin: "méi guān xi", meaning: "Ничего страшного" }, { chinese: "一", pinyin: "yī", meaning: "Один" }, { chinese: "二", pinyin: "èr", meaning: "Два" }, { chinese: "三", pinyin: "sān", meaning: "Три" }, { chinese: "四", pinyin: "sì", meaning: "Четыре" }
@@ -496,9 +507,9 @@
             ] }
         ];
 
-        // ---------------------- HSK 2 (150 слов, 10 уроков по 15 слов) ----------------------
+        // ---------------------- HSK 2 (150 слов, 10 уроков по 15) ----------------------
         const hsk2Lessons = [
-            { name: "Повседневные действия 1", words: [
+            { name: "Повседневные действия", words: [
                 { chinese: "早上", pinyin: "zǎo shang", meaning: "Утро" }, { chinese: "晚上", pinyin: "wǎn shang", meaning: "Вечер" }, { chinese: "吃饭", pinyin: "chī fàn", meaning: "Есть" }, { chinese: "睡觉", pinyin: "shuì jiào", meaning: "Спать" }, { chinese: "起床", pinyin: "qǐ chuáng", meaning: "Вставать" }, { chinese: "洗澡", pinyin: "xǐ zǎo", meaning: "Принимать душ" }, { chinese: "刷牙", pinyin: "shuā yá", meaning: "Чистить зубы" }, { chinese: "洗脸", pinyin: "xǐ liǎn", meaning: "Умываться" }, { chinese: "穿衣服", pinyin: "chuān yī fu", meaning: "Одеваться" }, { chinese: "上班", pinyin: "shàng bān", meaning: "Идти на работу" }, { chinese: "下班", pinyin: "xià bān", meaning: "С работы" }, { chinese: "回家", pinyin: "huí jiā", meaning: "Возвращаться домой" }, { chinese: "休息", pinyin: "xiū xi", meaning: "Отдыхать" }, { chinese: "运动", pinyin: "yùn dòng", meaning: "Спорт" }, { chinese: "旅游", pinyin: "lǚ yóu", meaning: "Путешествовать" }
             ] },
             { name: "Описание людей", words: [
@@ -530,7 +541,7 @@
             ] }
         ];
 
-        // ---------------------- HSK 3 (300 слов, 15 уроков по 20 слов) ----------------------
+        // ---------------------- HSK 3 (300 слов, 15 уроков по 20) ----------------------
         const hsk3Lessons = [
             { name: "Семья и отношения", words: [
                 { chinese: "父母", pinyin: "fù mǔ", meaning: "Родители" }, { chinese: "夫妻", pinyin: "fū qī", meaning: "Супруги" }, { chinese: "结婚", pinyin: "jié hūn", meaning: "Жениться" }, { chinese: "离婚", pinyin: "lí hūn", meaning: "Разводиться" }, { chinese: "恋爱", pinyin: "liàn ài", meaning: "Любовь" }, { chinese: "感情", pinyin: "gǎn qíng", meaning: "Чувства" }, { chinese: "关心", pinyin: "guān xīn", meaning: "Заботиться" }, { chinese: "照顾", pinyin: "zhào gù", meaning: "Ухаживать" }, { chinese: "习惯", pinyin: "xí guàn", meaning: "Привычка" }, { chinese: "性格", pinyin: "xìng gé", meaning: "Характер" }, { chinese: "脾气", pinyin: "pí qi", meaning: "Нрав" }, { chinese: "尊重", pinyin: "zūn zhòng", meaning: "Уважать" }, { chinese: "信任", pinyin: "xìn rèn", meaning: "Доверять" }, { chinese: "理解", pinyin: "lǐ jiě", meaning: "Понимать" }, { chinese: "原谅", pinyin: "yuán liàng", meaning: "Прощать" }, { chinese: "吵架", pinyin: "chǎo jià", meaning: "Ссориться" }, { chinese: "和好", pinyin: "hé hǎo", meaning: "Мириться" }, { chinese: "想念", pinyin: "xiǎng niàn", meaning: "Скучать" }, { chinese: "忘记", pinyin: "wàng jì", meaning: "Забывать" }, { chinese: "记得", pinyin: "jì de", meaning: "Помнить" }
@@ -579,15 +590,28 @@
             ] }
         ];
 
-        // Объединяем всё
-        const hskData = {
-            1: hsk1Lessons,
-            2: hsk2Lessons,
-            3: hsk3Lessons
-        };
+        const hskData = { 1: hsk1Lessons, 2: hsk2Lessons, 3: hsk3Lessons };
+        const lessonsPerLevel = { 1: 15, 2: 10, 3: 15 };
 
         let currentHskLevel = 1;
         let currentLesson = 0;
+        
+        // Структура для хранения результатов тестов (какие уроки открыты)
+        let unlockedLessons = JSON.parse(localStorage.getItem('hsk_unlocked_lessons')) || { 1: [0], 2: [0], 3: [0] };
+        
+        function isLessonUnlocked(level, lessonIndex) {
+            return unlockedLessons[level] && unlockedLessons[level].includes(lessonIndex);
+        }
+        
+        function unlockLesson(level, lessonIndex) {
+            if (!unlockedLessons[level]) unlockedLessons[level] = [];
+            if (!unlockedLessons[level].includes(lessonIndex)) {
+                unlockedLessons[level].push(lessonIndex);
+                localStorage.setItem('hsk_unlocked_lessons', JSON.stringify(unlockedLessons));
+            }
+        }
+        
+        // Прогресс выученных слов
         let learnedWords = JSON.parse(localStorage.getItem('hsk_all_learned')) || [];
 
         function saveProgress() {
@@ -676,6 +700,17 @@
             currentVolume = e.target.value / 100;
         });
 
+        // Переключение на следующий урок
+        function goToNextLesson() {
+            if (currentLesson + 1 < hskData[currentHskLevel].length) {
+                currentLesson++;
+                renderLessonNav();
+                renderCurrentLesson();
+            } else {
+                alert("🎉 Поздравляю! Ты завершил все уроки этого уровня!");
+            }
+        }
+
         function renderLessonNav() {
             const nav = document.getElementById('lessonNav');
             const lessons = hskData[currentHskLevel];
@@ -685,8 +720,17 @@
                 btn.className = 'lesson-btn';
                 if (i === currentLesson) btn.classList.add('active');
                 if (getLessonLearnedCount(currentHskLevel, i) === lessons[i].words.length) btn.classList.add('learned');
+                if (!isLessonUnlocked(currentHskLevel, i)) btn.classList.add('locked');
                 btn.innerText = i + 1;
-                btn.onclick = () => { currentLesson = i; renderLessonNav(); renderCurrentLesson(); };
+                btn.onclick = () => {
+                    if (isLessonUnlocked(currentHskLevel, i)) {
+                        currentLesson = i;
+                        renderLessonNav();
+                        renderCurrentLesson();
+                    } else {
+                        alert(`🔒 Урок ${i+1} заблокирован! Сначала сдайте тест урока ${i} на 9/10.`);
+                    }
+                };
                 nav.appendChild(btn);
             }
         }
@@ -695,9 +739,10 @@
             const btns = document.querySelectorAll('.lesson-btn');
             const lessons = hskData[currentHskLevel];
             for (let i = 0; i < btns.length; i++) {
-                btns[i].classList.remove('learned', 'active');
+                btns[i].classList.remove('learned', 'active', 'locked');
                 if (getLessonLearnedCount(currentHskLevel, i) === lessons[i].words.length) btns[i].classList.add('learned');
                 if (i === currentLesson) btns[i].classList.add('active');
+                if (!isLessonUnlocked(currentHskLevel, i)) btns[i].classList.add('locked');
             }
         }
 
@@ -723,49 +768,103 @@
             const learnedCount = getLessonLearnedCount(currentHskLevel, currentLesson);
             const percent = Math.round(learnedCount / lesson.words.length * 100);
             const levelNames = {1: "HSK 1", 2: "HSK 2", 3: "HSK 3"};
+            
+            // Показываем кнопку следующего урока только если текущий пройден и следующий существует
+            const nextLessonExists = currentLesson + 1 < hskData[currentHskLevel].length;
+            const currentLessonCompleted = getLessonLearnedCount(currentHskLevel, currentLesson) === lesson.words.length;
+            
             content.innerHTML = `
                 <div class="lesson-title">📖 ${levelNames[currentHskLevel]} — Урок ${currentLesson + 1}: ${lesson.name}</div>
                 <div class="lesson-desc">🔊 Нажми на <strong>иероглиф</strong> — китайское произношение, на <strong>перевод</strong> — русский перевод</div>
                 <div class="words-grid">${wordsHtml}</div>
                 <div class="lesson-progress">
                     <div class="progress-bar-container"><div class="progress-bar"><div class="progress-fill" style="width: ${percent}%">${percent}%</div></div></div>
-                    <button class="test-btn" onclick="startTest()">📝 Тест урока</button>
+                    <button class="test-btn" onclick="startTest()">📝 Тест урока (10 вопросов, нужно 9/10)</button>
+                    ${nextLessonExists && currentLessonCompleted && isLessonUnlocked(currentHskLevel, currentLesson + 1) ? `<button class="next-lesson-btn" onclick="goToNextLesson()">➡️ Следующий урок</button>` : ''}
                 </div>
+                ${!isLessonUnlocked(currentHskLevel, currentLesson + 1) && currentLessonCompleted && currentLesson + 1 < hskData[currentHskLevel].length ? 
+                    `<div style="text-align: center; margin-top: 10px; color: #ff9800;">⭐ Сдайте тест урока ${currentLesson + 1}, чтобы открыть следующий урок!</div>` : ''}
             `;
             updateStats();
         }
 
-        // Тест
+        // ТЕСТ — 10 вопросов, нужно 9/10 для разблокировки
         let currentTestQuestions = [], currentTestIndex = 0, testScore = 0;
+        
         function startTest() {
             const lesson = hskData[currentHskLevel][currentLesson];
-            currentTestQuestions = [...lesson.words].sort(() => 0.5 - Math.random()).slice(0, Math.min(10, lesson.words.length));
-            currentTestIndex = 0; testScore = 0;
+            // Берём все слова урока, перемешиваем и берём 10 (или меньше, если в уроке меньше 10 слов)
+            let allWords = [...lesson.words];
+            for (let i = allWords.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [allWords[i], allWords[j]] = [allWords[j], allWords[i]];
+            }
+            currentTestQuestions = allWords.slice(0, Math.min(10, allWords.length));
+            currentTestIndex = 0;
+            testScore = 0;
             renderTestQuestion();
             document.getElementById('testModal').classList.add('active');
         }
+        
         function renderTestQuestion() {
             if (currentTestIndex >= currentTestQuestions.length) {
-                const percent = Math.round(testScore / currentTestQuestions.length * 100);
-                document.getElementById('testContent').innerHTML = `<div class="test-result">🎉 Результат: ${testScore}/${currentTestQuestions.length}<br>${percent >= 80 ? 'Отлично!' : 'Повтори слова!'}</div><button class="close-modal" onclick="closeTest()">Закрыть</button>`;
+                const passed = testScore >= 9;
+                const nextLessonIndex = currentLesson + 1;
+                
+                if (passed && nextLessonIndex < hskData[currentHskLevel].length) {
+                    unlockLesson(currentHskLevel, nextLessonIndex);
+                    renderLessonNav();
+                }
+                
+                document.getElementById('testContent').innerHTML = `
+                    <div class="test-result">
+                        🎉 Результат: ${testScore}/${currentTestQuestions.length}<br>
+                        ${testScore >= 9 ? '✅ Отлично! Следующий урок открыт!' : '❌ Нужно набрать 9/10, чтобы открыть следующий урок. Попробуй ещё раз!'}
+                    </div>
+                    <button class="close-modal" onclick="closeTest()">Закрыть</button>
+                    ${testScore < 9 ? `<button class="close-modal" style="background: #f44336; margin-top: 10px;" onclick="closeTest(); startTest();">🔄 Пройти тест снова</button>` : ''}
+                `;
+                if (passed && nextLessonIndex < hskData[currentHskLevel].length) {
+                    renderCurrentLesson();
+                }
                 return;
             }
+            
             const q = currentTestQuestions[currentTestIndex];
-            const allMeanings = hskData[currentHskLevel][currentLesson].words.map(w => w.meaning);
+            const lesson = hskData[currentHskLevel][currentLesson];
+            const allMeanings = lesson.words.map(w => w.meaning);
             const options = [q.meaning];
-            while (options.length < 4) { const r = allMeanings[Math.floor(Math.random() * allMeanings.length)]; if (!options.includes(r)) options.push(r); }
+            while (options.length < 4) {
+                const r = allMeanings[Math.floor(Math.random() * allMeanings.length)];
+                if (!options.includes(r)) options.push(r);
+            }
             options.sort(() => 0.5 - Math.random());
             let optsHtml = '';
-            options.forEach(opt => { optsHtml += `<div class="test-option" onclick="checkTestAnswer('${opt.replace(/'/g, "\\'")}', this)">${opt}</div>`; });
-            document.getElementById('testContent').innerHTML = `<div class="test-question" onclick="speakChinese('${q.chinese}')">${q.chinese} 🔊</div><div style="color:#e74c3c">${q.pinyin}</div><div class="test-options">${optsHtml}</div><div>${currentTestIndex+1}/${currentTestQuestions.length}</div><div style="font-size:0.7rem; margin-top:8px;">🔊 Нажми на иероглиф для произношения</div>`;
+            options.forEach(opt => {
+                optsHtml += `<div class="test-option" onclick="checkTestAnswer('${opt.replace(/'/g, "\\'")}', this)">${opt}</div>`;
+            });
+            document.getElementById('testContent').innerHTML = `
+                <div class="test-question" onclick="speakChinese('${q.chinese}')">${q.chinese} 🔊</div>
+                <div style="color:#e74c3c">${q.pinyin}</div>
+                <div class="test-options">${optsHtml}</div>
+                <div>Вопрос ${currentTestIndex+1} из ${currentTestQuestions.length}</div>
+                <div style="font-size:0.7rem; margin-top:8px;">🔊 Нажми на иероглиф для произношения</div>
+                <div style="margin-top: 10px;">Нужно набрать 9/10 для открытия следующего урока</div>
+            `;
         }
+        
         function checkTestAnswer(selected, element) {
             const correct = currentTestQuestions[currentTestIndex].meaning;
             const allOpts = document.querySelectorAll('.test-option');
-            allOpts.forEach(opt => { opt.style.pointerEvents = 'none'; if (opt.innerText === correct) opt.classList.add('correct'); if (opt === element && opt.innerText !== correct) opt.classList.add('wrong'); });
+            allOpts.forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                if (opt.innerText === correct) opt.classList.add('correct');
+                if (opt === element && opt.innerText !== correct) opt.classList.add('wrong');
+            });
             if (selected === correct) testScore++;
             setTimeout(() => { currentTestIndex++; renderTestQuestion(); }, 1000);
         }
+        
         function closeTest() { document.getElementById('testModal').classList.remove('active'); }
 
         // Переключение уровня
@@ -780,6 +879,12 @@
             });
         });
 
+        // Инициализация: первый урок всегда открыт
+        if (!unlockedLessons[1] || unlockedLessons[1].length === 0) unlockedLessons[1] = [0];
+        if (!unlockedLessons[2] || unlockedLessons[2].length === 0) unlockedLessons[2] = [0];
+        if (!unlockedLessons[3] || unlockedLessons[3].length === 0) unlockedLessons[3] = [0];
+        localStorage.setItem('hsk_unlocked_lessons', JSON.stringify(unlockedLessons));
+        
         renderLessonNav();
         renderCurrentLesson();
     </script>
