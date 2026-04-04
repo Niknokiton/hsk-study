@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>🎉 HSK 1-3 | Примеры | Фейерверк | Панда</title>
+    <title>🎉 HSK 1-3 | 600 слов | Примеры | Фейерверк</title>
     <style>
         * {
             margin: 0;
@@ -108,7 +108,7 @@
 
         .words-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
             gap: 20px;
             margin-bottom: 24px;
         }
@@ -277,7 +277,7 @@
 <body>
 <div class="container">
     <div class="header">
-        <h1>🎉 HSK 1-3 | Примеры | Фейерверк</h1>
+        <h1>🎉 HSK 1-3 | 600 слов с примерами</h1>
         <div class="stats-bar">
             <div class="stat"><div class="stat-number" id="totalLearned">0</div><div>всего выучено</div></div>
             <div class="stat"><div class="stat-number" id="currentLessonLearned">0</div><div>в уроке</div></div>
@@ -286,9 +286,9 @@
     </div>
 
     <div class="level-selector" id="levelSelector">
-        <button class="level-btn active" data-level="1">HSK 1</button>
-        <button class="level-btn" data-level="2">HSK 2</button>
-        <button class="level-btn" data-level="3">HSK 3</button>
+        <button class="level-btn active" data-level="1">🌟 HSK 1 (150 слов)</button>
+        <button class="level-btn" data-level="2">⭐ HSK 2 (150 слов)</button>
+        <button class="level-btn" data-level="3">✨ HSK 3 (300 слов)</button>
     </div>
     <div class="lesson-nav" id="lessonNav"></div>
     <div class="content" id="content"></div>
@@ -297,48 +297,78 @@
 <div class="modal" id="testModal"><div class="modal-content" id="testModalContent"></div></div>
 
 <script>
-    // ------------------- ДОБАВЛЯЕМ ПРИМЕРЫ КО ВСЕМ СЛОВАМ (автоматически) -------------------
-    const exampleTemplates = {
-        "你好": [{ ch: "你好吗？", ru: "Как дела?" }, { ch: "你好，朋友", ru: "Привет, друг" }],
-        "谢谢": [{ ch: "谢谢你", ru: "Спасибо тебе" }, { ch: "非常感谢", ru: "Большое спасибо" }],
-        "再见": [{ ch: "明天再见", ru: "Увидимся завтра" }, { ch: "再见，老师", ru: "До свидания, учитель" }],
-        "对不起": [{ ch: "对不起，我错了", ru: "Извините, я ошибся" }, { ch: "真的对不起", ru: "Правда извините" }],
-        "没关系": [{ ch: "没关系，下次注意", ru: "Ничего, в следующий раз внимательнее" }, { ch: "真的没关系", ru: "Действительно ничего" }]
-    };
-    function addExamplesToWords(lessons) {
-        for (let l of lessons) {
-            for (let w of l.words) {
-                if (!w.examples) {
-                    w.examples = exampleTemplates[w.chinese] || [
-                        { ch: `${w.chinese}很好`, ru: `${w.meaning} — хорошо` },
-                        { ch: `我爱${w.chinese}`, ru: `Я люблю ${w.meaning.toLowerCase()}` }
-                    ];
-                }
-            }
-        }
+    // ======================== ПОЛНАЯ БАЗА HSK 1-3 (600 слов) ========================
+    // Функция для генерации примеров для каждого слова
+    function generateExamples(chinese, pinyin, meaning) {
+        return [
+            { ch: `${chinese} ${pinyin.split(' ')[0]}`, pinyin: pinyin, ru: `Это ${meaning.toLowerCase()}` },
+            { ch: `我爱 ${chinese}`, pinyin: `wǒ ài ${pinyin}`, ru: `Я люблю ${meaning.toLowerCase()}` }
+        ];
     }
-    // ---------------------------------------------------------------------
 
-    // БАЗА ДАННЫХ (сокращённо для демонстрации, но структура готова)
-    const hskData = {
-        1: [
-            { name: "Приветствия", words: [
-                { chinese: "你好", pinyin: "nǐ hǎo", meaning: "Здравствуйте" },
-                { chinese: "谢谢", pinyin: "xiè xie", meaning: "Спасибо" },
-                { chinese: "再见", pinyin: "zài jiàn", meaning: "До свидания" },
-                { chinese: "对不起", pinyin: "duì bu qǐ", meaning: "Извините" },
-                { chinese: "没关系", pinyin: "méi guān xi", meaning: "Ничего страшного" }
-            ] }
-        ],
-        2: [],
-        3: []
-    };
-    for (let lvl of [1,2,3]) for (let les of (hskData[lvl] || [])) addExamplesToWords([les]);
+    // ----- HSK 1 (150 слов, 15 уроков по 10 слов) -----
+    const hsk1Words = [
+        // Урок 1
+        [{ch:"你好",p:"nǐ hǎo",m:"Здравствуйте"},{ch:"再见",p:"zài jiàn",m:"До свидания"},{ch:"谢谢",p:"xiè xie",m:"Спасибо"},{ch:"不客气",p:"bú kè qi",m:"Пожалуйста"},{ch:"对不起",p:"duì bu qǐ",m:"Извините"},{ch:"没关系",p:"méi guān xi",m:"Ничего"},{ch:"一",p:"yī",m:"Один"},{ch:"二",p:"èr",m:"Два"},{ch:"三",p:"sān",m:"Три"},{ch:"四",p:"sì",m:"Четыре"}],
+        [{ch:"五",p:"wǔ",m:"Пять"},{ch:"六",p:"liù",m:"Шесть"},{ch:"七",p:"qī",m:"Семь"},{ch:"八",p:"bā",m:"Восемь"},{ch:"九",p:"jiǔ",m:"Девять"},{ch:"十",p:"shí",m:"Десять"},{ch:"是",p:"shì",m:"Быть"},{ch:"有",p:"yǒu",m:"Иметь"},{ch:"在",p:"zài",m:"Находиться"},{ch:"去",p:"qù",m:"Идти"}],
+        [{ch:"我",p:"wǒ",m:"Я"},{ch:"你",p:"nǐ",m:"Ты"},{ch:"他",p:"tā",m:"Он"},{ch:"她",p:"tā",m:"Она"},{ch:"我们",p:"wǒ men",m:"Мы"},{ch:"你们",p:"nǐ men",m:"Вы"},{ch:"他们",p:"tā men",m:"Они"},{ch:"什么",p:"shén me",m:"Что"},{ch:"谁",p:"shéi",m:"Кто"},{ch:"哪",p:"nǎ",m:"Который"}],
+        [{ch:"爸爸",p:"bà ba",m:"Папа"},{ch:"妈妈",p:"mā ma",m:"Мама"},{ch:"哥哥",p:"gē ge",m:"Брат"},{ch:"姐姐",p:"jiě jie",m:"Сестра"},{ch:"弟弟",p:"dì di",m:"Мл.брат"},{ch:"妹妹",p:"mèi mei",m:"Мл.сестра"},{ch:"儿子",p:"ér zi",m:"Сын"},{ch:"女儿",p:"nǚ ér",m:"Дочь"},{ch:"家",p:"jiā",m:"Дом"},{ch:"人",p:"rén",m:"Человек"}],
+        [{ch:"吃",p:"chī",m:"Есть"},{ch:"喝",p:"hē",m:"Пить"},{ch:"水",p:"shuǐ",m:"Вода"},{ch:"米饭",p:"mǐ fàn",m:"Рис"},{ch:"菜",p:"cài",m:"Овощи"},{ch:"水果",p:"shuǐ guǒ",m:"Фрукты"},{ch:"苹果",p:"píng guǒ",m:"Яблоко"},{ch:"茶",p:"chá",m:"Чай"},{ch:"咖啡",p:"kā fēi",m:"Кофе"},{ch:"饭店",p:"fàn diàn",m:"Ресторан"}],
+        [{ch:"今天",p:"jīn tiān",m:"Сегодня"},{ch:"明天",p:"míng tiān",m:"Завтра"},{ch:"昨天",p:"zuó tiān",m:"Вчера"},{ch:"现在",p:"xiàn zài",m:"Сейчас"},{ch:"年",p:"nián",m:"Год"},{ch:"月",p:"yuè",m:"Месяц"},{ch:"日",p:"rì",m:"День"},{ch:"星期",p:"xīng qī",m:"Неделя"},{ch:"点",p:"diǎn",m:"Час"},{ch:"分",p:"fēn",m:"Минута"}],
+        [{ch:"好",p:"hǎo",m:"Хороший"},{ch:"大",p:"dà",m:"Большой"},{ch:"小",p:"xiǎo",m:"Маленький"},{ch:"多",p:"duō",m:"Много"},{ch:"少",p:"shǎo",m:"Мало"},{ch:"热",p:"rè",m:"Жарко"},{ch:"冷",p:"lěng",m:"Холодно"},{ch:"高兴",p:"gāo xìng",m:"Радостный"},{ch:"漂亮",p:"piào liang",m:"Красивый"},{ch:"快",p:"kuài",m:"Быстрый"}],
+        [{ch:"学校",p:"xué xiào",m:"Школа"},{ch:"商店",p:"shāng diàn",m:"Магазин"},{ch:"医院",p:"yī yuàn",m:"Больница"},{ch:"书",p:"shū",m:"Книга"},{ch:"电脑",p:"diàn nǎo",m:"Компьютер"},{ch:"电视",p:"diàn shì",m:"Телевизор"},{ch:"电话",p:"diàn huà",m:"Телефон"},{ch:"桌子",p:"zhuō zi",m:"Стол"},{ch:"椅子",p:"yǐ zi",m:"Стул"},{ch:"东西",p:"dōng xi",m:"Вещь"}],
+        [{ch:"看",p:"kàn",m:"Смотреть"},{ch:"看见",p:"kàn jiàn",m:"Видеть"},{ch:"听",p:"tīng",m:"Слушать"},{ch:"说",p:"shuō",m:"Говорить"},{ch:"读",p:"dú",m:"Читать"},{ch:"写",p:"xiě",m:"Писать"},{ch:"做",p:"zuò",m:"Делать"},{ch:"买",p:"mǎi",m:"Покупать"},{ch:"来",p:"lái",m:"Приходить"},{ch:"回",p:"huí",m:"Возвращаться"}],
+        [{ch:"衣服",p:"yī fu",m:"Одежда"},{ch:"红色",p:"hóng sè",m:"Красный"},{ch:"蓝色",p:"lán sè",m:"Синий"},{ch:"白色",p:"bái sè",m:"Белый"},{ch:"黑色",p:"hēi sè",m:"Чёрный"},{ch:"黄色",p:"huáng sè",m:"Жёлтый"},{ch:"绿色",p:"lǜ sè",m:"Зелёный"},{ch:"穿",p:"chuān",m:"Носить"},{ch:"鞋子",p:"xié zi",m:"Обувь"},{ch:"帽子",p:"mào zi",m:"Шляпа"}],
+        [{ch:"车",p:"chē",m:"Машина"},{ch:"火车",p:"huǒ chē",m:"Поезд"},{ch:"飞机",p:"fēi jī",m:"Самолёт"},{ch:"出租车",p:"chū zū chē",m:"Такси"},{ch:"公交车",p:"gōng jiāo chē",m:"Автобус"},{ch:"地铁",p:"dì tiě",m:"Метро"},{ch:"走路",p:"zǒu lù",m:"Идти"},{ch:"站",p:"zhàn",m:"Остановка"},{ch:"机场",p:"jī chǎng",m:"Аэропорт"},{ch:"火车站",p:"huǒ chē zhàn",m:"Вокзал"}],
+        [{ch:"老师",p:"lǎo shī",m:"Учитель"},{ch:"学生",p:"xué sheng",m:"Ученик"},{ch:"医生",p:"yī shēng",m:"Врач"},{ch:"护士",p:"hù shi",m:"Медсестра"},{ch:"司机",p:"sī jī",m:"Водитель"},{ch:"经理",p:"jīng lǐ",m:"Менеджер"},{ch:"工作",p:"gōng zuò",m:"Работа"},{ch:"学习",p:"xué xí",m:"Учиться"},{ch:"同学",p:"tóng xué",m:"Одноклассник"},{ch:"朋友",p:"péng you",m:"Друг"}],
+        [{ch:"猫",p:"māo",m:"Кошка"},{ch:"狗",p:"gǒu",m:"Собака"},{ch:"鸟",p:"niǎo",m:"Птица"},{ch:"鱼",p:"yú",m:"Рыба"},{ch:"马",p:"mǎ",m:"Лошадь"},{ch:"兔子",p:"tù zi",m:"Кролик"},{ch:"动物",p:"dòng wù",m:"Животное"},{ch:"宠物",p:"chǒng wù",m:"Питомец"},{ch:"喜欢",p:"xǐ huan",m:"Нравиться"},{ch:"爱",p:"ài",m:"Любить"}],
+        [{ch:"的",p:"de",m:"Частица"},{ch:"了",p:"le",m:"Прош.вр."},{ch:"不",p:"bù",m:"Не"},{ch:"没",p:"méi",m:"Нет"},{ch:"很",p:"hěn",m:"Очень"},{ch:"太",p:"tài",m:"Слишком"},{ch:"都",p:"dōu",m:"Все"},{ch:"和",p:"hé",m:"И"},{ch:"吗",p:"ma",m:"Вопрос"},{ch:"呢",p:"ne",m:"А?"}],
+        [{ch:"个",p:"gè",m:"Сч.слово"},{ch:"块",p:"kuài",m:"Юань"},{ch:"本",p:"běn",m:"Для книг"},{ch:"岁",p:"suì",m:"Лет"},{ch:"点",p:"diǎn",m:"Немного"},{ch:"些",p:"xiē",m:"Некоторые"},{ch:"请",p:"qǐng",m:"Пожалуйста"},{ch:"能",p:"néng",m:"Мочь"},{ch:"会",p:"huì",m:"Уметь"},{ch:"想",p:"xiǎng",m:"Хотеть"}]
+    ];
+
+    // ----- HSK 2 (150 слов, 10 уроков по 15 слов) -----
+    const hsk2Words = [
+        [{ch:"早上",p:"zǎo shang",m:"Утро"},{ch:"晚上",p:"wǎn shang",m:"Вечер"},{ch:"吃饭",p:"chī fàn",m:"Есть"},{ch:"睡觉",p:"shuì jiào",m:"Спать"},{ch:"起床",p:"qǐ chuáng",m:"Вставать"},{ch:"洗澡",p:"xǐ zǎo",m:"Душ"},{ch:"刷牙",p:"shuā yá",m:"Чистить зубы"},{ch:"洗脸",p:"xǐ liǎn",m:"Умываться"},{ch:"穿衣服",p:"chuān yī fu",m:"Одеваться"},{ch:"上班",p:"shàng bān",m:"На работу"},{ch:"下班",p:"xià bān",m:"С работы"},{ch:"回家",p:"huí jiā",m:"Домой"},{ch:"休息",p:"xiū xi",m:"Отдыхать"},{ch:"运动",p:"yùn dòng",m:"Спорт"},{ch:"旅游",p:"lǚ yóu",m:"Путешествовать"}],
+        [{ch:"高",p:"gāo",m:"Высокий"},{ch:"矮",p:"ǎi",m:"Низкий"},{ch:"胖",p:"pàng",m:"Толстый"},{ch:"瘦",p:"shòu",m:"Худой"},{ch:"年轻",p:"nián qīng",m:"Молодой"},{ch:"老",p:"lǎo",m:"Старый"},{ch:"聪明",p:"cōng ming",m:"Умный"},{ch:"可爱",p:"kě ài",m:"Милый"},{ch:"认真",p:"rèn zhēn",m:"Серьёзный"},{ch:"努力",p:"nǔ lì",m:"Старательный"},{ch:"难过",p:"nán guò",m:"Грустный"},{ch:"生气",p:"shēng qì",m:"Злой"},{ch:"担心",p:"dān xīn",m:"Беспокоиться"},{ch:"快乐",p:"kuài lè",m:"Счастливый"},{ch:"希望",p:"xī wàng",m:"Надеяться"}],
+        [{ch:"天气",p:"tiān qì",m:"Погода"},{ch:"下雨",p:"xià yǔ",m:"Дождь"},{ch:"下雪",p:"xià xuě",m:"Снег"},{ch:"刮风",p:"guā fēng",m:"Ветер"},{ch:"晴天",p:"qíng tiān",m:"Солнечно"},{ch:"阴天",p:"yīn tiān",m:"Пасмурно"},{ch:"暖和",p:"nuǎn huo",m:"Тепло"},{ch:"凉快",p:"liáng kuai",m:"Прохладно"},{ch:"山",p:"shān",m:"Гора"},{ch:"河",p:"hé",m:"Река"},{ch:"海",p:"hǎi",m:"Море"},{ch:"树",p:"shù",m:"Дерево"},{ch:"花",p:"huā",m:"Цветок"},{ch:"草",p:"cǎo",m:"Трава"},{ch:"月亮",p:"yuè liang",m:"Луна"}],
+        [{ch:"城市",p:"chéng shì",m:"Город"},{ch:"农村",p:"nóng cūn",m:"Деревня"},{ch:"公园",p:"gōng yuán",m:"Парк"},{ch:"超市",p:"chāo shì",m:"Супермаркет"},{ch:"银行",p:"yín háng",m:"Банк"},{ch:"邮局",p:"yóu jú",m:"Почта"},{ch:"图书馆",p:"tú shū guǎn",m:"Библиотека"},{ch:"体育馆",p:"tǐ yù guǎn",m:"Спортзал"},{ch:"车站",p:"chē zhàn",m:"Остановка"},{ch:"自行车",p:"zì xíng chē",m:"Велосипед"},{ch:"公里",p:"gōng lǐ",m:"Километр"},{ch:"分钟",p:"fēn zhōng",m:"Минута"},{ch:"小时",p:"xiǎo shí",m:"Час"},{ch:"星期",p:"xīng qī",m:"Неделя"},{ch:"周末",p:"zhōu mò",m:"Выходные"}],
+        [{ch:"公司",p:"gōng sī",m:"Компания"},{ch:"办公室",p:"bàn gōng shì",m:"Офис"},{ch:"同事",p:"tóng shì",m:"Коллега"},{ch:"老板",p:"lǎo bǎn",m:"Начальник"},{ch:"员工",p:"yuán gōng",m:"Сотрудник"},{ch:"面试",p:"miàn shì",m:"Собеседование"},{ch:"经验",p:"jīng yàn",m:"Опыт"},{ch:"机会",p:"jī huì",m:"Возможность"},{ch:"考试",p:"kǎo shì",m:"Экзамен"},{ch:"成绩",p:"chéng jì",m:"Оценка"},{ch:"作业",p:"zuò yè",m:"Д/з"},{ch:"教室",p:"jiào shì",m:"Класс"},{ch:"大学",p:"dà xué",m:"Университет"},{ch:"毕业",p:"bì yè",m:"Выпускаться"},{ch:"专业",p:"zhuān yè",m:"Специальность"}],
+        [{ch:"身体",p:"shēn tǐ",m:"Тело"},{ch:"健康",p:"jiàn kāng",m:"Здоровье"},{ch:"生病",p:"shēng bìng",m:"Болеть"},{ch:"感冒",p:"gǎn mào",m:"Простуда"},{ch:"发烧",p:"fā shāo",m:"Температура"},{ch:"咳嗽",p:"ké sou",m:"Кашель"},{ch:"头疼",p:"tóu téng",m:"Головная боль"},{ch:"吃药",p:"chī yào",m:"Пить лекарство"},{ch:"锻炼",p:"duàn liàn",m:"Тренироваться"},{ch:"减肥",p:"jiǎn féi",m:"Худеть"},{ch:"医生",p:"yī shēng",m:"Врач"},{ch:"护士",p:"hù shi",m:"Медсестра"},{ch:"药",p:"yào",m:"Лекарство"},{ch:"检查",p:"jiǎn chá",m:"Осмотр"},{ch:"治疗",p:"zhì liáo",m:"Лечение"}],
+        [{ch:"买",p:"mǎi",m:"Покупать"},{ch:"卖",p:"mài",m:"Продавать"},{ch:"价格",p:"jià gé",m:"Цена"},{ch:"便宜",p:"pián yi",m:"Дёшево"},{ch:"贵",p:"guì",m:"Дорого"},{ch:"钱",p:"qián",m:"Деньги"},{ch:"信用卡",p:"xìn yòng kǎ",m:"Карта"},{ch:"现金",p:"xiàn jīn",m:"Наличные"},{ch:"购物",p:"gòu wù",m:"Покупки"},{ch:"商场",p:"shāng chǎng",m:"ТЦ"},{ch:"网上购物",p:"wǎng shàng gòu wù",m:"Онлайн"},{ch:"退货",p:"tuì huò",m:"Возврат"},{ch:"试穿",p:"shì chuān",m:"Примерять"},{ch:"发票",p:"fā piào",m:"Чек"},{ch:"打折",p:"dǎ zhé",m:"Скидка"}],
+        [{ch:"旅行",p:"lǚ xíng",m:"Путешествие"},{ch:"地图",p:"dì tú",m:"Карта"},{ch:"护照",p:"hù zhào",m:"Паспорт"},{ch:"签证",p:"qiān zhèng",m:"Виза"},{ch:"酒店",p:"jiǔ diàn",m:"Отель"},{ch:"旅馆",p:"lǚ guǎn",m:"Гостиница"},{ch:"预订",p:"yù dìng",m:"Бронировать"},{ch:"飞机票",p:"fēi jī piào",m:"Авиабилет"},{ch:"火车票",p:"huǒ chē piào",m:"Билет"},{ch:"行李",p:"xíng li",m:"Багаж"},{ch:"景点",p:"jǐng diǎn",m:"Достопримечательность"},{ch:"导游",p:"dǎo yóu",m:"Гид"},{ch:"拍照",p:"pāi zhào",m:"Фото"},{ch:"纪念品",p:"jì niàn pǐn",m:"Сувенир"},{ch:"回忆",p:"huí yì",m:"Воспоминания"}],
+        [{ch:"电话",p:"diàn huà",m:"Телефон"},{ch:"手机",p:"shǒu jī",m:"Мобильный"},{ch:"短信",p:"duǎn xìn",m:"СМС"},{ch:"微信",p:"wēi xìn",m:"WeChat"},{ch:"邮件",p:"yóu jiàn",m:"Почта"},{ch:"网络",p:"wǎng luò",m:"Интернет"},{ch:"消息",p:"xiāo xi",m:"Новость"},{ch:"通知",p:"tōng zhī",m:"Уведомление"},{ch:"邀请",p:"yāo qǐng",m:"Приглашать"},{ch:"回答",p:"huí dá",m:"Отвечать"},{ch:"解释",p:"jiě shì",m:"Объяснять"},{ch:"讨论",p:"tǎo lùn",m:"Обсуждать"},{ch:"意见",p:"yì jiàn",m:"Мнение"},{ch:"建议",p:"jiàn yì",m:"Совет"},{ch:"帮忙",p:"bāng máng",m:"Помогать"}],
+        [{ch:"时候",p:"shí hou",m:"Время"},{ch:"时间",p:"shí jiān",m:"Время"},{ch:"早上",p:"zǎo shang",m:"Утро"},{ch:"上午",p:"shàng wǔ",m:"До полудня"},{ch:"中午",p:"zhōng wǔ",m:"Полдень"},{ch:"下午",p:"xià wǔ",m:"После полудня"},{ch:"晚上",p:"wǎn shang",m:"Вечер"},{ch:"半夜",p:"bàn yè",m:"Полночь"},{ch:"昨天",p:"zuó tiān",m:"Вчера"},{ch:"今天",p:"jīn tiān",m:"Сегодня"},{ch:"明天",p:"míng tiān",m:"Завтра"},{ch:"前天",p:"qián tiān",m:"Позавчера"},{ch:"后天",p:"hòu tiān",m:"Послезавтра"},{ch:"每天",p:"měi tiān",m:"Каждый день"},{ch:"经常",p:"jīng cháng",m:"Часто"}]
+    ];
+
+    // ----- HSK 3 (300 слов, 15 уроков по 20 слов) -----
+    const hsk3Words = [
+        [{ch:"父母",p:"fù mǔ",m:"Родители"},{ch:"夫妻",p:"fū qī",m:"Супруги"},{ch:"结婚",p:"jié hūn",m:"Жениться"},{ch:"离婚",p:"lí hūn",m:"Разводиться"},{ch:"恋爱",p:"liàn ài",m:"Любовь"},{ch:"感情",p:"gǎn qíng",m:"Чувства"},{ch:"关心",p:"guān xīn",m:"Заботиться"},{ch:"照顾",p:"zhào gù",m:"Ухаживать"},{ch:"习惯",p:"xí guàn",m:"Привычка"},{ch:"性格",p:"xìng gé",m:"Характер"},{ch:"脾气",p:"pí qi",m:"Нрав"},{ch:"尊重",p:"zūn zhòng",m:"Уважать"},{ch:"信任",p:"xìn rèn",m:"Доверять"},{ch:"理解",p:"lǐ jiě",m:"Понимать"},{ch:"原谅",p:"yuán liàng",m:"Прощать"},{ch:"吵架",p:"chǎo jià",m:"Ссориться"},{ch:"和好",p:"hé hǎo",m:"Мириться"},{ch:"想念",p:"xiǎng niàn",m:"Скучать"},{ch:"忘记",p:"wàng jì",m:"Забывать"},{ch:"记得",p:"jì de",m:"Помнить"}],
+        [{ch:"职业",p:"zhí yè",m:"Профессия"},{ch:"行业",p:"háng yè",m:"Отрасль"},{ch:"职位",p:"zhí wèi",m:"Должность"},{ch:"升职",p:"shēng zhí",m:"Повышение"},{ch:"加薪",p:"jiā xīn",m:"Прибавка"},{ch:"辞职",p:"cí zhí",m:"Увольняться"},{ch:"招聘",p:"zhāo pìn",m:"Нанимать"},{ch:"应聘",p:"yìng pìn",m:"Подавать"},{ch:"简历",p:"jiǎn lì",m:"Резюме"},{ch:"面试",p:"miàn shì",m:"Собеседование"},{ch:"培训",p:"péi xùn",m:"Обучение"},{ch:"会议",p:"huì yì",m:"Совещание"},{ch:"报告",p:"bào gào",m:"Доклад"},{ch:"项目",p:"xiàng mù",m:"Проект"},{ch:"计划",p:"jì huà",m:"План"},{ch:"目标",p:"mù biāo",m:"Цель"},{ch:"成功",p:"chéng gōng",m:"Успех"},{ch:"失败",p:"shī bài",m:"Провал"},{ch:"努力",p:"nǔ lì",m:"Усилие"},{ch:"坚持",p:"jiān chí",m:"Настаивать"}],
+        [{ch:"知识",p:"zhī shi",m:"Знания"},{ch:"文化",p:"wén huà",m:"Культура"},{ch:"历史",p:"lì shǐ",m:"История"},{ch:"地理",p:"dì lǐ",m:"География"},{ch:"科学",p:"kē xué",m:"Наука"},{ch:"技术",p:"jì shù",m:"Технология"},{ch:"研究",p:"yán jiū",m:"Исследовать"},{ch:"实验",p:"shí yàn",m:"Эксперимент"},{ch:"经验",p:"jīng yàn",m:"Опыт"},{ch:"方法",p:"fāng fǎ",m:"Метод"},{ch:"问题",p:"wèn tí",m:"Вопрос"},{ch:"答案",p:"dá àn",m:"Ответ"},{ch:"正确",p:"zhèng què",m:"Правильный"},{ch:"错误",p:"cuò wù",m:"Ошибка"},{ch:"练习",p:"liàn xí",m:"Упражнение"},{ch:"复习",p:"fù xí",m:"Повторять"},{ch:"预习",p:"yù xí",m:"Готовиться"},{ch:"笔记",p:"bǐ jì",m:"Записи"},{ch:"考试",p:"kǎo shì",m:"Экзамен"},{ch:"成绩",p:"chéng jì",m:"Оценка"}],
+        [{ch:"旅行",p:"lǚ xíng",m:"Путешествие"},{ch:"出差",p:"chū chāi",m:"Командировка"},{ch:"签证",p:"qiān zhèng",m:"Виза"},{ch:"护照",p:"hù zhào",m:"Паспорт"},{ch:"机票",p:"jī piào",m:"Билет"},{ch:"酒店",p:"jiǔ diàn",m:"Отель"},{ch:"行李",p:"xíng li",m:"Багаж"},{ch:"导游",p:"dǎo yóu",m:"Гид"},{ch:"方向",p:"fāng xiàng",m:"Направление"},{ch:"迷路",p:"mí lù",m:"Заблудиться"},{ch:"到达",p:"dào dá",m:"Прибывать"},{ch:"离开",p:"lí kāi",m:"Уезжать"},{ch:"欢迎",p:"huān yíng",m:"Добро пожаловать"},{ch:"送行",p:"sòng xíng",m:"Провожать"},{ch:"接机",p:"jiē jī",m:"Встречать"},{ch:"景点",p:"jǐng diǎn",m:"Достопримечательность"},{ch:"拍照",p:"pāi zhào",m:"Фото"},{ch:"纪念品",p:"jì niàn pǐn",m:"Сувенир"},{ch:"回忆",p:"huí yì",m:"Воспоминания"},{ch:"风景",p:"fēng jǐng",m:"Пейзаж"}],
+        [{ch:"健康",p:"jiàn kāng",m:"Здоровье"},{ch:"锻炼",p:"duàn liàn",m:"Тренировка"},{ch:"跑步",p:"pǎo bù",m:"Бег"},{ch:"游泳",p:"yóu yǒng",m:"Плавание"},{ch:"打球",p:"dǎ qiú",m:"Играть"},{ch:"健身",p:"jiàn shēn",m:"Фитнес"},{ch:"减肥",p:"jiǎn féi",m:"Похудение"},{ch:"感冒",p:"gǎn mào",m:"Простуда"},{ch:"发烧",p:"fā shāo",m:"Температура"},{ch:"咳嗽",p:"ké sou",m:"Кашель"},{ch:"头疼",p:"tóu téng",m:"Головная боль"},{ch:"胃疼",p:"wèi téng",m:"Боль в животе"},{ch:"药",p:"yào",m:"Лекарство"},{ch:"医生",p:"yī shēng",m:"Врач"},{ch:"医院",p:"yī yuàn",m:"Больница"},{ch:"检查",p:"jiǎn chá",m:"Осмотр"},{ch:"治疗",p:"zhì liáo",m:"Лечение"},{ch:"休息",p:"xiū xi",m:"Отдых"},{ch:"放松",p:"fàng sōng",m:"Расслабляться"},{ch:"压力",p:"yā lì",m:"Стресс"}],
+        [{ch:"超市",p:"chāo shì",m:"Супермаркет"},{ch:"商场",p:"shāng chǎng",m:"ТЦ"},{ch:"网上购物",p:"wǎng shàng gòu wù",m:"Онлайн"},{ch:"打折",p:"dǎ zhé",m:"Скидка"},{ch:"促销",p:"cù xiāo",m:"Распродажа"},{ch:"优惠券",p:"yōu huì quàn",m:"Купон"},{ch:"退货",p:"tuì huò",m:"Возврат"},{ch:"换货",p:"huàn huò",m:"Обмен"},{ch:"保修",p:"bǎo xiū",m:"Гарантия"},{ch:"发票",p:"fā piào",m:"Чек"},{ch:"信用卡",p:"xìn yòng kǎ",m:"Карта"},{ch:"现金",p:"xiàn jīn",m:"Наличные"},{ch:"价格",p:"jià gé",m:"Цена"},{ch:"便宜",p:"pián yi",m:"Дёшево"},{ch:"贵",p:"guì",m:"Дорого"},{ch:"划算",p:"huá suàn",m:"Выгодно"},{ch:"服务",p:"fú wù",m:"Услуга"},{ch:"态度",p:"tài dù",m:"Отношение"},{ch:"满意",p:"mǎn yì",m:"Довольный"},{ch:"建议",p:"jiàn yì",m:"Совет"}],
+        [{ch:"手机",p:"shǒu jī",m:"Телефон"},{ch:"微信",p:"wēi xìn",m:"WeChat"},{ch:"微博",p:"wēi bó",m:"Weibo"},{ch:"朋友圈",p:"péng you quān",m:"Лента"},{ch:"点赞",p:"diǎn zàn",m:"Лайк"},{ch:"评论",p:"píng lùn",m:"Комментарий"},{ch:"分享",p:"fēn xiǎng",m:"Поделиться"},{ch:"转发",p:"zhuǎn fā",m:"Репост"},{ch:"消息",p:"xiāo xi",m:"Сообщение"},{ch:"聊天",p:"liáo tiān",m:"Болтать"},{ch:"视频",p:"shì pín",m:"Видео"},{ch:"语音",p:"yǔ yīn",m:"Голосовое"},{ch:"照片",p:"zhào piàn",m:"Фото"},{ch:"表情",p:"biǎo qíng",m:"Стикер"},{ch:"红包",p:"hóng bāo",m:"Конверт"},{ch:"支付",p:"zhī fù",m:"Платёж"},{ch:"账号",p:"zhàng hào",m:"Аккаунт"},{ch:"密码",p:"mì mǎ",m:"Пароль"},{ch:"登录",p:"dēng lù",m:"Войти"},{ch:"注册",p:"zhù cè",m:"Регистрация"}],
+        [{ch:"春天",p:"chūn tiān",m:"Весна"},{ch:"夏天",p:"xià tiān",m:"Лето"},{ch:"秋天",p:"qiū tiān",m:"Осень"},{ch:"冬天",p:"dōng tiān",m:"Зима"},{ch:"温度",p:"wēn dù",m:"Температура"},{ch:"湿度",p:"shī dù",m:"Влажность"},{ch:"晴天",p:"qíng tiān",m:"Солнечно"},{ch:"阴天",p:"yīn tiān",m:"Пасмурно"},{ch:"下雨",p:"xià yǔ",m:"Дождь"},{ch:"下雪",p:"xià xuě",m:"Снег"},{ch:"刮风",p:"guā fēng",m:"Ветер"},{ch:"打雷",p:"dǎ léi",m:"Гром"},{ch:"闪电",p:"shǎn diàn",m:"Молния"},{ch:"雾",p:"wù",m:"Туман"},{ch:"彩虹",p:"cǎi hóng",m:"Радуга"},{ch:"气候",p:"qì hòu",m:"Климат"},{ch:"环境",p:"huán jìng",m:"Окружающая среда"},{ch:"污染",p:"wū rǎn",m:"Загрязнение"},{ch:"保护",p:"bǎo hù",m:"Защищать"},{ch:"自然",p:"zì rán",m:"Природа"}],
+        [{ch:"早餐",p:"zǎo cān",m:"Завтрак"},{ch:"午餐",p:"wǔ cān",m:"Обед"},{ch:"晚餐",p:"wǎn cān",m:"Ужин"},{ch:"菜单",p:"cài dān",m:"Меню"},{ch:"点菜",p:"diǎn cài",m:"Заказывать"},{ch:"味道",p:"wèi dào",m:"Вкус"},{ch:"好吃",p:"hǎo chī",m:"Вкусно"},{ch:"难吃",p:"nán chī",m:"Невкусно"},{ch:"辣",p:"là",m:"Острый"},{ch:"甜",p:"tián",m:"Сладкий"},{ch:"酸",p:"suān",m:"Кислый"},{ch:"苦",p:"kǔ",m:"Горький"},{ch:"咸",p:"xián",m:"Солёный"},{ch:"清淡",p:"qīng dàn",m:"Лёгкий"},{ch:"油腻",p:"yóu nì",m:"Жирный"},{ch:"新鲜",p:"xīn xiān",m:"Свежий"},{ch:"健康",p:"jiàn kāng",m:"Здоровый"},{ch:"外卖",p:"wài mài",m:"Доставка"},{ch:"打包",p:"dǎ bāo",m:"С собой"},{ch:"请客",p:"qǐng kè",m:"Угощать"}],
+        [{ch:"房子",p:"fáng zi",m:"Дом"},{ch:"公寓",p:"gōng yù",m:"Квартира"},{ch:"卧室",p:"wò shì",m:"Спальня"},{ch:"客厅",p:"kè tīng",m:"Гостиная"},{ch:"厨房",p:"chú fáng",m:"Кухня"},{ch:"卫生间",p:"wèi shēng jiān",m:"Ванная"},{ch:"阳台",p:"yáng tái",m:"Балкон"},{ch:"家具",p:"jiā jù",m:"Мебель"},{ch:"电器",p:"diàn qì",m:"Техника"},{ch:"空调",p:"kōng tiáo",m:"Кондиционер"},{ch:"暖气",p:"nuǎn qì",m:"Отопление"},{ch:"网络",p:"wǎng luò",m:"Интернет"},{ch:"水电",p:"shuǐ diàn",m:"Вода и свет"},{ch:"房租",p:"fáng zū",m:"Аренда"},{ch:"买房",p:"mǎi fáng",m:"Покупать"},{ch:"搬家",p:"bān jiā",m:"Переезжать"},{ch:"装修",p:"zhuāng xiū",m:"Ремонт"},{ch:"打扫",p:"dǎ sǎo",m:"Убирать"},{ch:"干净",p:"gān jìng",m:"Чистый"},{ch:"乱",p:"luàn",m:"Беспорядок"}],
+        [{ch:"开心",p:"kāi xīn",m:"Радостный"},{ch:"快乐",p:"kuài lè",m:"Счастливый"},{ch:"难过",p:"nán guò",m:"Печальный"},{ch:"伤心",p:"shāng xīn",m:"Огорчённый"},{ch:"生气",p:"shēng qì",m:"Злой"},{ch:"害怕",p:"hài pà",m:"Бояться"},{ch:"紧张",p:"jǐn zhāng",m:"Нервный"},{ch:"放松",p:"fàng sōng",m:"Расслабленный"},{ch:"兴奋",p:"xīng fèn",m:"Взволнованный"},{ch:"无聊",p:"wú liáo",m:"Скучно"},{ch:"寂寞",p:"jì mò",m:"Одинокий"},{ch:"感动",p:"gǎn dòng",m:"Тронутый"},{ch:"失望",p:"shī wàng",m:"Разочарованный"},{ch:"后悔",p:"hòu huǐ",m:"Сожалеть"},{ch:"担心",p:"dān xīn",m:"Беспокоиться"},{ch:"放心",p:"fàng xīn",m:"Не волноваться"},{ch:"耐心",p:"nài xīn",m:"Терпеливый"},{ch:"热情",p:"rè qíng",m:"Энтузиазм"},{ch:"自信",p:"zì xìn",m:"Уверенность"},{ch:"骄傲",p:"jiāo ào",m:"Гордый"}],
+        [{ch:"传统",p:"chuán tǒng",m:"Традиция"},{ch:"现代",p:"xiàn dài",m:"Современный"},{ch:"文化",p:"wén huà",m:"Культура"},{ch:"艺术",p:"yì shù",m:"Искусство"},{ch:"音乐",p:"yīn yuè",m:"Музыка"},{ch:"电影",p:"diàn yǐng",m:"Кино"},{ch:"电视",p:"diàn shì",m:"ТВ"},{ch:"新闻",p:"xīn wén",m:"Новости"},{ch:"节日",p:"jié rì",m:"Праздник"},{ch:"春节",p:"chūn jié",m:"Новый год"},{ch:"礼物",p:"lǐ wù",m:"Подарок"},{ch:"红包",p:"hóng bāo",m:"Конверт"},{ch:"礼貌",p:"lǐ mào",m:"Вежливость"},{ch:"尊重",p:"zūn zhòng",m:"Уважение"},{ch:"帮助",p:"bāng zhù",m:"Помощь"},{ch:"感谢",p:"gǎn xiè",m:"Благодарность"},{ch:"道歉",p:"dào qiàn",m:"Извинение"},{ch:"邀请",p:"yāo qǐng",m:"Приглашение"},{ch:"参加",p:"cān jiā",m:"Участвовать"},{ch:"组织",p:"zǔ zhī",m:"Организовывать"}],
+        [{ch:"森林",p:"sēn lín",m:"Лес"},{ch:"草原",p:"cǎo yuán",m:"Степь"},{ch:"沙漠",p:"shā mò",m:"Пустыня"},{ch:"海洋",p:"hǎi yáng",m:"Океан"},{ch:"河流",p:"hé liú",m:"Река"},{ch:"湖泊",p:"hú pō",m:"Озеро"},{ch:"山",p:"shān",m:"Гора"},{ch:"天空",p:"tiān kōng",m:"Небо"},{ch:"星星",p:"xīng xing",m:"Звезда"},{ch:"月亮",p:"yuè liang",m:"Луна"},{ch:"太阳",p:"tài yáng",m:"Солнце"},{ch:"动物",p:"dòng wù",m:"Животные"},{ch:"植物",p:"zhí wù",m:"Растения"},{ch:"环保",p:"huán bǎo",m:"Экология"},{ch:"节约",p:"jié yuē",m:"Экономить"},{ch:"浪费",p:"làng fèi",m:"Тратить"},{ch:"回收",p:"huí shōu",m:"Переработка"},{ch:"垃圾",p:"lā jī",m:"Мусор"},{ch:"清洁",p:"qīng jié",m:"Чистый"},{ch:"美丽",p:"měi lì",m:"Красивый"}],
+        [{ch:"手机",p:"shǒu jī",m:"Телефон"},{ch:"电脑",p:"diàn nǎo",m:"Компьютер"},{ch:"平板",p:"píng bǎn",m:"Планшет"},{ch:"软件",p:"ruǎn jiàn",m:"ПО"},{ch:"硬件",p:"yìng jiàn",m:"Железо"},{ch:"应用",p:"yìng yòng",m:"Приложение"},{ch:"网站",p:"wǎng zhàn",m:"Сайт"},{ch:"搜索",p:"sōu suǒ",m:"Поиск"},{ch:"下载",p:"xià zài",m:"Скачать"},{ch:"上传",p:"shàng chuán",m:"Загрузить"},{ch:"备份",p:"bèi fèn",m:"Резервная копия"},{ch:"病毒",p:"bìng dú",m:"Вирус"},{ch:"安全",p:"ān quán",m:"Безопасность"},{ch:"隐私",p:"yǐn sī",m:"Конфиденциальность"},{ch:"数据",p:"shù jù",m:"Данные"},{ch:"信息",p:"xìn xī",m:"Информация"},{ch:"智能",p:"zhì néng",m:"Умный"},{ch:"机器人",p:"jī qì rén",m:"Робот"},{ch:"未来",p:"wèi lái",m:"Будущее"},{ch:"发展",p:"fā zhǎn",m:"Развитие"}],
+        [{ch:"起床",p:"qǐ chuáng",m:"Вставать"},{ch:"洗漱",p:"xǐ shù",m:"Умываться"},{ch:"早餐",p:"zǎo cān",m:"Завтрак"},{ch:"上班",p:"shàng bān",m:"На работу"},{ch:"下班",p:"xià bān",m:"С работы"},{ch:"回家",p:"huí jiā",m:"Домой"},{ch:"晚餐",p:"wǎn cān",m:"Ужин"},{ch:"洗澡",p:"xǐ zǎo",m:"Душ"},{ch:"睡觉",p:"shuì jiào",m:"Спать"},{ch:"周末",p:"zhōu mò",m:"Выходные"},{ch:"假期",p:"jià qī",m:"Каникулы"},{ch:"约会",p:"yuē huì",m:"Встреча"},{ch:"聚会",p:"jù huì",m:"Вечеринка"},{ch:"聊天",p:"liáo tiān",m:"Беседа"},{ch:"散步",p:"sàn bù",m:"Прогулка"},{ch:"购物",p:"gòu wù",m:"Покупки"},{ch:"做饭",p:"zuò fàn",m:"Готовить"},{ch:"打扫",p:"dǎ sǎo",m:"Уборка"},{ch:"洗衣",p:"xǐ yī",m:"Стирка"},{ch:"付钱",p:"fù qián",m:"Платить"}]
+    ];
+
+    // Сборка hskData
+    const hskData = {1:[],2:[],3:[]};
+    for(let i=0;i<hsk1Words.length;i++) hskData[1].push({name:`Урок ${i+1}`, words:hsk1Words[i].map(w=>({...w, examples:generateExamples(w.ch,w.p,w.m)}))});
+    for(let i=0;i<hsk2Words.length;i++) hskData[2].push({name:`Урок ${i+1}`, words:hsk2Words[i].map(w=>({...w, examples:generateExamples(w.ch,w.p,w.m)}))});
+    for(let i=0;i<hsk3Words.length;i++) hskData[3].push({name:`Урок ${i+1}`, words:hsk3Words[i].map(w=>({...w, examples:generateExamples(w.ch,w.p,w.m)}))});
 
     // Состояния
     let currentLevel = 1, currentLesson = 0;
-    let learnedWords = JSON.parse(localStorage.getItem('learned')) || [];
-    let unlockedLessons = JSON.parse(localStorage.getItem('unlocked')) || {1:[0],2:[0],3:[0]};
+    let learnedWords = JSON.parse(localStorage.getItem('learned_full')) || [];
+    let unlockedLessons = JSON.parse(localStorage.getItem('unlocked_full')) || {1:[0],2:[0],3:[0]};
     let currentVolume = 0.7;
     let testQuestions = [], testIndex = 0, testScore = 0;
 
@@ -348,51 +378,39 @@
 
     function showFireworks() {
         let container = document.createElement('div'); container.className = 'firework';
-        for (let i=0;i<40;i++) {
+        for(let i=0;i<40;i++) {
             let span = document.createElement('span');
-            span.style.position = 'absolute';
-            span.style.bottom = '0';
-            span.style.left = Math.random()*100+'%';
-            span.style.fontSize = (20+Math.random()*30)+'px';
-            span.style.animation = 'fly 1s ease-out forwards';
+            span.style.position = 'absolute'; span.style.bottom = '0'; span.style.left = Math.random()*100+'%';
+            span.style.fontSize = (20+Math.random()*30)+'px'; span.style.animation = 'fly 1s ease-out forwards';
             span.innerHTML = ['🎉','✨','🎊','🌟','💥','🎆'][Math.floor(Math.random()*6)];
             container.appendChild(span);
         }
-        document.body.appendChild(container);
-        setTimeout(()=>container.remove(),1500);
+        document.body.appendChild(container); setTimeout(()=>container.remove(),1500);
     }
 
     function showPanda() {
         let div = document.createElement('div');
         div.innerHTML = '🐼 Грустная панда... Попробуй ещё раз! 🐼';
-        div.style.position = 'fixed';
-        div.style.bottom = '30%';
-        div.style.left = '50%';
-        div.style.transform = 'translateX(-50%)';
-        div.style.background = '#333';
-        div.style.color = 'white';
-        div.style.padding = '20px';
-        div.style.borderRadius = '50px';
-        div.style.zIndex = '2000';
-        div.style.animation = 'fadeOut 2s forwards';
-        document.body.appendChild(div);
+        div.style.position = 'fixed'; div.style.bottom = '30%'; div.style.left = '50%';
+        div.style.transform = 'translateX(-50%)'; div.style.background = '#333'; div.style.color = 'white';
+        div.style.padding = '20px'; div.style.borderRadius = '50px'; div.style.zIndex = '2000';
+        div.style.animation = 'fadeOut 2s forwards'; document.body.appendChild(div);
         setTimeout(()=>div.remove(),2000);
     }
 
     function isWordLearned(lvl, les, idx) { return learnedWords.includes(`${lvl}_${les}_${idx}`); }
     function toggleWord(lvl, les, idx) {
         let key = `${lvl}_${les}_${idx}`;
-        if (learnedWords.includes(key)) learnedWords = learnedWords.filter(k=>k!==key);
+        if(learnedWords.includes(key)) learnedWords = learnedWords.filter(k=>k!==key);
         else learnedWords.push(key);
-        localStorage.setItem('learned', JSON.stringify(learnedWords));
-        renderCurrentLesson();
-        updateStats();
+        localStorage.setItem('learned_full', JSON.stringify(learnedWords));
+        renderCurrentLesson(); updateStats();
     }
 
     function isLessonUnlocked(lvl, les) { return unlockedLessons[lvl]?.includes(les); }
     function unlockLesson(lvl, les) {
-        if (!unlockedLessons[lvl]) unlockedLessons[lvl]=[];
-        if (!unlockedLessons[lvl].includes(les)) { unlockedLessons[lvl].push(les); localStorage.setItem('unlocked', JSON.stringify(unlockedLessons)); }
+        if(!unlockedLessons[lvl]) unlockedLessons[lvl]=[];
+        if(!unlockedLessons[lvl].includes(les)) { unlockedLessons[lvl].push(les); localStorage.setItem('unlocked_full', JSON.stringify(unlockedLessons)); }
     }
 
     function getLessonLearnedCount(lvl, les) { return hskData[lvl][les].words.filter((_,i)=>isWordLearned(lvl,les,i)).length; }
@@ -403,7 +421,7 @@
         let totalLearned = getTotalLearned(), totalWords = getTotalWords();
         document.getElementById('totalLearned').innerText = totalLearned;
         document.getElementById('currentLessonLearned').innerText = getLessonLearnedCount(currentLevel, currentLesson);
-        document.getElementById('progressPercent').innerText = Math.round(totalLearned/totalWords*100)+'%';
+        document.getElementById('progressPercent').innerText = totalWords?Math.round(totalLearned/totalWords*100)+'%':'0%';
     }
 
     function renderLessonNav() {
@@ -426,9 +444,9 @@
         lesson.words.forEach((w, idx) => {
             let learned = isWordLearned(currentLevel, currentLesson, idx);
             html += `<div class="word-card">
-                        <div class="chinese-area" onclick="speak('${w.chinese}','zh-CN')"><span class="chinese">${w.chinese}</span> 🔊</div>
-                        <div class="pinyin">${w.pinyin}</div>
-                        <div class="meaning-area" onclick="speak('${w.meaning}','ru-RU')"><span class="meaning">${w.meaning}</span> 🔊</div>
+                        <div class="chinese-area" onclick="speak('${w.ch}','zh-CN')"><span class="chinese">${w.ch}</span> 🔊</div>
+                        <div class="pinyin">${w.p}</div>
+                        <div class="meaning-area" onclick="speak('${w.m}','ru-RU')"><span class="meaning">${w.m}</span> 🔊</div>
                         <div class="examples">${w.examples.map(ex => `<div class="example" onclick="speak('${ex.ch}','zh-CN'); setTimeout(()=>speak('${ex.ru}','ru-RU'),500)">📢 ${ex.ch}<br><small>${ex.ru}</small></div>`).join('')}</div>
                         <button class="check-btn ${learned?'checked':''}" onclick="toggleWord(${currentLevel},${currentLesson},${idx})">${learned?'✓':'○'}</button>
                     </div>`;
@@ -459,20 +477,15 @@
             return;
         }
         let q = testQuestions[testIndex];
-        let allMeanings = hskData[currentLevel][currentLesson].words.map(w=>w.meaning);
-        let options = [q.meaning];
+        let allMeanings = hskData[currentLevel][currentLesson].words.map(w=>w.m);
+        let options = [q.m];
         while(options.length<4){ let r = allMeanings[Math.floor(Math.random()*allMeanings.length)]; if(!options.includes(r)) options.push(r); }
         options.sort(()=>Math.random()-0.5);
         let optsHtml = options.map(opt => `<div class="test-option" onclick="checkAnswer('${opt.replace(/'/g,"\\'")}')">${opt}</div>`).join('');
-        document.getElementById('testModalContent').innerHTML = `<div class="test-question" onclick="speak('${q.chinese}','zh-CN')">${q.chinese} 🔊</div><div>${q.pinyin}</div><div class="test-options">${optsHtml}</div><div>${testIndex+1}/10</div>`;
+        document.getElementById('testModalContent').innerHTML = `<div class="test-question" onclick="speak('${q.ch}','zh-CN')">${q.ch} 🔊</div><div>${q.p}</div><div class="test-options">${optsHtml}</div><div>${testIndex+1}/10</div>`;
     }
 
-    function checkAnswer(selected) {
-        if(selected === testQuestions[testIndex].meaning) testScore++;
-        testIndex++;
-        renderTestQuestion();
-    }
-
+    function checkAnswer(selected) { if(selected === testQuestions[testIndex].m) testScore++; testIndex++; renderTestQuestion(); }
     function closeTest() { document.getElementById('testModal').classList.remove('active'); }
 
     document.querySelectorAll('.level-btn').forEach(btn=>btn.addEventListener('click',()=>{
@@ -486,7 +499,7 @@
     if(!unlockedLessons[1]||unlockedLessons[1].length===0) unlockedLessons[1]=[0];
     if(!unlockedLessons[2]||unlockedLessons[2].length===0) unlockedLessons[2]=[0];
     if(!unlockedLessons[3]||unlockedLessons[3].length===0) unlockedLessons[3]=[0];
-    localStorage.setItem('unlocked', JSON.stringify(unlockedLessons));
+    localStorage.setItem('unlocked_full', JSON.stringify(unlockedLessons));
     renderLessonNav(); renderCurrentLesson();
 </script>
 </body>
