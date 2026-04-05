@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>HSK Study | Изучай китайский с удовольствием</title>
+    <title>HSK Study | Современное изучение китайского</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,43 +14,67 @@
         }
 
         body {
-            font-family: -apple-system, 'Segoe UI', 'Roboto', 'Poppins', sans-serif;
+            font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            padding: 20px;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            position: relative;
+            overflow-x: hidden;
         }
 
-        /* Общие стили */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(120, 80, 200, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 80, 120, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
         .hide { display: none !important; }
 
-        /* Центрирование контента */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+        }
+
         .center-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 90vh;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+            padding: 20px;
         }
 
-        /* Карточка формы */
-        .auth-card, .welcome-card {
-            background: white;
-            border-radius: 40px;
-            padding: 40px;
-            max-width: 450px;
+        /* Формы входа/регистрации */
+        .auth-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 48px;
+            padding: 48px 40px;
+            max-width: 480px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            animation: fadeInUp 0.5s ease;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.6s ease;
         }
 
-        .welcome-card {
-            max-width: 550px;
-        }
-
-        .auth-card h2, .welcome-card h2 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: #333;
+        .auth-card h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #fff, #e0c3ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         .input-group {
@@ -60,75 +85,208 @@
         .input-group label {
             display: block;
             margin-bottom: 8px;
-            font-weight: bold;
-            color: #555;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
         }
 
         .input-group input {
             width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 30px;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 28px;
             font-size: 1rem;
-            transition: 0.2s;
+            color: white;
+            transition: all 0.3s ease;
         }
 
         .input-group input:focus {
             outline: none;
-            border-color: #f5576c;
+            border-color: #ff6b9d;
+            box-shadow: 0 0 15px rgba(255, 107, 157, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #f5576c, #f093fb);
+            background: linear-gradient(135deg, #ff6b9d, #c084fc, #a855f7);
             color: white;
             border: none;
             padding: 14px 30px;
-            border-radius: 50px;
+            border-radius: 40px;
             font-size: 1rem;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             width: 100%;
-            transition: 0.2s;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .btn-secondary {
-            background: #e9ecef;
-            color: #495057;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 15px;
-            width: 100%;
-        }
-
-        .error-message {
-            color: #f44336;
-            font-size: 0.8rem;
-            margin-top: 10px;
+            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);
         }
 
         .switch-link {
             margin-top: 20px;
-            color: #667eea;
+            color: #c084fc;
             cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
         }
 
-        .user-info {
+        .switch-link:hover {
+            color: #ff6b9d;
+        }
+
+        .error-message {
+            color: #ff6b9d;
+            font-size: 0.8rem;
+            margin-top: 12px;
+        }
+
+        /* Главная страница */
+        .welcome-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 48px;
+            padding: 50px 40px;
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .welcome-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .welcome-header h2 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #fff, #e0c3ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 10px 24px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #ff6b9d;
+            color: white;
+        }
+
+        .levels-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+
+        .level-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            padding: 40px 30px;
+            width: 260px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .level-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .level-card:hover::before {
+            opacity: 1;
+        }
+
+        .level-card[data-level="1"] { border-top: 3px solid #4caf50; }
+        .level-card[data-level="2"] { border-top: 3px solid #2196f3; }
+        .level-card[data-level="3"] { border-top: 3px solid #ff9800; }
+
+        .level-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .level-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: inline-block;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+        }
+
+        .level-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .level-subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .word-count {
+            background: rgba(255,255,255,0.15);
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: 15px;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         /* Анимации */
@@ -148,113 +306,99 @@
             50% { transform: translateY(-10px); }
         }
 
-        /* Кнопки уровней */
-        .levels-grid {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-            margin: 40px 0;
-        }
-
-        .level-card {
-            border-radius: 40px;
-            padding: 40px 30px;
-            width: 280px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-
-        .level-card[data-level="1"] { background: linear-gradient(135deg, #4caf50, #8bc34a); color: white; }
-        .level-card[data-level="2"] { background: linear-gradient(135deg, #2196f3, #03a9f4); color: white; }
-        .level-card[data-level="3"] { background: linear-gradient(135deg, #ff9800, #ff5722); color: white; }
-
-        .level-card:hover {
-            transform: translateY(-15px) scale(1.02);
-        }
-
-        .level-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            display: inline-block;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .level-title {
-            font-size: 2rem;
-            font-weight: bold;
-        }
-
-        .word-count {
-            background: rgba(255,255,255,0.25);
-            display: inline-block;
-            padding: 8px 20px;
-            border-radius: 40px;
-            margin-top: 15px;
-        }
-
-        /* Стили приложения */
-        .container {
+        /* Основное приложение */
+        .app-container {
+            position: relative;
+            z-index: 1;
             max-width: 1400px;
             margin: 0 auto;
+            padding: 20px;
         }
 
-        .header {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            border-radius: 32px 32px 0 0;
-            padding: 24px 20px;
+        .app-header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 40px 40px 0 0;
+            padding: 30px 25px;
             text-align: center;
-            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .app-header h1 {
+            font-size: clamp(1.5rem, 5vw, 2.2rem);
+            background: linear-gradient(135deg, #fff, #e0c3ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         .stats-bar {
-            background: rgba(255,255,255,0.2);
-            border-radius: 30px;
-            padding: 12px 20px;
-            margin-top: 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 60px;
+            padding: 15px 25px;
+            margin-top: 20px;
             display: flex;
             justify-content: space-around;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 15px;
+        }
+
+        .stat {
+            text-align: center;
         }
 
         .stat-number {
-            font-size: clamp(1.2rem, 4vw, 1.8rem);
-            font-weight: bold;
+            font-size: clamp(1.3rem, 4vw, 2rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffd700, #ff9800);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 0.5px;
         }
 
         .tab-selector {
-            background: white;
             display: flex;
-            border-bottom: 2px solid #e0e0e0;
+            gap: 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 60px;
+            padding: 5px;
+            margin: 20px 0;
         }
 
         .tab-btn {
             flex: 1;
-            padding: 16px;
-            font-size: 1rem;
-            font-weight: bold;
+            padding: 14px 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
             border: none;
-            background: #f8f9fa;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.6);
             cursor: pointer;
+            border-radius: 50px;
+            transition: 0.3s;
         }
 
         .tab-btn.active {
-            background: white;
-            color: #f5576c;
-            border-bottom: 3px solid #f5576c;
+            background: linear-gradient(135deg, #ff6b9d, #c084fc);
+            color: white;
+            box-shadow: 0 5px 15px rgba(168, 85, 247, 0.3);
         }
 
         .lesson-nav {
-            background: white;
-            padding: 16px;
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
             justify-content: center;
-            max-height: 200px;
-            overflow-y: auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 40px;
+            margin-bottom: 20px;
         }
 
         .lesson-btn {
@@ -262,15 +406,18 @@
             height: 50px;
             border-radius: 50%;
             border: none;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: rgba(255, 255, 255, 0.1);
             color: white;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
         }
 
         .lesson-btn.active {
+            background: linear-gradient(135deg, #ff6b9d, #c084fc);
             transform: scale(1.1);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 0 15px rgba(192, 132, 252, 0.5);
         }
 
         .lesson-btn.learned {
@@ -278,165 +425,205 @@
         }
 
         .lesson-btn.locked {
-            background: #9e9e9e;
+            background: rgba(255, 255, 255, 0.05);
             cursor: not-allowed;
             opacity: 0.5;
         }
 
         .content {
-            background: white;
-            padding: 20px;
-            border-radius: 0 0 32px 32px;
-            min-height: 500px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 32px;
+            padding: 24px;
         }
 
         .words-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
         }
 
         .word-card {
-            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-            border-radius: 20px;
-            padding: 16px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 20px;
             text-align: center;
             position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .word-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 107, 157, 0.5);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
 
         .chinese {
-            font-size: 1.8rem;
-            font-weight: bold;
+            font-size: 2rem;
+            font-weight: 700;
             cursor: pointer;
+            color: white;
+            transition: 0.2s;
+        }
+
+        .chinese:hover {
+            text-shadow: 0 0 10px rgba(255,107,157,0.5);
         }
 
         .pinyin {
             font-size: 0.9rem;
-            color: #e74c3c;
+            color: rgba(255, 255, 255, 0.6);
+            margin: 8px 0;
         }
 
         .meaning {
-            font-size: 0.9rem;
-            color: #27ae60;
+            font-size: 0.95rem;
+            color: #c084fc;
             cursor: pointer;
+            font-weight: 500;
         }
 
         .check-btn {
             position: absolute;
-            top: 12px;
-            right: 12px;
-            width: 28px;
-            height: 28px;
+            top: 15px;
+            right: 15px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            background: #4caf50;
+            background: rgba(255, 255, 255, 0.1);
             color: white;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             cursor: pointer;
+            font-size: 1rem;
+            transition: 0.3s;
         }
 
         .check-btn.checked {
-            background: #2e7d32;
+            background: linear-gradient(135deg, #4caf50, #8bc34a);
+            border: none;
         }
 
         .lesson-progress {
-            background: #f0f0f0;
-            border-radius: 30px;
-            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 60px;
+            padding: 15px 20px;
+            margin-top: 24px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 15px;
         }
 
         .progress-bar {
-            background: #ddd;
-            border-radius: 20px;
-            height: 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            height: 10px;
             flex: 2;
             overflow: hidden;
         }
 
         .progress-fill {
-            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            background: linear-gradient(90deg, #ff6b9d, #c084fc);
             height: 100%;
-            transition: width 0.3s;
+            border-radius: 30px;
+            transition: width 0.5s ease;
         }
 
-        .test-btn, .game-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+        .test-btn {
+            background: linear-gradient(135deg, #c084fc, #a855f7);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 30px;
+            padding: 10px 24px;
+            border-radius: 40px;
             cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
         }
 
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(168, 85, 247, 0.4);
+        }
+
+        /* Игры */
         .game-container {
             text-align: center;
         }
 
         .game-selector {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .game-type-btn {
-            background: #e0e0e0;
-            border: none;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             padding: 10px 20px;
-            border-radius: 30px;
+            border-radius: 40px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            transition: 0.3s;
         }
 
         .game-type-btn.active {
-            background: linear-gradient(135deg, #f5576c, #f093fb);
+            background: linear-gradient(135deg, #ff6b9d, #c084fc);
             color: white;
+            border-color: transparent;
         }
 
         .game-question {
             font-size: 2.5rem;
             margin: 30px 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-            border-radius: 30px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 40px;
             cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
         }
 
         .game-options {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-            margin: 20px 0;
         }
 
         .game-option {
-            background: #f0f0f0;
+            background: rgba(255, 255, 255, 0.08);
             padding: 15px;
-            border-radius: 20px;
+            border-radius: 28px;
             cursor: pointer;
             transition: 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .game-option:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
         }
 
         .game-option.correct {
-            background: #4caf50;
+            background: linear-gradient(135deg, #4caf50, #8bc34a);
             color: white;
         }
 
         .game-option.wrong {
-            background: #f44336;
+            background: linear-gradient(135deg, #f44336, #e91e63);
             color: white;
         }
 
         .game-score {
-            font-size: 1.2rem;
-            margin: 15px 0;
-            color: #f5576c;
-            font-weight: bold;
+            font-size: 1.1rem;
+            margin: 20px 0;
+            color: #c084fc;
+            font-weight: 600;
         }
 
         .next-game-btn {
@@ -444,27 +631,13 @@
             color: white;
             border: none;
             padding: 12px 30px;
-            border-radius: 30px;
+            border-radius: 40px;
             cursor: pointer;
             margin-top: 20px;
+            font-weight: 600;
         }
 
-        .game-result {
-            font-size: 1.5rem;
-            margin: 20px 0;
-        }
-
-        .volume-control {
-            position: fixed;
-            bottom: 16px;
-            right: 16px;
-            background: rgba(0,0,0,0.7);
-            padding: 8px 12px;
-            border-radius: 30px;
-            color: white;
-            z-index: 100;
-        }
-
+        /* Модальное окно */
         .modal {
             display: none;
             position: fixed;
@@ -472,11 +645,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
             z-index: 1000;
             justify-content: center;
             align-items: center;
-            padding: 16px;
+            padding: 20px;
         }
 
         .modal.active {
@@ -484,30 +658,84 @@
         }
 
         .modal-content {
-            background: white;
-            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 48px;
             max-width: 500px;
             width: 100%;
-            padding: 24px;
+            padding: 32px;
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-content h2 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .test-question {
+            font-size: 2.5rem;
+            margin: 20px 0;
+            cursor: pointer;
+            color: white;
+        }
+
+        .test-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
         }
 
         .test-option {
-            background: #f0f0f0;
-            padding: 12px;
-            border-radius: 16px;
-            margin: 8px 0;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 14px;
+            border-radius: 40px;
             cursor: pointer;
+            transition: 0.2s;
+            color: white;
         }
 
         .test-option.correct {
-            background: #4caf50;
-            color: white;
+            background: linear-gradient(135deg, #4caf50, #8bc34a);
         }
 
         .test-option.wrong {
-            background: #f44336;
+            background: linear-gradient(135deg, #f44336, #e91e63);
+        }
+
+        .test-result {
             color: white;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .close-modal {
+            background: linear-gradient(135deg, #c084fc, #a855f7);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        .volume-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            padding: 10px 16px;
+            border-radius: 40px;
+            color: white;
+            z-index: 100;
+            font-size: 0.8rem;
+        }
+
+        .volume-control input {
+            vertical-align: middle;
         }
 
         .firework {
@@ -527,40 +755,39 @@
 
         .back-btn {
             position: fixed;
-            top: 16px;
-            left: 16px;
-            background: rgba(0,0,0,0.6);
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
             color: white;
-            padding: 10px 16px;
-            border-radius: 30px;
+            padding: 10px 20px;
+            border-radius: 40px;
             cursor: pointer;
             z-index: 1000;
-            border: none;
-            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 500;
+            transition: 0.3s;
         }
 
-        .logout-btn {
-            background: rgba(0,0,0,0.3);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 30px;
-            cursor: pointer;
+        .back-btn:hover {
+            background: rgba(0, 0, 0, 0.7);
+            border-color: #ff6b9d;
         }
 
         @media (max-width: 768px) {
-            .level-card { width: 260px; padding: 30px 20px; }
-            .level-icon { font-size: 3rem; }
-            .level-title { font-size: 1.6rem; }
-            .auth-card, .welcome-card { padding: 30px 20px; margin: 20px; }
+            .level-card { width: 100%; max-width: 280px; }
+            .auth-card { padding: 32px 24px; margin: 20px; }
+            .welcome-card { padding: 30px 24px; }
+            .words-grid { grid-template-columns: 1fr; }
+            .game-options { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <!-- ========== СИСТЕМА РЕГИСТРАЦИИ ========== -->
+    <!-- СИСТЕМА РЕГИСТРАЦИИ -->
     <div id="authContainer" class="center-container">
         <div id="loginForm" class="auth-card">
-            <h2>🔐 Вход в аккаунт</h2>
+            <h2>🔐 Добро пожаловать</h2>
             <div class="input-group">
                 <label>Имя пользователя</label>
                 <input type="text" id="loginUsername" placeholder="Введите имя">
@@ -575,7 +802,7 @@
         </div>
 
         <div id="registerForm" class="auth-card hide">
-            <h2>📝 Регистрация</h2>
+            <h2>📝 Создать аккаунт</h2>
             <div class="input-group">
                 <label>Имя пользователя</label>
                 <input type="text" id="regUsername" placeholder="Введите имя">
@@ -594,45 +821,48 @@
         </div>
     </div>
 
-    <!-- ========== ГЛАВНАЯ СТРАНИЦА (ВЫБОР УРОВНЯ) ========== -->
+    <!-- ГЛАВНАЯ СТРАНИЦА -->
     <div id="mainPage" class="center-container hide">
         <div class="welcome-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="welcome-header">
                 <h2>🎋 HSK Study</h2>
                 <button class="logout-btn" onclick="logout()">🚪 Выйти</button>
             </div>
-            <p style="color: #666; margin-bottom: 20px;">Выберите уровень для изучения</p>
-            <div class="levels-grid" style="margin: 20px 0;">
+            <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px;">Выберите уровень для изучения</p>
+            <div class="levels-grid">
                 <div class="level-card" data-level="1">
                     <div class="level-icon">🌟</div>
                     <div class="level-title">HSK 1</div>
+                    <div class="level-subtitle">Начальный уровень</div>
                     <div class="word-count">150 слов</div>
                 </div>
                 <div class="level-card" data-level="2">
                     <div class="level-icon">⭐</div>
                     <div class="level-title">HSK 2</div>
+                    <div class="level-subtitle">Базовый уровень</div>
                     <div class="word-count">150 слов</div>
                 </div>
                 <div class="level-card" data-level="3">
                     <div class="level-icon">✨</div>
                     <div class="level-title">HSK 3</div>
+                    <div class="level-subtitle">Средний уровень</div>
                     <div class="word-count">300 слов</div>
                 </div>
             </div>
-            <div id="userWelcome" style="margin-top: 20px; color: #888;"></div>
+            <div id="userWelcome" style="margin-top: 20px; color: rgba(255,255,255,0.5);"></div>
         </div>
     </div>
 
-    <!-- ========== ОСНОВНОЕ ПРИЛОЖЕНИЕ ========== -->
+    <!-- ОСНОВНОЕ ПРИЛОЖЕНИЕ -->
     <div id="appContainer" class="hide">
-        <button class="back-btn" id="backBtn">🏠 На главную</button>
-        <div class="container">
-            <div class="header">
+        <button class="back-btn" id="backBtn">← На главную</button>
+        <div class="app-container">
+            <div class="app-header">
                 <h1 id="appTitle">📚 HSK 1 | Изучение</h1>
                 <div class="stats-bar">
-                    <div class="stat"><div class="stat-number" id="totalLearned">0</div><div>всего выучено</div></div>
-                    <div class="stat"><div class="stat-number" id="currentLessonLearned">0</div><div>в уроке</div></div>
-                    <div class="stat"><div class="stat-number" id="progressPercent">0%</div><div>прогресс</div></div>
+                    <div class="stat"><div class="stat-number" id="totalLearned">0</div><div class="stat-label">всего выучено</div></div>
+                    <div class="stat"><div class="stat-number" id="currentLessonLearned">0</div><div class="stat-label">в уроке</div></div>
+                    <div class="stat"><div class="stat-number" id="progressPercent">0%</div><div class="stat-label">прогресс</div></div>
                 </div>
             </div>
 
@@ -646,7 +876,7 @@
         </div>
 
         <div class="volume-control">🔊 <input type="range" id="volumeSlider" min="0" max="100" value="70"></div>
-        <div class="modal" id="testModal"><div class="modal-content"><h2>📝 Тест урока (10 вопросов)</h2><div id="testContent"></div></div></div>
+        <div class="modal" id="testModal"><div class="modal-content"><h2>📝 Тест урока</h2><div id="testContent"></div></div></div>
     </div>
 
     <script>
@@ -664,107 +894,75 @@
             { chinese:"学校",pinyin:"xué xiào",meaning:"Школа"},{chinese:"商店",pinyin:"shāng diàn",meaning:"Магазин"},{chinese:"医院",pinyin:"yī yuàn",meaning:"Больница"},{chinese:"书",pinyin:"shū",meaning:"Книга"},{chinese:"电脑",pinyin:"diàn nǎo",meaning:"Компьютер"},{chinese:"电视",pinyin:"diàn shì",meaning:"Телевизор"},{chinese:"电话",pinyin:"diàn huà",meaning:"Телефон"},{chinese:"看",pinyin:"kàn",meaning:"Смотреть"},{chinese:"听",pinyin:"tīng",meaning:"Слушать"},{chinese:"说",pinyin:"shuō",meaning:"Говорить"}
         ];
         
-        // Разбиваем на 15 уроков по 10 слов
         const hsk1Lessons = [];
         for (let i = 0; i < 15; i++) {
-            hsk1Lessons.push({
-                name: `Урок ${i+1}`,
-                words: hsk1Words.slice(i*10, (i+1)*10)
-            });
+            hsk1Lessons.push({ name: `Урок ${i+1}`, words: hsk1Words.slice(i*10, (i+1)*10) });
         }
         
-        // HSK 2 (упрощённо, 150 слов)
         const hsk2Words = hsk1Words.slice(0, 150);
         const hsk2Lessons = [];
         for (let i = 0; i < 15; i++) {
-            hsk2Lessons.push({
-                name: `Урок ${i+1}`,
-                words: hsk2Words.slice(i*10, (i+1)*10)
-            });
+            hsk2Lessons.push({ name: `Урок ${i+1}`, words: hsk2Words.slice(i*10, (i+1)*10) });
         }
         
-        // HSK 3 (упрощённо, 300 слов)
         const hsk3Words = [...hsk1Words, ...hsk1Words, ...hsk1Words.slice(0, 100)];
         const hsk3Lessons = [];
         for (let i = 0; i < 15; i++) {
-            hsk3Lessons.push({
-                name: `Урок ${i+1}`,
-                words: hsk3Words.slice(i*20, (i+1)*20)
-            });
+            hsk3Lessons.push({ name: `Урок ${i+1}`, words: hsk3Words.slice(i*20, (i+1)*20) });
         }
         
         const hskData = { 1: hsk1Lessons, 2: hsk2Lessons, 3: hsk3Lessons };
         
         // ============================================
-        // СИСТЕМА ПОЛЬЗОВАТЕЛЕЙ
+        // ПОЛЬЗОВАТЕЛИ
         // ============================================
         
         let currentUser = null;
         
-        function saveUsers(users) {
-            localStorage.setItem('hsk_users', JSON.stringify(users));
-        }
-        
-        function getUsers() {
-            return JSON.parse(localStorage.getItem('hsk_users')) || [];
-        }
-        
+        function saveUsers(users) { localStorage.setItem('hsk_users', JSON.stringify(users)); }
+        function getUsers() { return JSON.parse(localStorage.getItem('hsk_users')) || []; }
         function getUserData(username) {
             return JSON.parse(localStorage.getItem(`hsk_user_${username}`)) || {
-                learnedWords: [],
-                unlockedLessons: { 1: [0], 2: [0], 3: [0] }
+                learnedWords: [], unlockedLessons: { 1: [0], 2: [0], 3: [0] }
             };
         }
-        
-        function saveUserData(username, data) {
-            localStorage.setItem(`hsk_user_${username}`, JSON.stringify(data));
-        }
+        function saveUserData(username, data) { localStorage.setItem(`hsk_user_${username}`, JSON.stringify(data)); }
         
         function register() {
             const username = document.getElementById('regUsername').value.trim();
             const email = document.getElementById('regEmail').value.trim();
             const password = document.getElementById('regPassword').value;
-            
             if (!username || !email || !password) {
                 document.getElementById('registerError').innerText = 'Заполните все поля';
                 return;
             }
             if (password.length < 4) {
-                document.getElementById('registerError').innerText = 'Пароль должен быть минимум 4 символа';
+                document.getElementById('registerError').innerText = 'Пароль минимум 4 символа';
                 return;
             }
-            
             const users = getUsers();
             if (users.find(u => u.username === username)) {
                 document.getElementById('registerError').innerText = 'Пользователь уже существует';
                 return;
             }
-            
             users.push({ username, email, password });
             saveUsers(users);
             saveUserData(username, { learnedWords: [], unlockedLessons: { 1: [0], 2: [0], 3: [0] } });
-            
-            document.getElementById('registerError').innerText = '';
             showLogin();
-            document.getElementById('loginError').innerHTML = '<span style="color:#4caf50">✅ Регистрация успешна! Войдите.</span>';
+            document.getElementById('loginError').innerHTML = '<span style="color:#4caf50">✅ Регистрация успешна!</span>';
         }
         
         function login() {
             const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value;
-            
             const users = getUsers();
             const user = users.find(u => u.username === username && u.password === password);
-            
             if (!user) {
                 document.getElementById('loginError').innerText = 'Неверное имя или пароль';
                 return;
             }
-            
             currentUser = username;
             localStorage.setItem('hsk_current_user', username);
-            
-            document.getElementById('loginError').innerText = '';
             showMainPage();
         }
         
@@ -839,8 +1037,12 @@
             let div = document.createElement('div');
             div.innerHTML = '🐼 Грустная панда... Попробуй ещё раз! 🐼';
             div.style.position = 'fixed'; div.style.bottom = '30%'; div.style.left = '50%';
-            div.style.transform = 'translateX(-50%)'; div.style.background = '#333'; div.style.color = 'white';
-            div.style.padding = '20px'; div.style.borderRadius = '50px'; div.style.zIndex = '2000';
+            div.style.transform = 'translateX(-50%)'; div.style.background = 'rgba(0,0,0,0.8)';
+            div.style.backdropFilter = 'blur(10px)';
+            div.style.color = 'white';
+            div.style.padding = '20px';
+            div.style.borderRadius = '50px';
+            div.style.zIndex = '2000';
             div.style.animation = 'fadeOut 2s forwards';
             document.body.appendChild(div);
             setTimeout(() => div.remove(), 2000);
@@ -909,23 +1111,22 @@
             lesson.words.forEach((w, idx) => {
                 let learned = isWordLearned(currentLevel, currentLesson, idx);
                 html += `<div class="word-card">
-                            <div class="chinese" onclick="speak('${w.chinese}','zh-CN')">${w.chinese} 🔊</div>
+                            <div class="chinese" onclick="speak('${w.chinese}','zh-CN')">${w.chinese}</div>
                             <div class="pinyin">${w.pinyin}</div>
-                            <div class="meaning" onclick="speak('${w.meaning}','ru-RU')">${w.meaning} 🔊</div>
+                            <div class="meaning" onclick="speak('${w.meaning}','ru-RU')">${w.meaning}</div>
                             <button class="check-btn ${learned ? 'checked' : ''}" onclick="toggleWord(${currentLevel},${currentLesson},${idx})">${learned ? '✓' : '○'}</button>
                         </div>`;
             });
             let percent = getLessonLearnedCount(currentLevel, currentLesson) / lesson.words.length * 100;
             html += `</div><div class="lesson-progress"><div class="progress-bar"><div class="progress-fill" style="width:${percent}%"></div></div>
-                     <button class="test-btn" onclick="startTest()">📝 Тест урока</button></div>`;
+                     <button class="test-btn" onclick="startTest()">📝 Пройти тест</button></div>`;
             document.getElementById('content').innerHTML = html;
             updateStats();
         }
         
         function renderGames() {
             let gameNames = ["🎯 Найди перевод", "🔊 Угадай по звуку", "✏️ Найди иероглиф", "📝 Составь пару"];
-            let html = `<div class="game-container">
-                <div class="game-selector">`;
+            let html = `<div class="game-container"><div class="game-selector">`;
             for (let i = 0; i < 4; i++) {
                 html += `<button class="game-type-btn ${gameType === i ? 'active' : ''}" onclick="setGameType(${i})">${gameNames[i]}</button>`;
             }
@@ -979,13 +1180,13 @@
                 let modal = document.getElementById('gameContent');
                 if (percent >= 70) showFireworks();
                 else showPanda();
-                modal.innerHTML = `<div class="game-result"><h2>${percent >= 70 ? '🎉 Молодец! 🎉' : '📚 Продолжай учиться!'}</h2><p>Очки: ${gameScore} / ${gameQuestions.length}</p><button class="next-game-btn" onclick="startNewGame()">🔄 Играть снова</button><button class="next-game-btn" style="background:#667eea" onclick="renderGames()">🎮 Другие игры</button></div>`;
+                modal.innerHTML = `<div class="game-result"><h2>${percent >= 70 ? '🎉 Поздравляю!' : '📚 Продолжай учиться!'}</h2><p>${gameScore} / ${gameQuestions.length}</p><button class="next-game-btn" onclick="startNewGame()">🔄 Играть снова</button><button class="next-game-btn" style="background:#c084fc" onclick="renderGames()">🎮 Другие игры</button></div>`;
                 return;
             }
             let q = gameQuestions[gameIndex];
-            let html = `<div class="game-score">Счёт: ${gameScore} / ${gameIndex} | Вопрос ${gameIndex+1}/${gameQuestions.length}</div>`;
+            let html = `<div class="game-score">${gameScore} / ${gameIndex} | Вопрос ${gameIndex+1}/${gameQuestions.length}</div>`;
             if (q.question.audio) {
-                html += `<div class="game-question" onclick="speak('${q.question.audio}','zh-CN')">${q.question.text} 🔊</div>`;
+                html += `<div class="game-question" onclick="speak('${q.question.audio}','zh-CN')">${q.question.text}</div>`;
                 setTimeout(() => speak(q.question.audio, 'zh-CN'), 100);
             } else {
                 html += `<div class="game-question">${q.question.text}</div>`;
@@ -1031,7 +1232,7 @@
                 let passed = testScore >= 9;
                 if (passed && currentLesson + 1 < hskData[currentLevel].length) unlockLesson(currentLevel, currentLesson + 1);
                 if (passed) showFireworks(); else showPanda();
-                document.getElementById('testContent').innerHTML = `<div class="test-result">🎉 Результат: ${testScore}/${currentTestQuestions.length}<br>${testScore >= 9 ? '✅ Следующий урок открыт!' : '❌ Нужно 9/10'}</div><button class="close-modal" onclick="closeTest()">Закрыть</button>${testScore < 9 ? `<button class="close-modal" style="background:#f44336; margin-top:10px" onclick="closeTest(); startTest();">🔄 Ещё раз</button>` : ''}`;
+                document.getElementById('testContent').innerHTML = `<div class="test-result">🎉 ${testScore}/${currentTestQuestions.length}<br>${testScore >= 9 ? '✅ Следующий урок открыт!' : '❌ Нужно 9/10'}</div><button class="close-modal" onclick="closeTest()">Закрыть</button>${testScore < 9 ? `<button class="close-modal" style="background:#ff6b9d; margin-top:10px" onclick="closeTest(); startTest();">🔄 Попробовать снова</button>` : ''}`;
                 if (passed && currentLesson + 1 < hskData[currentLevel].length) { renderLessonNav(); if (currentTab === "study") renderCurrentLesson(); }
                 return;
             }
@@ -1047,7 +1248,7 @@
             options.forEach(opt => {
                 optsHtml += `<div class="test-option" onclick="checkTestAnswer('${opt.replace(/'/g, "\\'")}', this)">${opt}</div>`;
             });
-            document.getElementById('testContent').innerHTML = `<div class="test-question" onclick="speak('${q.chinese}','zh-CN')">${q.chinese} 🔊</div><div style="color:#e74c3c">${q.pinyin}</div><div class="test-options">${optsHtml}</div><div>${currentTestIndex+1}/${currentTestQuestions.length}</div><div style="margin-top:10px">Нужно 9/10</div>`;
+            document.getElementById('testContent').innerHTML = `<div class="test-question" onclick="speak('${q.chinese}','zh-CN')">${q.chinese}</div><div style="color:#c084fc; margin:10px 0">${q.pinyin}</div><div class="test-options">${optsHtml}</div><div>${currentTestIndex+1}/${currentTestQuestions.length}</div><div style="margin-top:10px">⭐ Нужно 9/10 для открытия следующего урока</div>`;
         }
         
         function checkTestAnswer(selected, element) {
@@ -1078,13 +1279,10 @@
             currentLevel = level;
             currentLesson = 0;
             document.getElementById('appTitle').innerHTML = `📚 HSK ${level} | Изучение`;
-            
             loadUserAppData();
-            
             renderLessonNav();
             if (currentTab === "study") renderCurrentLesson();
             else renderGames();
-            
             document.getElementById('mainPage').classList.add('hide');
             document.getElementById('appContainer').classList.remove('hide');
         }
@@ -1103,7 +1301,6 @@
         
         document.getElementById('backBtn').onclick = goHome;
         
-        // Проверяем, есть ли сохранённый пользователь
         const savedUser = localStorage.getItem('hsk_current_user');
         if (savedUser) {
             currentUser = savedUser;
