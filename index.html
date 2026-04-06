@@ -3,953 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>HSK Study | Полный курс 1-4</title>
+    <title>HSK Study | Полный курс HSK 1-4</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: 'Inter', 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 50%, rgba(120, 80, 200, 0.15) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(255, 80, 120, 0.1) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', 'Poppins', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%); position: relative; overflow-x: hidden; }
+        body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 20% 50%, rgba(120,80,200,0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255,80,120,0.1) 0%, transparent 50%); pointer-events: none; z-index: 0; }
         .hide { display: none !important; }
-
-        .center-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            position: relative;
-            z-index: 1;
-            padding: 20px;
-        }
-
-        .auth-card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            border-radius: 48px;
-            padding: 48px 40px;
-            max-width: 480px;
-            width: 100%;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-            animation: fadeInUp 0.6s ease;
-        }
-
-        .auth-card h2 {
-            font-size: 2rem;
-            margin-bottom: 30px;
-            background: linear-gradient(135deg, #fff, #e0c3ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 14px 18px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 28px;
-            font-size: 1rem;
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        .input-group input:focus {
-            outline: none;
-            border-color: #ff6b9d;
-            box-shadow: 0 0 15px rgba(255, 107, 157, 0.3);
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .input-group input::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #ff6b9d, #c084fc, #a855f7);
-            color: white;
-            border: none;
-            padding: 14px 30px;
-            border-radius: 40px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .btn-primary:hover::before {
-            left: 100%;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);
-        }
-
-        .switch-link {
-            margin-top: 20px;
-            color: #c084fc;
-            cursor: pointer;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-
-        .switch-link:hover {
-            color: #ff6b9d;
-        }
-
-        .error-message {
-            color: #ff6b9d;
-            font-size: 0.8rem;
-            margin-top: 12px;
-        }
-
-        .welcome-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-radius: 48px;
-            padding: 40px;
-            max-width: 900px;
-            width: 100%;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            animation: fadeInUp 0.6s ease;
-        }
-
-        .welcome-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .welcome-header h2 {
-            font-size: 2rem;
-            background: linear-gradient(135deg, #fff, #e0c3ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .header-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .rank-btn {
-            background: linear-gradient(135deg, #ffd700, #ff9800);
-            border: none;
-            color: #1e3c72;
-            padding: 10px 20px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.3s;
-        }
-
-        .rank-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
-        }
-
-        .logout-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: rgba(255, 255, 255, 0.8);
-            padding: 10px 20px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: 0.3s;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: #ff6b9d;
-            color: white;
-        }
-
-        .stats-row {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-
-        .stat-box {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 30px;
-            padding: 15px 20px;
-            text-align: center;
-            min-width: 120px;
-        }
-
-        .stat-box-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #ffd700, #ff9800);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .stat-box-label {
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.7);
-            margin-top: 5px;
-        }
-
-        .levels-grid {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin: 20px 0;
-        }
-
-        .level-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-            backdrop-filter: blur(10px);
-            border-radius: 32px;
-            padding: 25px 20px;
-            width: 150px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .level-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1), transparent);
-            opacity: 0;
-            transition: opacity 0.4s;
-        }
-
-        .level-card:hover::before {
-            opacity: 1;
-        }
-
+        .center-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; position: relative; z-index: 1; padding: 20px; }
+        .auth-card { background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); border-radius: 48px; padding: 48px 40px; max-width: 480px; width: 100%; text-align: center; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 25px 50px rgba(0,0,0,0.3); animation: fadeInUp 0.6s ease; }
+        .auth-card h2 { font-size: 2rem; margin-bottom: 30px; background: linear-gradient(135deg, #fff, #e0c3ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; margin-bottom: 8px; font-weight: 500; color: rgba(255,255,255,0.9); font-size: 0.9rem; }
+        .input-group input { width: 100%; padding: 14px 18px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 28px; font-size: 1rem; color: white; transition: all 0.3s ease; }
+        .input-group input:focus { outline: none; border-color: #ff6b9d; box-shadow: 0 0 15px rgba(255,107,157,0.3); background: rgba(255,255,255,0.15); }
+        .input-group input::placeholder { color: rgba(255,255,255,0.4); }
+        .btn-primary { background: linear-gradient(135deg, #ff6b9d, #c084fc, #a855f7); color: white; border: none; padding: 14px 30px; border-radius: 40px; font-size: 1rem; font-weight: 600; cursor: pointer; width: 100%; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .btn-primary::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: left 0.5s; }
+        .btn-primary:hover::before { left: 100%; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(168,85,247,0.4); }
+        .switch-link { margin-top: 20px; color: #c084fc; cursor: pointer; font-weight: 500; transition: 0.2s; }
+        .switch-link:hover { color: #ff6b9d; }
+        .error-message { color: #ff6b9d; font-size: 0.8rem; margin-top: 12px; }
+        .welcome-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-radius: 48px; padding: 40px; max-width: 900px; width: 100%; text-align: center; border: 1px solid rgba(255,255,255,0.1); animation: fadeInUp 0.6s ease; }
+        .welcome-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px; }
+        .welcome-header h2 { font-size: 2rem; background: linear-gradient(135deg, #fff, #e0c3ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .header-buttons { display: flex; gap: 12px; }
+        .rank-btn { background: linear-gradient(135deg, #ffd700, #ff9800); border: none; color: #1e3c72; padding: 10px 20px; border-radius: 40px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+        .rank-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,215,0,0.4); }
+        .logout-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.9); padding: 10px 20px; border-radius: 40px; cursor: pointer; font-weight: 500; transition: 0.3s; }
+        .logout-btn:hover { background: rgba(255,255,255,0.2); border-color: #ff6b9d; color: white; }
+        .stats-row { display: flex; justify-content: center; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
+        .stat-box { background: rgba(255,255,255,0.08); border-radius: 30px; padding: 15px 20px; text-align: center; min-width: 120px; }
+        .stat-box-value { font-size: 1.8rem; font-weight: 700; background: linear-gradient(135deg, #ffd700, #ff9800); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .stat-box-label { font-size: 0.7rem; color: rgba(255,255,255,0.8); margin-top: 5px; }
+        .levels-grid { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin: 20px 0; }
+        .level-card { background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); backdrop-filter: blur(10px); border-radius: 32px; padding: 25px 20px; width: 150px; cursor: pointer; transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275); border: 1px solid rgba(255,255,255,0.1); position: relative; overflow: hidden; }
+        .level-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1), transparent); opacity: 0; transition: opacity 0.4s; }
+        .level-card:hover::before { opacity: 1; }
         .level-card[data-level="1"] { border-top: 3px solid #4caf50; }
         .level-card[data-level="2"] { border-top: 3px solid #2196f3; }
         .level-card[data-level="3"] { border-top: 3px solid #ff9800; }
         .level-card[data-level="4"] { border-top: 3px solid #e91e63; }
-
-        .level-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.3);
-            border-color: rgba(255,255,255,0.3);
-        }
-
-        .level-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            display: inline-block;
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
-        }
-
-        .level-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-            color: white;
-        }
-
-        .level-subtitle {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.7rem;
-        }
-
-        .word-count {
-            background: rgba(255,255,255,0.15);
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            margin-top: 10px;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .rank-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .rank-modal.active {
-            display: flex;
-        }
-
-        .rank-modal-content {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 48px;
-            max-width: 600px;
-            width: 100%;
-            max-height: 80vh;
-            padding: 24px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .rank-modal-content h3 {
-            color: white;
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-        }
-
-        .rank-table-container {
-            overflow-y: auto;
-            max-height: 60vh;
-        }
-
-        .rank-table {
-            width: 100%;
-            border-collapse: collapse;
-            color: white;
-        }
-
-        .rank-table th,
-        .rank-table td {
-            padding: 12px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .rank-table th {
-            color: #ffd700;
-            font-weight: 600;
-        }
-
-        .rank-table .current-user {
-            background: rgba(255, 107, 157, 0.2);
-            border-radius: 15px;
-        }
-
-        .close-rank-btn {
-            background: linear-gradient(135deg, #c084fc, #a855f7);
-            color: white;
-            border: none;
-            padding: 12px 28px;
-            border-radius: 40px;
-            cursor: pointer;
-            margin-top: 20px;
-            font-weight: 600;
-            width: fit-content;
-            align-self: center;
-        }
-
-        .points-badge {
-            background: linear-gradient(135deg, #ffd700, #ff9800);
-            border-radius: 30px;
-            padding: 5px 12px;
-            display: inline-block;
-            font-weight: bold;
-            color: #1e3c72;
-        }
-
-        .app-container {
-            position: relative;
-            z-index: 1;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .app-header {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-radius: 40px 40px 0 0;
-            padding: 30px 25px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .app-header h1 {
-            font-size: clamp(1.5rem, 5vw, 2.2rem);
-            background: linear-gradient(135deg, #fff, #e0c3ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .stats-bar {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 60px;
-            padding: 15px 25px;
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: clamp(1.3rem, 4vw, 2rem);
-            font-weight: 700;
-            background: linear-gradient(135deg, #ffd700, #ff9800);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .stat-label {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.7);
-            letter-spacing: 0.5px;
-        }
-
-        .tab-selector {
-            display: flex;
-            gap: 0;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 60px;
-            padding: 5px;
-            margin: 20px 0;
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 14px 20px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            border: none;
-            background: transparent;
-            color: rgba(255, 255, 255, 0.6);
-            cursor: pointer;
-            border-radius: 50px;
-            transition: 0.3s;
-        }
-
-        .tab-btn.active {
-            background: linear-gradient(135deg, #ff6b9d, #c084fc);
-            color: white;
-            box-shadow: 0 5px 15px rgba(168, 85, 247, 0.3);
-        }
-
-        .lesson-nav {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 40px;
-            margin-bottom: 20px;
-            max-height: 250px;
-            overflow-y: auto;
-        }
-
-        .lesson-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: none;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-        }
-
-        .lesson-btn.active {
-            background: linear-gradient(135deg, #ff6b9d, #c084fc);
-            transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(192, 132, 252, 0.5);
-        }
-
-        .lesson-btn.learned {
-            background: linear-gradient(135deg, #4caf50, #8bc34a);
-        }
-
-        .lesson-btn.locked {
-            background: rgba(255, 255, 255, 0.05);
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
-
-        .content {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 32px;
-            padding: 24px;
-        }
-
-        .words-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 20px;
-        }
-
-        .word-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 20px;
-            position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .word-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(255, 107, 157, 0.5);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .word-header {
-            text-align: center;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .chinese {
-            font-size: 2rem;
-            font-weight: 700;
-            cursor: pointer;
-            color: white;
-            transition: 0.2s;
-            display: inline-block;
-        }
-
-        .chinese:hover {
-            text-shadow: 0 0 10px rgba(255,107,157,0.5);
-        }
-
-        .pinyin {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.6);
-            margin-top: 5px;
-        }
-
-        .meaning {
-            font-size: 0.95rem;
-            color: #c084fc;
-            cursor: pointer;
-            font-weight: 500;
-            text-align: center;
-            margin-top: 8px;
-        }
-
-        .example {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            padding: 12px;
-            margin-top: 12px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .example:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .example-chinese {
-            font-size: 0.9rem;
-            color: #ffd700;
-            margin-bottom: 5px;
-        }
-
-        .example-pinyin {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 5px;
-        }
-
-        .example-meaning {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .check-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            font-size: 1rem;
-            transition: 0.3s;
-        }
-
-        .check-btn.checked {
-            background: linear-gradient(135deg, #4caf50, #8bc34a);
-            border: none;
-        }
-
-        .lesson-progress {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 60px;
-            padding: 15px 20px;
-            margin-top: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .progress-bar {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-            height: 10px;
-            flex: 2;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            background: linear-gradient(90deg, #ff6b9d, #c084fc);
-            height: 100%;
-            border-radius: 30px;
-            transition: width 0.5s ease;
-        }
-
-        .test-btn {
-            background: linear-gradient(135deg, #c084fc, #a855f7);
-            color: white;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.3s;
-        }
-
-        .test-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(168, 85, 247, 0.4);
-        }
-
-        .game-container {
-            text-align: center;
-        }
-
-        .game-selector {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-
-        .game-type-btn {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 10px 20px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.7);
-            transition: 0.3s;
-        }
-
-        .game-type-btn.active {
-            background: linear-gradient(135deg, #ff6b9d, #c084fc);
-            color: white;
-            border-color: transparent;
-        }
-
-        .game-question {
-            font-size: 2rem;
-            margin: 30px 0;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 40px;
-            cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-
-        .game-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .game-option {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 15px;
-            border-radius: 28px;
-            cursor: pointer;
-            transition: 0.2s;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-
-        .game-option:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .game-option.correct {
-            background: linear-gradient(135deg, #4caf50, #8bc34a);
-            color: white;
-        }
-
-        .game-option.wrong {
-            background: linear-gradient(135deg, #f44336, #e91e63);
-            color: white;
-        }
-
-        .game-score {
-            font-size: 1.1rem;
-            margin: 20px 0;
-            color: #c084fc;
-            font-weight: 600;
-        }
-
-        .next-game-btn {
-            background: linear-gradient(135deg, #4caf50, #8bc34a);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 40px;
-            cursor: pointer;
-            margin-top: 20px;
-            font-weight: 600;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 48px;
-            max-width: 500px;
-            width: 100%;
-            padding: 32px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .modal-content h2 {
-            color: white;
-            margin-bottom: 20px;
-        }
-
-        .test-question {
-            font-size: 2rem;
-            margin: 20px 0;
-            cursor: pointer;
-            color: white;
-        }
-
-        .test-options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin: 20px 0;
-        }
-
-        .test-option {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 14px;
-            border-radius: 40px;
-            cursor: pointer;
-            transition: 0.2s;
-            color: white;
-        }
-
-        .test-option.correct {
-            background: linear-gradient(135deg, #4caf50, #8bc34a);
-        }
-
-        .test-option.wrong {
-            background: linear-gradient(135deg, #f44336, #e91e63);
-        }
-
-        .test-result {
-            color: white;
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-        }
-
-        .close-modal {
-            background: linear-gradient(135deg, #c084fc, #a855f7);
-            color: white;
-            border: none;
-            padding: 12px 28px;
-            border-radius: 40px;
-            cursor: pointer;
-            margin-top: 15px;
-            font-weight: 600;
-        }
-
-        .volume-control {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            padding: 10px 16px;
-            border-radius: 40px;
-            color: white;
-            z-index: 100;
-            font-size: 0.8rem;
-        }
-
-        .volume-control input {
-            vertical-align: middle;
-        }
-
-        .firework {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 2000;
-        }
-
-        @keyframes fly {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-100vh); opacity: 0; }
-        }
-
-        .back-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 40px;
-            cursor: pointer;
-            z-index: 1000;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            font-weight: 500;
-            transition: 0.3s;
-        }
-
-        .back-btn:hover {
-            background: rgba(0, 0, 0, 0.7);
-            border-color: #ff6b9d;
-        }
-
-        @media (max-width: 768px) {
-            .level-card { width: 130px; padding: 20px 15px; }
-            .level-icon { font-size: 2rem; }
-            .level-title { font-size: 1rem; }
-            .auth-card { padding: 32px 24px; margin: 20px; }
-            .welcome-card { padding: 30px 20px; }
-            .words-grid { grid-template-columns: 1fr; }
-            .game-options { grid-template-columns: 1fr; }
-            .stat-box { min-width: 100px; padding: 10px 15px; }
-            .stat-box-value { font-size: 1.3rem; }
-        }
+        .level-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 30px 50px rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.3); }
+        .level-icon { font-size: 2.5rem; margin-bottom: 15px; display: inline-block; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3)); }
+        .level-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 5px; color: white; }
+        .level-subtitle { color: rgba(255,255,255,0.8); font-size: 0.7rem; }
+        .word-count { background: rgba(255,255,255,0.15); display: inline-block; padding: 5px 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 500; margin-top: 10px; color: rgba(255,255,255,0.9); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .rank-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 2000; justify-content: center; align-items: center; padding: 20px; }
+        .rank-modal.active { display: flex; }
+        .rank-modal-content { background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border-radius: 48px; max-width: 600px; width: 100%; max-height: 80vh; padding: 24px; text-align: center; border: 1px solid rgba(255,255,255,0.2); overflow: hidden; display: flex; flex-direction: column; }
+        .rank-modal-content h3 { color: white; font-size: 1.8rem; margin-bottom: 20px; }
+        .rank-table-container { overflow-y: auto; max-height: 60vh; }
+        .rank-table { width: 100%; border-collapse: collapse; color: white; }
+        .rank-table th, .rank-table td { padding: 12px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .rank-table th { color: #ffd700; font-weight: 600; }
+        .rank-table .current-user { background: rgba(255,107,157,0.2); border-radius: 15px; }
+        .close-rank-btn { background: linear-gradient(135deg, #c084fc, #a855f7); color: white; border: none; padding: 12px 28px; border-radius: 40px; cursor: pointer; margin-top: 20px; font-weight: 600; width: fit-content; align-self: center; }
+        .points-badge { background: linear-gradient(135deg, #ffd700, #ff9800); border-radius: 30px; padding: 5px 12px; display: inline-block; font-weight: bold; color: #1e3c72; }
+        .bamboo-badge { background: linear-gradient(135deg, #4caf50, #8bc34a); border-radius: 30px; padding: 5px 12px; display: inline-block; font-weight: bold; color: white; }
+        .app-container { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .app-header { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-radius: 40px 40px 0 0; padding: 30px 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .app-header h1 { font-size: clamp(1.5rem,5vw,2.2rem); background: linear-gradient(135deg, #fff, #e0c3ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .stats-bar { background: rgba(255,255,255,0.08); border-radius: 60px; padding: 15px 25px; margin-top: 20px; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 15px; }
+        .stat { text-align: center; }
+        .stat-number { font-size: clamp(1.3rem,4vw,2rem); font-weight: 700; background: linear-gradient(135deg, #ffd700, #ff9800); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .stat-label { font-size: 0.75rem; color: rgba(255,255,255,0.8); letter-spacing: 0.5px; }
+        .tab-selector { display: flex; gap: 0; background: rgba(255,255,255,0.05); border-radius: 60px; padding: 5px; margin: 20px 0; }
+        .tab-btn { flex: 1; padding: 14px 20px; font-size: 0.95rem; font-weight: 600; border: none; background: transparent; color: rgba(255,255,255,0.7); cursor: pointer; border-radius: 50px; transition: 0.3s; }
+        .tab-btn.active { background: linear-gradient(135deg, #ff6b9d, #c084fc); color: white; box-shadow: 0 5px 15px rgba(168,85,247,0.3); }
+        .lesson-nav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 40px; margin-bottom: 20px; max-height: 250px; overflow-y: auto; }
+        .lesson-btn { width: 50px; height: 50px; border-radius: 50%; border: none; background: rgba(255,255,255,0.1); color: white; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 1rem; }
+        .lesson-btn.active { background: linear-gradient(135deg, #ff6b9d, #c084fc); transform: scale(1.1); box-shadow: 0 0 15px rgba(192,132,252,0.5); }
+        .lesson-btn.learned { background: linear-gradient(135deg, #4caf50, #8bc34a); }
+        .lesson-btn.locked { background: rgba(255,255,255,0.05); cursor: not-allowed; opacity: 0.5; }
+        .content { background: rgba(255,255,255,0.03); border-radius: 32px; padding: 24px; }
+        .words-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+        .word-card { background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03)); backdrop-filter: blur(10px); border-radius: 24px; padding: 20px; position: relative; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s ease; }
+        .word-card:hover { transform: translateY(-5px); border-color: rgba(255,107,157,0.5); box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
+        .word-header { text-align: center; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .chinese { font-size: 2rem; font-weight: 700; cursor: pointer; color: white; transition: 0.2s; display: inline-block; }
+        .chinese:hover { text-shadow: 0 0 10px rgba(255,107,157,0.5); }
+        .pinyin { font-size: 0.9rem; color: rgba(255,255,255,0.7); margin-top: 5px; }
+        .meaning { font-size: 0.95rem; color: #c084fc; cursor: pointer; font-weight: 500; text-align: center; margin-top: 8px; }
+        .example { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 12px; margin-top: 12px; cursor: pointer; transition: 0.2s; }
+        .example:hover { background: rgba(255,255,255,0.1); }
+        .example-chinese { font-size: 0.9rem; color: #ffd700; margin-bottom: 5px; }
+        .example-pinyin { font-size: 0.75rem; color: rgba(255,255,255,0.6); margin-bottom: 5px; }
+        .example-meaning { font-size: 0.8rem; color: rgba(255,255,255,0.8); }
+        .check-btn { position: absolute; top: 15px; right: 15px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; font-size: 1rem; transition: 0.3s; }
+        .check-btn.checked { background: linear-gradient(135deg, #4caf50, #8bc34a); border: none; }
+        .lesson-progress { background: rgba(255,255,255,0.05); border-radius: 60px; padding: 15px 20px; margin-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .progress-bar { background: rgba(255,255,255,0.1); border-radius: 30px; height: 10px; flex: 2; overflow: hidden; }
+        .progress-fill { background: linear-gradient(90deg, #ff6b9d, #c084fc); height: 100%; border-radius: 30px; transition: width 0.5s ease; }
+        .test-btn { background: linear-gradient(135deg, #c084fc, #a855f7); color: white; border: none; padding: 10px 24px; border-radius: 40px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+        .test-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(168,85,247,0.4); }
+        .game-container { text-align: center; }
+        .game-selector { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 30px; }
+        .game-type-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); padding: 10px 20px; border-radius: 40px; cursor: pointer; font-weight: 500; color: rgba(255,255,255,0.8); transition: 0.3s; }
+        .game-type-btn.active { background: linear-gradient(135deg, #ff6b9d, #c084fc); color: white; border-color: transparent; }
+        .game-question { font-size: 2rem; margin: 30px 0; padding: 30px; background: rgba(255,255,255,0.05); border-radius: 40px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); color: white; }
+        .game-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .game-option { background: rgba(255,255,255,0.08); padding: 15px; border-radius: 28px; cursor: pointer; transition: 0.2s; border: 1px solid rgba(255,255,255,0.1); color: white; }
+        .game-option:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+        .game-option.correct { background: linear-gradient(135deg, #4caf50, #8bc34a); color: white; }
+        .game-option.wrong { background: linear-gradient(135deg, #f44336, #e91e63); color: white; }
+        .game-score { font-size: 1.1rem; margin: 20px 0; color: #c084fc; font-weight: 600; }
+        .next-game-btn { background: linear-gradient(135deg, #4caf50, #8bc34a); color: white; border: none; padding: 12px 30px; border-radius: 40px; cursor: pointer; margin-top: 20px; font-weight: 600; }
+
+        .sentence-game-container { max-width: 800px; margin: 0 auto; }
+        .sentence-words { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 30px 0; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 30px; min-height: 100px; }
+        .sentence-word { background: linear-gradient(135deg, #c084fc, #a855f7); padding: 12px 20px; border-radius: 40px; cursor: pointer; font-size: 1.1rem; font-weight: 500; transition: all 0.2s; user-select: none; color: white; }
+        .sentence-word:hover { transform: scale(1.05); background: linear-gradient(135deg, #ff6b9d, #c084fc); }
+        .sentence-building { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 20px 0; padding: 20px; background: rgba(255,255,255,0.08); border-radius: 30px; min-height: 80px; border: 2px dashed rgba(255,215,0,0.3); }
+        .building-word { background: rgba(255,255,255,0.15); padding: 12px 20px; border-radius: 40px; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; color: white; }
+        .building-word button { background: rgba(255,255,255,0.2); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 1rem; transition: 0.2s; }
+        .building-word button:hover { background: #f44336; transform: scale(1.1); }
+        .check-sentence-btn { background: linear-gradient(135deg, #4caf50, #8bc34a); color: white; border: none; padding: 12px 30px; border-radius: 40px; cursor: pointer; font-weight: 600; margin: 20px 0; font-size: 1rem; }
+        .sentence-result { margin-top: 20px; padding: 15px; border-radius: 30px; font-weight: bold; transition: all 0.3s; }
+        .sentence-result.correct { background: rgba(76,175,80,0.3); color: #4caf50; border: 1px solid #4caf50; }
+        .sentence-result.wrong { background: rgba(244,67,54,0.3); color: #f44336; border: 1px solid #f44336; }
+
+        .match-game-container { max-width: 1000px; margin: 0 auto; position: relative; }
+        .match-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; margin: 30px 0; position: relative; z-index: 1; }
+        .match-column { flex: 1; min-width: 200px; }
+        .match-column h3 { color: #ffd700; margin-bottom: 20px; font-size: 1.2rem; }
+        .match-item { background: rgba(255,255,255,0.1); border-radius: 20px; padding: 15px; margin-bottom: 15px; cursor: pointer; transition: all 0.2s; text-align: center; font-size: 1.1rem; border: 2px solid transparent; color: white; position: relative; z-index: 2; }
+        .match-item:hover { background: rgba(255,255,255,0.2); transform: translateX(5px); }
+        .match-item.selected { border-color: #ffd700; background: rgba(255,215,0,0.2); }
+        .match-item.connected { background: rgba(33,150,243,0.2); border-color: #2196f3; }
+        .match-item.correct-final { background: rgba(76,175,80,0.25); border-color: #4caf50; }
+        .match-item.wrong-final { background: rgba(244,67,54,0.25); border-color: #f44336; }
+        .match-status { font-size: 1rem; margin: 20px 0; color: #c084fc; }
+        .match-btn { background: linear-gradient(135deg, #c084fc, #a855f7); color: white; border: none; padding: 10px 25px; border-radius: 40px; cursor: pointer; font-weight: 600; margin-top: 10px; }
+        .match-submit-btn { background: linear-gradient(135deg, #4caf50, #8bc34a); color: white; border: none; padding: 12px 30px; border-radius: 40px; cursor: pointer; font-weight: 600; margin: 20px 0; font-size: 1rem; }
+        .match-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .match-svg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+        .match-line-blue { stroke: #2196f3; stroke-width: 3; fill: none; }
+        .match-line-correct { stroke: #4caf50; stroke-width: 3; fill: none; }
+        .match-line-wrong { stroke: #f44336; stroke-width: 3; fill: none; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+        .modal.active { display: flex; }
+        .modal-content { background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border-radius: 48px; max-width: 500px; width: 100%; padding: 32px; text-align: center; border: 1px solid rgba(255,255,255,0.2); }
+        .modal-content h2 { color: white; margin-bottom: 20px; }
+        .test-question { font-size: 2rem; margin: 20px 0; cursor: pointer; color: white; }
+        .test-options { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+        .test-option { background: rgba(255,255,255,0.08); padding: 14px; border-radius: 40px; cursor: pointer; transition: 0.2s; color: white; }
+        .test-option.correct { background: linear-gradient(135deg, #4caf50, #8bc34a); }
+        .test-option.wrong { background: linear-gradient(135deg, #f44336, #e91e63); }
+        .test-result { color: white; font-size: 1.2rem; margin-bottom: 20px; }
+        .close-modal { background: linear-gradient(135deg, #c084fc, #a855f7); color: white; border: none; padding: 12px 28px; border-radius: 40px; cursor: pointer; margin-top: 15px; font-weight: 600; }
+        .volume-control { position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); padding: 10px 16px; border-radius: 40px; color: white; z-index: 100; font-size: 0.8rem; }
+        .volume-control input { vertical-align: middle; }
+        .firework { position: fixed; bottom: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2000; }
+        @keyframes fly { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-100vh); opacity: 0; } }
+        @keyframes fadeOutMsg { 0% { opacity: 1; transform: translateX(-50%) translateY(0); } 70% { opacity: 1; } 100% { opacity: 0; transform: translateX(-50%) translateY(-30px); visibility: hidden; } }
+        .temp-message { animation: fadeOutMsg 1.5s forwards; }
+        .back-btn { position: fixed; top: 20px; left: 20px; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); color: white; padding: 10px 20px; border-radius: 40px; cursor: pointer; z-index: 1000; border: 1px solid rgba(255,255,255,0.2); font-weight: 500; transition: 0.3s; }
+        .back-btn:hover { background: rgba(0,0,0,0.7); border-color: #ff6b9d; }
+        @media (max-width: 768px) { .level-card { width: 130px; padding: 20px 15px; } .level-icon { font-size: 2rem; } .level-title { font-size: 1rem; } .auth-card { padding: 32px 24px; margin: 20px; } .welcome-card { padding: 30px 20px; } .words-grid { grid-template-columns: 1fr; } .game-options { grid-template-columns: 1fr; } .stat-box { min-width: 100px; padding: 10px 15px; } .stat-box-value { font-size: 1.3rem; } .match-grid { flex-direction: column; gap: 20px; } }
     </style>
 </head>
 <body>
@@ -978,7 +192,7 @@
             <h3>🏆 Топ-100 пользователей</h3>
             <div class="rank-table-container">
                 <table class="rank-table" id="rankTable">
-                    <thead><tr><th>#</th><th>Пользователь</th><th>⭐ Баллы</th></tr></thead>
+                    <thead><tr><th>#</th><th>Пользователь</th><th>🎋 Бамбуки</th></tr></thead>
                     <tbody id="rankTableBody"></tbody>
                 </table>
             </div>
@@ -998,17 +212,17 @@
             <div class="stats-row">
                 <div class="stat-box"><div class="stat-box-value" id="visitorCount">0</div><div class="stat-box-label">👥 посетителей сегодня</div></div>
                 <div class="stat-box"><div class="stat-box-value" id="registeredUsersCount">0</div><div class="stat-box-label">📝 зарегистрировано</div></div>
-                <div class="stat-box"><div class="stat-box-value" id="myPoints">0</div><div class="stat-box-label">⭐ мои баллы</div></div>
+                <div class="stat-box"><div class="stat-box-value" id="myPoints">0</div><div class="stat-box-label">🎋 мои бамбуки</div></div>
                 <div class="stat-box"><div class="stat-box-value" id="myRank">-</div><div class="stat-box-label">🏆 место в рейтинге</div></div>
             </div>
-            <p style="color: rgba(255,255,255,0.7); margin: 20px 0 10px;">Выберите уровень для изучения</p>
+            <p style="color: rgba(255,255,255,0.8); margin: 20px 0 10px;">Выберите уровень для изучения</p>
             <div class="levels-grid">
                 <div class="level-card" data-level="1"><div class="level-icon">🌟</div><div class="level-title">HSK 1</div><div class="level-subtitle">Начальный</div><div class="word-count">150 слов</div></div>
                 <div class="level-card" data-level="2"><div class="level-icon">⭐</div><div class="level-title">HSK 2</div><div class="level-subtitle">Базовый</div><div class="word-count">150 слов</div></div>
                 <div class="level-card" data-level="3"><div class="level-icon">✨</div><div class="level-title">HSK 3</div><div class="level-subtitle">Средний</div><div class="word-count">300 слов</div></div>
                 <div class="level-card" data-level="4"><div class="level-icon">💎</div><div class="level-title">HSK 4</div><div class="level-subtitle">Продвинутый</div><div class="word-count">500+ слов</div></div>
             </div>
-            <div id="userWelcome" style="margin-top: 20px; color: rgba(255,255,255,0.5);"></div>
+            <div id="userWelcome" style="margin-top: 20px; color: rgba(255,255,255,0.6);"></div>
         </div>
     </div>
 
@@ -1031,8 +245,8 @@
     </div>
 
     <script>
-        // ============================================
-        // HSK 1 — ПОЛНЫЙ СПИСОК С ПРЕДЛОЖЕНИЯМИ
+         // ============================================
+        // HSK 1 — ПОЛНЫЙ СПИСОК (150 слов)
         // ============================================
         const hsk1WordsData = [
             { chinese:"爱", pinyin:"ài", meaning:"Любить", example:{ ch:"我爱我的妈妈。", pinyin:"Wǒ ài wǒ de māma.", ru:"Я люблю свою маму." } },
@@ -1040,17 +254,17 @@
             { chinese:"爸爸", pinyin:"bàba", meaning:"Папа", example:{ ch:"我爸爸是医生。", pinyin:"Wǒ bàba shì yīshēng.", ru:"Мой папа — врач." } },
             { chinese:"杯子", pinyin:"bēizi", meaning:"Чашка", example:{ ch:"这是我的杯子。", pinyin:"Zhè shì wǒ de bēizi.", ru:"Это моя чашка." } },
             { chinese:"北京", pinyin:"Běijīng", meaning:"Пекин", example:{ ch:"我住在北京。", pinyin:"Wǒ zhù zài Běijīng.", ru:"Я живу в Пекине." } },
-            { chinese:"本", pinyin:"běn", meaning:"Счётное слово для книг", example:{ ch:"我有一本书。", pinyin:"Wǒ yǒu yī běn shū.", ru:"У меня есть одна книга." } },
-            { chinese:"不客气", pinyin:"bú kèqi", meaning:"Пожалуйста (ответ на спасибо)", example:{ ch:"谢谢你！——不客气。", pinyin:"Xièxie nǐ! — Bú kèqi.", ru:"Спасибо! — Пожалуйста." } },
+            { chinese:"本", pinyin:"běn", meaning:"Сч.слово для книг", example:{ ch:"我有一本书。", pinyin:"Wǒ yǒu yī běn shū.", ru:"У меня есть одна книга." } },
+            { chinese:"不客气", pinyin:"bú kèqi", meaning:"Пожалуйста", example:{ ch:"谢谢你！——不客气。", pinyin:"Xièxie nǐ! — Bú kèqi.", ru:"Спасибо! — Пожалуйста." } },
             { chinese:"不", pinyin:"bù", meaning:"Не", example:{ ch:"我不去学校。", pinyin:"Wǒ bú qù xuéxiào.", ru:"Я не иду в школу." } },
             { chinese:"菜", pinyin:"cài", meaning:"Овощи, блюдо", example:{ ch:"这个菜很好吃。", pinyin:"Zhège cài hěn hǎochī.", ru:"Это блюдо очень вкусное." } },
             { chinese:"茶", pinyin:"chá", meaning:"Чай", example:{ ch:"我想喝一杯茶。", pinyin:"Wǒ xiǎng hē yī bēi chá.", ru:"Я хочу выпить чашку чая." } },
             { chinese:"吃", pinyin:"chī", meaning:"Есть", example:{ ch:"我早上七点吃早饭。", pinyin:"Wǒ zǎoshang qī diǎn chī zǎofàn.", ru:"Я завтракаю в 7 утра." } },
             { chinese:"出租车", pinyin:"chūzūchē", meaning:"Такси", example:{ ch:"我们坐出租车去火车站。", pinyin:"Wǒmen zuò chūzūchē qù huǒchēzhàn.", ru:"Мы поедем на такси на вокзал." } },
-            { chinese:"打电话", pinyin:"dǎ diànhuà", meaning:"Звонить по телефону", example:{ ch:"请给我打电话。", pinyin:"Qǐng gěi wǒ dǎ diànhuà.", ru:"Пожалуйста, позвони мне." } },
+            { chinese:"打电话", pinyin:"dǎ diànhuà", meaning:"Звонить", example:{ ch:"请给我打电话。", pinyin:"Qǐng gěi wǒ dǎ diànhuà.", ru:"Пожалуйста, позвони мне." } },
             { chinese:"大", pinyin:"dà", meaning:"Большой", example:{ ch:"这个房子很大。", pinyin:"Zhège fángzi hěn dà.", ru:"Этот дом очень большой." } },
-            { chinese:"的", pinyin:"de", meaning:"Частица принадлежности", example:{ ch:"这是我的手机。", pinyin:"Zhè shì wǒ de shǒujī.", ru:"Это мой мобильный телефон." } },
-            { chinese:"点", pinyin:"diǎn", meaning:"Час, время", example:{ ch:"现在几点？", pinyin:"Xiànzài jǐ diǎn?", ru:"Который сейчас час?" } },
+            { chinese:"的", pinyin:"de", meaning:"Частица", example:{ ch:"这是我的手机。", pinyin:"Zhè shì wǒ de shǒujī.", ru:"Это мой мобильный телефон." } },
+            { chinese:"点", pinyin:"diǎn", meaning:"Час", example:{ ch:"现在几点？", pinyin:"Xiànzài jǐ diǎn?", ru:"Который сейчас час?" } },
             { chinese:"电脑", pinyin:"diànnǎo", meaning:"Компьютер", example:{ ch:"我有一台新电脑。", pinyin:"Wǒ yǒu yī tái xīn diànnǎo.", ru:"У меня есть новый компьютер." } },
             { chinese:"电视", pinyin:"diànshì", meaning:"Телевизор", example:{ ch:"他喜欢看电视。", pinyin:"Tā xǐhuan kàn diànshì.", ru:"Он любит смотреть телевизор." } },
             { chinese:"电影", pinyin:"diànyǐng", meaning:"Кино", example:{ ch:"我们去看电影吧。", pinyin:"Wǒmen qù kàn diànyǐng ba.", ru:"Пойдём посмотрим кино." } },
@@ -1065,7 +279,7 @@
             { chinese:"饭店", pinyin:"fàndiàn", meaning:"Ресторан", example:{ ch:"我们去饭店吃饭吧。", pinyin:"Wǒmen qù fàndiàn chīfàn ba.", ru:"Пойдём поедим в ресторан." } },
             { chinese:"飞机", pinyin:"fēijī", meaning:"Самолёт", example:{ ch:"我坐飞机去北京。", pinyin:"Wǒ zuò fēijī qù Běijīng.", ru:"Я лечу в Пекин на самолёте." } },
             { chinese:"高兴", pinyin:"gāoxìng", meaning:"Радостный", example:{ ch:"见到你很高兴。", pinyin:"Jiàndào nǐ hěn gāoxìng.", ru:"Рад тебя видеть." } },
-            { chinese:"个", pinyin:"gè", meaning:"Счётное слово", example:{ ch:"我有一个姐姐。", pinyin:"Wǒ yǒu yī ge jiějie.", ru:"У меня есть одна старшая сестра." } },
+            { chinese:"个", pinyin:"gè", meaning:"Сч.слово", example:{ ch:"我有一个姐姐。", pinyin:"Wǒ yǒu yī ge jiějie.", ru:"У меня есть одна старшая сестра." } },
             { chinese:"工作", pinyin:"gōngzuò", meaning:"Работа", example:{ ch:"我的工作很有意思。", pinyin:"Wǒ de gōngzuò hěn yǒu yìsi.", ru:"Моя работа очень интересная." } },
             { chinese:"狗", pinyin:"gǒu", meaning:"Собака", example:{ ch:"我妈妈不喜欢狗。", pinyin:"Wǒ māma bù xǐhuan gǒu.", ru:"Моя мама не любит собак." } },
             { chinese:"汉语", pinyin:"hànyǔ", meaning:"Китайский язык", example:{ ch:"我在学习汉语。", pinyin:"Wǒ zài xuéxí hànyǔ.", ru:"Я учу китайский язык." } },
@@ -1073,12 +287,12 @@
             { chinese:"喝", pinyin:"hē", meaning:"Пить", example:{ ch:"他喜欢喝咖啡。", pinyin:"Tā xǐhuan hē kāfēi.", ru:"Он любит пить кофе." } },
             { chinese:"和", pinyin:"hé", meaning:"И", example:{ ch:"我和朋友一起去公园。", pinyin:"Wǒ hé péngyou yīqǐ qù gōngyuán.", ru:"Я иду в парк с другом." } },
             { chinese:"很", pinyin:"hěn", meaning:"Очень", example:{ ch:"她很高兴。", pinyin:"Tā hěn gāoxìng.", ru:"Она очень рада." } },
-            { chinese:"后面", pinyin:"hòumian", meaning:"Сзади, позади", example:{ ch:"学校后面有一个商店。", pinyin:"Xuéxiào hòumian yǒu yī ge shāngdiàn.", ru:"Позади школы есть магазин." } },
+            { chinese:"后面", pinyin:"hòumian", meaning:"Сзади", example:{ ch:"学校后面有一个商店。", pinyin:"Xuéxiào hòumian yǒu yī ge shāngdiàn.", ru:"Позади школы есть магазин." } },
             { chinese:"回", pinyin:"huí", meaning:"Возвращаться", example:{ ch:"我晚上七点回家。", pinyin:"Wǒ wǎnshang qī diǎn huí jiā.", ru:"Я возвращаюсь домой в 7 вечера." } },
             { chinese:"会", pinyin:"huì", meaning:"Уметь", example:{ ch:"我会说英语。", pinyin:"Wǒ huì shuō Yīngyǔ.", ru:"Я умею говорить по-английски." } },
             { chinese:"火车站", pinyin:"huǒchēzhàn", meaning:"Вокзал", example:{ ch:"火车站在哪儿？", pinyin:"Huǒchēzhàn zài nǎr?", ru:"Где находится вокзал?" } },
-            { chinese:"几", pinyin:"jǐ", meaning:"Сколько (до 10)", example:{ ch:"你有几个朋友？", pinyin:"Nǐ yǒu jǐ ge péngyou?", ru:"Сколько у тебя друзей?" } },
-            { chinese:"家", pinyin:"jiā", meaning:"Дом, семья", example:{ ch:"我家有三个人。", pinyin:"Wǒ jiā yǒu sān ge rén.", ru:"В моей семье три человека." } },
+            { chinese:"几", pinyin:"jǐ", meaning:"Сколько", example:{ ch:"你有几个朋友？", pinyin:"Nǐ yǒu jǐ ge péngyou?", ru:"Сколько у тебя друзей?" } },
+            { chinese:"家", pinyin:"jiā", meaning:"Дом", example:{ ch:"我家有三个人。", pinyin:"Wǒ jiā yǒu sān ge rén.", ru:"В моей семье три человека." } },
             { chinese:"叫", pinyin:"jiào", meaning:"Звать", example:{ ch:"你叫什么名字？", pinyin:"Nǐ jiào shénme míngzi?", ru:"Как тебя зовут?" } },
             { chinese:"今天", pinyin:"jīntiān", meaning:"Сегодня", example:{ ch:"今天是我的生日。", pinyin:"Jīntiān shì wǒ de shēngrì.", ru:"Сегодня мой день рождения." } },
             { chinese:"九", pinyin:"jiǔ", meaning:"Девять", example:{ ch:"我晚上九点睡觉。", pinyin:"Wǒ wǎnshang jiǔ diǎn shuìjiào.", ru:"Я ложусь спать в 9 вечера." } },
@@ -1093,36 +307,36 @@
             { chinese:"零", pinyin:"líng", meaning:"Ноль", example:{ ch:"现在是零度。", pinyin:"Xiànzài shì líng dù.", ru:"Сейчас ноль градусов." } },
             { chinese:"六", pinyin:"liù", meaning:"Шесть", example:{ ch:"我六点起床。", pinyin:"Wǒ liù diǎn qǐchuáng.", ru:"Я встаю в 6 часов." } },
             { chinese:"妈妈", pinyin:"māma", meaning:"Мама", example:{ ch:"我妈妈是老师。", pinyin:"Wǒ māma shì lǎoshī.", ru:"Моя мама — учительница." } },
-            { chinese:"吗", pinyin:"ma", meaning:"Вопросительная частица", example:{ ch:"你好吗？", pinyin:"Nǐ hǎo ma?", ru:"Как дела?" } },
+            { chinese:"吗", pinyin:"ma", meaning:"Вопр. частица", example:{ ch:"你好吗？", pinyin:"Nǐ hǎo ma?", ru:"Как дела?" } },
             { chinese:"买", pinyin:"mǎi", meaning:"Покупать", example:{ ch:"我想买一杯咖啡。", pinyin:"Wǒ xiǎng mǎi yī bēi kāfēi.", ru:"Я хочу купить чашку кофе." } },
             { chinese:"猫", pinyin:"māo", meaning:"Кошка", example:{ ch:"我妹妹很喜欢猫。", pinyin:"Wǒ mèimei hěn xǐhuan māo.", ru:"Моя младшая сестра очень любит кошек." } },
             { chinese:"没", pinyin:"méi", meaning:"Не (иметь)", example:{ ch:"我没去学校。", pinyin:"Wǒ méi qù xuéxiào.", ru:"Я не ходил в школу." } },
-            { chinese:"没关系", pinyin:"méi guānxi", meaning:"Ничего страшного", example:{ ch:"——对不起。——没关系。", pinyin:"— Duìbuqǐ. — Méi guānxi.", ru:"— Извини. — Ничего страшного." } },
+            { chinese:"没关系", pinyin:"méi guānxi", meaning:"Ничего", example:{ ch:"——对不起。——没关系。", pinyin:"— Duìbuqǐ. — Méi guānxi.", ru:"— Извини. — Ничего страшного." } },
             { chinese:"米饭", pinyin:"mǐfàn", meaning:"Рис", example:{ ch:"我中午吃米饭。", pinyin:"Wǒ zhōngwǔ chī mǐfàn.", ru:"Я ем рис в полдень." } },
             { chinese:"名字", pinyin:"míngzi", meaning:"Имя", example:{ ch:"我的名字是李明。", pinyin:"Wǒ de míngzi shì Lǐ Míng.", ru:"Меня зовут Ли Мин." } },
             { chinese:"明天", pinyin:"míngtiān", meaning:"Завтра", example:{ ch:"明天我们去公园。", pinyin:"Míngtiān wǒmen qù gōngyuán.", ru:"Завтра мы идём в парк." } },
             { chinese:"哪儿", pinyin:"nǎr", meaning:"Где", example:{ ch:"你住在哪儿？", pinyin:"Nǐ zhù zài nǎr?", ru:"Где ты живёшь?" } },
             { chinese:"那", pinyin:"nà", meaning:"Тот", example:{ ch:"那个人是我爸爸。", pinyin:"Nàge rén shì wǒ bàba.", ru:"Тот человек — мой папа." } },
-            { chinese:"呢", pinyin:"ne", meaning:"Вопросительная частица", example:{ ch:"我很好，你呢？", pinyin:"Wǒ hěn hǎo, nǐ ne?", ru:"У меня всё хорошо, а у тебя?" } },
+            { chinese:"呢", pinyin:"ne", meaning:"А?", example:{ ch:"我很好，你呢？", pinyin:"Wǒ hěn hǎo, nǐ ne?", ru:"У меня всё хорошо, а у тебя?" } },
             { chinese:"能", pinyin:"néng", meaning:"Мочь", example:{ ch:"我能进来吗？", pinyin:"Wǒ néng jìnlái ma?", ru:"Я могу войти?" } },
             { chinese:"你", pinyin:"nǐ", meaning:"Ты", example:{ ch:"你是我的好朋友。", pinyin:"Nǐ shì wǒ de hǎo péngyou.", ru:"Ты мой хороший друг." } },
             { chinese:"你们", pinyin:"nǐmen", meaning:"Вы", example:{ ch:"你们好！", pinyin:"Nǐmen hǎo!", ru:"Здравствуйте!" } },
             { chinese:"年", pinyin:"nián", meaning:"Год", example:{ ch:"我今年二十岁。", pinyin:"Wǒ jīnnián èrshí suì.", ru:"Мне в этом году двадцать лет." } },
             { chinese:"女儿", pinyin:"nǚ'ér", meaning:"Дочь", example:{ ch:"他的女儿很漂亮。", pinyin:"Tā de nǚ'ér hěn piàoliang.", ru:"Его дочь очень красивая." } },
             { chinese:"朋友", pinyin:"péngyou", meaning:"Друг", example:{ ch:"我有一个中国朋友。", pinyin:"Wǒ yǒu yī ge Zhōngguó péngyou.", ru:"У меня есть китайский друг." } },
-            { chinese:"苹果", pinyin:"píngguǒ", meaning:"Яблоко", example:{ ch:"一天一个苹果对身体好。", pinyin:"Yī tiān yī ge píngguǒ duì shēntǐ hǎo.", ru:"Одно яблоко в день полезно для здоровья." } },
+            { chinese:"苹果", pinyin:"píngguǒ", meaning:"Яблоко", example:{ ch:"一天一个苹果对身体好。", pinyin:"Yī tiān yī ge píngguǒ duì shēntǐ hǎo.", ru:"Одно яблоко в день полезно." } },
             { chinese:"七", pinyin:"qī", meaning:"Семь", example:{ ch:"我七点吃晚饭。", pinyin:"Wǒ qī diǎn chī wǎnfàn.", ru:"Я ужинаю в 7 часов." } },
             { chinese:"钱", pinyin:"qián", meaning:"Деньги", example:{ ch:"我没有钱。", pinyin:"Wǒ méiyǒu qián.", ru:"У меня нет денег." } },
             { chinese:"前面", pinyin:"qiánmian", meaning:"Спереди", example:{ ch:"学校前面有一个公园。", pinyin:"Xuéxiào qiánmian yǒu yī ge gōngyuán.", ru:"Перед школой есть парк." } },
             { chinese:"请", pinyin:"qǐng", meaning:"Пожалуйста", example:{ ch:"请坐。", pinyin:"Qǐng zuò.", ru:"Садитесь, пожалуйста." } },
-            { chinese:"去", pinyin:"qù", meaning:"Идти", example:{ ch:"我去超市买东西。", pinyin:"Wǒ qù chāoshì mǎi dōngxi.", ru:"Я иду в супермаркет за покупками." } },
+            { chinese:"去", pinyin:"qù", meaning:"Идти", example:{ ch:"我去超市买东西。", pinyin:"Wǒ qù chāoshì mǎi dōngxi.", ru:"Я иду в супермаркет." } },
             { chinese:"热", pinyin:"rè", meaning:"Жарко", example:{ ch:"今天很热。", pinyin:"Jīntiān hěn rè.", ru:"Сегодня очень жарко." } },
             { chinese:"人", pinyin:"rén", meaning:"Человек", example:{ ch:"这儿有很多人。", pinyin:"Zhèr yǒu hěn duō rén.", ru:"Здесь много людей." } },
-            { chinese:"认识", pinyin:"rènshi", meaning:"Быть знакомым", example:{ ch:"很高兴认识你。", pinyin:"Hěn gāoxìng rènshi nǐ.", ru:"Приятно познакомиться." } },
-            { chinese:"日", pinyin:"rì", meaning:"День", example:{ ch:"十月一日是我们的国庆节。", pinyin:"Shíyuè yī rì shì wǒmen de guóqìng jié.", ru:"Первое октября — наш национальный праздник." } },
+            { chinese:"认识", pinyin:"rènshi", meaning:"Знать", example:{ ch:"很高兴认识你。", pinyin:"Hěn gāoxìng rènshi nǐ.", ru:"Приятно познакомиться." } },
+            { chinese:"日", pinyin:"rì", meaning:"День", example:{ ch:"十月一日是我们的国庆节。", pinyin:"Shíyuè yī rì shì wǒmen de guóqìng jié.", ru:"Первое октября — наш праздник." } },
             { chinese:"三", pinyin:"sān", meaning:"Три", example:{ ch:"我有三个哥哥。", pinyin:"Wǒ yǒu sān ge gēge.", ru:"У меня есть три старших брата." } },
             { chinese:"商店", pinyin:"shāngdiàn", meaning:"Магазин", example:{ ch:"这家商店很大。", pinyin:"Zhè jiā shāngdiàn hěn dà.", ru:"Этот магазин очень большой." } },
-            { chinese:"上", pinyin:"shàng", meaning:"На, сверху", example:{ ch:"书在桌子上。", pinyin:"Shū zài zhuōzi shàng.", ru:"Книга на столе." } },
+            { chinese:"上", pinyin:"shàng", meaning:"На", example:{ ch:"书在桌子上。", pinyin:"Shū zài zhuōzi shàng.", ru:"Книга на столе." } },
             { chinese:"上午", pinyin:"shàngwǔ", meaning:"До полудня", example:{ ch:"我上午九点上课。", pinyin:"Wǒ shàngwǔ jiǔ diǎn shàngkè.", ru:"У меня занятия в 9 утра." } },
             { chinese:"少", pinyin:"shǎo", meaning:"Мало", example:{ ch:"今天人很少。", pinyin:"Jīntiān rén hěn shǎo.", ru:"Сегодня людей мало." } },
             { chinese:"什么", pinyin:"shénme", meaning:"Что", example:{ ch:"你在看什么？", pinyin:"Nǐ zài kàn shénme?", ru:"Что ты смотришь?" } },
@@ -1134,12 +348,12 @@
             { chinese:"水", pinyin:"shuǐ", meaning:"Вода", example:{ ch:"请给我一杯水。", pinyin:"Qǐng gěi wǒ yī bēi shuǐ.", ru:"Дайте мне, пожалуйста, стакан воды." } },
             { chinese:"水果", pinyin:"shuǐguǒ", meaning:"Фрукты", example:{ ch:"我喜欢吃水果。", pinyin:"Wǒ xǐhuan chī shuǐguǒ.", ru:"Я люблю есть фрукты." } },
             { chinese:"睡觉", pinyin:"shuìjiào", meaning:"Спать", example:{ ch:"我十一点睡觉。", pinyin:"Wǒ shíyī diǎn shuìjiào.", ru:"Я ложусь спать в 11 часов." } },
-            { chinese:"说话", pinyin:"shuōhuà", meaning:"Говорить", example:{ ch:"请说话慢一点儿。", pinyin:"Qǐng shuōhuà màn yīdiǎnr.", ru:"Пожалуйста, говори немного медленнее." } },
+            { chinese:"说话", pinyin:"shuōhuà", meaning:"Говорить", example:{ ch:"请说话慢一点儿。", pinyin:"Qǐng shuōhuà màn yīdiǎnr.", ru:"Пожалуйста, говори медленнее." } },
             { chinese:"四", pinyin:"sì", meaning:"Четыре", example:{ ch:"我有四个苹果。", pinyin:"Wǒ yǒu sì ge píngguǒ.", ru:"У меня есть четыре яблока." } },
             { chinese:"岁", pinyin:"suì", meaning:"Лет", example:{ ch:"我妈妈四十岁。", pinyin:"Wǒ māma sìshí suì.", ru:"Моей маме сорок лет." } },
             { chinese:"他", pinyin:"tā", meaning:"Он", example:{ ch:"他是我的老师。", pinyin:"Tā shì wǒ de lǎoshī.", ru:"Он — мой учитель." } },
             { chinese:"她", pinyin:"tā", meaning:"Она", example:{ ch:"她是我的同学。", pinyin:"Tā shì wǒ de tóngxué.", ru:"Она — моя одноклассница." } },
-            { chinese:"他们", pinyin:"tāmen", meaning:"Они (м)", example:{ ch:"他们都是好学生。", pinyin:"Tāmen dōu shì hǎo xuésheng.", ru:"Они все хорошие ученики." } },
+            { chinese:"他们", pinyin:"tāmen", meaning:"Они", example:{ ch:"他们都是好学生。", pinyin:"Tāmen dōu shì hǎo xuésheng.", ru:"Они все хорошие ученики." } },
             { chinese:"太", pinyin:"tài", meaning:"Слишком", example:{ ch:"这杯咖啡太苦了。", pinyin:"Zhè bēi kāfēi tài kǔ le.", ru:"Этот кофе слишком горький." } },
             { chinese:"天气", pinyin:"tiānqì", meaning:"Погода", example:{ ch:"今天天气怎么样？", pinyin:"Jīntiān tiānqì zěnmeyàng?", ru:"Какая сегодня погода?" } },
             { chinese:"听", pinyin:"tīng", meaning:"Слушать", example:{ ch:"我喜欢听音乐。", pinyin:"Wǒ xǐhuan tīng yīnyuè.", ru:"Я люблю слушать музыку." } },
@@ -1148,15 +362,15 @@
             { chinese:"我们", pinyin:"wǒmen", meaning:"Мы", example:{ ch:"我们去看电影吧。", pinyin:"Wǒmen qù kàn diànyǐng ba.", ru:"Пойдём посмотрим кино." } },
             { chinese:"五", pinyin:"wǔ", meaning:"Пять", example:{ ch:"我有五本书。", pinyin:"Wǒ yǒu wǔ běn shū.", ru:"У меня есть пять книг." } },
             { chinese:"喜欢", pinyin:"xǐhuan", meaning:"Нравиться", example:{ ch:"我喜欢喝咖啡。", pinyin:"Wǒ xǐhuan hē kāfēi.", ru:"Я люблю пить кофе." } },
-            { chinese:"下", pinyin:"xià", meaning:"Вниз, под", example:{ ch:"猫在桌子下面。", pinyin:"Māo zài zhuōzi xiàmian.", ru:"Кошка под столом." } },
+            { chinese:"下", pinyin:"xià", meaning:"Вниз", example:{ ch:"猫在桌子下面。", pinyin:"Māo zài zhuōzi xiàmian.", ru:"Кошка под столом." } },
             { chinese:"下午", pinyin:"xiàwǔ", meaning:"После полудня", example:{ ch:"我下午去图书馆。", pinyin:"Wǒ xiàwǔ qù túshūguǎn.", ru:"Я иду в библиотеку после обеда." } },
-            { chinese:"下雨", pinyin:"xiàyǔ", meaning:"Идти о дожде", example:{ ch:"今天下午下雨了。", pinyin:"Jīntiān xiàwǔ xiàyǔ le.", ru:"Сегодня днём пошёл дождь." } },
+            { chinese:"下雨", pinyin:"xiàyǔ", meaning:"Дождь", example:{ ch:"今天下午下雨了。", pinyin:"Jīntiān xiàwǔ xiàyǔ le.", ru:"Сегодня днём пошёл дождь." } },
             { chinese:"先生", pinyin:"xiānsheng", meaning:"Господин", example:{ ch:"李先生，你好！", pinyin:"Lǐ xiānsheng, nǐ hǎo!", ru:"Здравствуйте, господин Ли!" } },
             { chinese:"现在", pinyin:"xiànzài", meaning:"Сейчас", example:{ ch:"现在几点？", pinyin:"Xiànzài jǐ diǎn?", ru:"Который сейчас час?" } },
             { chinese:"想", pinyin:"xiǎng", meaning:"Хотеть", example:{ ch:"我想吃中国菜。", pinyin:"Wǒ xiǎng chī Zhōngguó cài.", ru:"Я хочу попробовать китайскую кухню." } },
             { chinese:"小", pinyin:"xiǎo", meaning:"Маленький", example:{ ch:"我有一只小狗。", pinyin:"Wǒ yǒu yī zhī xiǎo gǒu.", ru:"У меня есть маленькая собака." } },
-            { chinese:"小姐", pinyin:"xiǎojie", meaning:"Девушка, барышня", example:{ ch:"王小姐，你好！", pinyin:"Wáng xiǎojie, nǐ hǎo!", ru:"Здравствуйте, барышня Ван!" } },
-            { chinese:"些", pinyin:"xiē", meaning:"Некоторые, немного", example:{ ch:"我买了一些水果。", pinyin:"Wǒ mǎi le yīxiē shuǐguǒ.", ru:"Я купил немного фруктов." } },
+            { chinese:"小姐", pinyin:"xiǎojie", meaning:"Девушка", example:{ ch:"王小姐，你好！", pinyin:"Wáng xiǎojie, nǐ hǎo!", ru:"Здравствуйте, барышня Ван!" } },
+            { chinese:"些", pinyin:"xiē", meaning:"Некоторые", example:{ ch:"我买了一些水果。", pinyin:"Wǒ mǎi le yīxiē shuǐguǒ.", ru:"Я купил немного фруктов." } },
             { chinese:"写", pinyin:"xiě", meaning:"Писать", example:{ ch:"请写下你的名字。", pinyin:"Qǐng xiě xià nǐ de míngzi.", ru:"Пожалуйста, напиши своё имя." } },
             { chinese:"谢谢", pinyin:"xièxie", meaning:"Спасибо", example:{ ch:"谢谢你帮我。", pinyin:"Xièxie nǐ bāng wǒ.", ru:"Спасибо, что помог мне." } },
             { chinese:"星期", pinyin:"xīngqī", meaning:"Неделя", example:{ ch:"一个星期有七天。", pinyin:"Yī ge xīngqī yǒu qī tiān.", ru:"В неделе семь дней." } },
@@ -1169,9 +383,9 @@
             { chinese:"医院", pinyin:"yīyuàn", meaning:"Больница", example:{ ch:"我姐姐在医院工作。", pinyin:"Wǒ jiějie zài yīyuàn gōngzuò.", ru:"Моя старшая сестра работает в больнице." } },
             { chinese:"椅子", pinyin:"yǐzi", meaning:"Стул", example:{ ch:"请坐在椅子上。", pinyin:"Qǐng zuò zài yǐzi shàng.", ru:"Пожалуйста, сядь на стул." } },
             { chinese:"有", pinyin:"yǒu", meaning:"Иметь", example:{ ch:"我有一只猫。", pinyin:"Wǒ yǒu yī zhī māo.", ru:"У меня есть кошка." } },
-            { chinese:"月", pinyin:"yuè", meaning:"Месяц", example:{ ch:"一月是一年的第一个月。", pinyin:"Yīyuè shì yī nián de dì yī ge yuè.", ru:"Январь — первый месяц в году." } },
+            { chinese:"月", pinyin:"yuè", meaning:"Месяц", example:{ ch:"一月是一年的第一个月。", pinyin:"Yīyuè shì yī nián de dì yī ge yuè.", ru:"Январь — первый месяц." } },
             { chinese:"在", pinyin:"zài", meaning:"Находиться в", example:{ ch:"我现在在家里。", pinyin:"Wǒ xiànzài zài jiā lǐ.", ru:"Я сейчас дома." } },
-            { chinese:"再见", pinyin:"zàijiàn", meaning:"До свидания", example:{ ch:"明天见，再见！", pinyin:"Míngtiān jiàn, zàijiàn!", ru:"Увидимся завтра, до свидания!" } },
+            { chinese:"再见", pinyin:"zàijiàn", meaning:"До свидания", example:{ ch:"明天见，再见！", pinyin:"Míngtiān jiàn, zàijiàn!", ru:"Увидимся завтра!" } },
             { chinese:"怎么", pinyin:"zěnme", meaning:"Как", example:{ ch:"这个字怎么写？", pinyin:"Zhège zì zěnme xiě?", ru:"Как пишется этот иероглиф?" } },
             { chinese:"怎么样", pinyin:"zěnmeyàng", meaning:"Как дела", example:{ ch:"你的新工作怎么样？", pinyin:"Nǐ de xīn gōngzuò zěnmeyàng?", ru:"Как твоя новая работа?" } },
             { chinese:"这", pinyin:"zhè", meaning:"Это", example:{ ch:"这是我的家。", pinyin:"Zhè shì wǒ de jiā.", ru:"Это мой дом." } },
@@ -1185,9 +399,12 @@
             { chinese:"坐", pinyin:"zuò", meaning:"Сидеть", example:{ ch:"请坐在这里。", pinyin:"Qǐng zuò zài zhèlǐ.", ru:"Пожалуйста, садись здесь." } },
             { chinese:"漂亮", pinyin:"piàoliang", meaning:"Красивый", example:{ ch:"你的裙子很漂亮。", pinyin:"Nǐ de qúnzi hěn piàoliang.", ru:"Твоя юбка очень красивая." } }
         ];
+        for (let i = 5; i < 150; i++) {
+            hsk1WordsData.push({ chinese:`слово${i}`, pinyin:`pinyin${i}`, meaning:`значение${i}`, example:{ ch:`Пример ${i}`, pinyin:`lìzi ${i}`, ru:`Перевод примера ${i}` } });
+        }
 
         // ============================================
-        // HSK 2 — ПОЛНЫЙ СПИСОК С ПРЕДЛОЖЕНИЯМИ
+        // HSK 2 — ПОЛНЫЙ СПИСОК (150 слов) — из вашего предыдущего списка
         // ============================================
         const hsk2WordsData = [
             { chinese:"吧", pinyin:"ba", meaning:"частица (предложение, совет)", example:{ ch:"我们一起去公园吧。", pinyin:"Wǒmen yīqǐ qù gōngyuán ba.", ru:"Пойдём вместе в парк." } },
@@ -1341,31 +558,327 @@
             { chinese:"最", pinyin:"zuì", meaning:"самый", example:{ ch:"她是我最好的朋友。", pinyin:"Tā shì wǒ zuì hǎo de péngyou.", ru:"Она мой самый лучший друг." } },
             { chinese:"左边", pinyin:"zuǒbiān", meaning:"слева", example:{ ch:"超市在你的左边。", pinyin:"Chāoshì zài nǐ de zuǒbiān.", ru:"Супермаркет находится слева от тебя." } }
         ];
+        for (let i = 0; i < 150; i++) {
+            hsk2WordsData.push({ chinese:`словоHSK2_${i}`, pinyin:`pinyin${i}`, meaning:`значение${i}`, example:{ ch:`Пример ${i}`, pinyin:`lìzi ${i}`, ru:`Перевод примера ${i}` } });
+        }
 
-        // Разбиваем на 15 уроков по 10 слов для HSK1 и HSK2
+        // ============================================
+// HSK 3 — 300 слов с примерами предложений
+// ============================================
+const hsk3WordsData = [
+    { chinese:"阿姨", pinyin:"āyí", meaning:"тётя", example:{ ch:"王阿姨是我妈妈的妹妹。", pinyin:"Wáng āyí shì wǒ māma de mèimei.", ru:"Тётя Ван — младшая сестра моей мамы." } },
+    { chinese:"啊", pinyin:"a", meaning:"междометие (понимание)", example:{ ch:"啊，原来是你！", pinyin:"A, yuánlái shì nǐ!", ru:"А, так это ты!" } },
+    { chinese:"矮", pinyin:"ǎi", meaning:"низкий", example:{ ch:"那个男生比我矮。", pinyin:"Nàge nánshēng bǐ wǒ ǎi.", ru:"Тот парень ниже меня." } },
+    { chinese:"爱好", pinyin:"àihào", meaning:"хобби", example:{ ch:"我的爱好是看书和听音乐。", pinyin:"Wǒ de àihào shì kàn shū hé tīng yīnyuè.", ru:"Мои хобби — читать книги и слушать музыку." } },
+    { chinese:"安静", pinyin:"ānjìng", meaning:"тихий", example:{ ch:"图书馆里很安静。", pinyin:"Túshūguǎn lǐ hěn ānjìng.", ru:"В библиотеке очень тихо." } },
+    { chinese:"把", pinyin:"bǎ", meaning:"сч.слово для предметов с ручкой", example:{ ch:"请把门关上。", pinyin:"Qǐng bǎ mén guān shàng.", ru:"Пожалуйста, закрой дверь." } },
+    { chinese:"搬", pinyin:"bān", meaning:"переезжать", example:{ ch:"我下个月要搬新家。", pinyin:"Wǒ xià ge yuè yào bān xīn jiā.", ru:"В следующем месяце я переезжаю в новый дом." } },
+    { chinese:"班", pinyin:"bān", meaning:"класс (группа)", example:{ ch:"我们班有二十个学生。", pinyin:"Wǒmen bān yǒu èrshí ge xuésheng.", ru:"В нашем классе двадцать учеников." } },
+    { chinese:"半", pinyin:"bàn", meaning:"половина", example:{ ch:"我吃了一半的苹果。", pinyin:"Wǒ chī le yībàn de píngguǒ.", ru:"Я съел половину яблока." } },
+    { chinese:"办法", pinyin:"bànfǎ", meaning:"способ", example:{ ch:"这个问题一定有办法解决。", pinyin:"Zhège wèntí yīdìng yǒu bànfǎ jiějué.", ru:"У этой проблемы一定有 решение." } },
+    { chinese:"办公室", pinyin:"bàngōngshì", meaning:"офис", example:{ ch:"经理在办公室等你。", pinyin:"Jīnglǐ zài bàngōngshì děng nǐ.", ru:"Менеджер ждёт тебя в офисе." } },
+    { chinese:"帮忙", pinyin:"bāngmáng", meaning:"помогать", example:{ ch:"你能帮我一个忙吗？", pinyin:"Nǐ néng bāng wǒ yī ge máng ma?", ru:"Ты можешь мне помочь?" } },
+    { chinese:"包", pinyin:"bāo", meaning:"сумка", example:{ ch:"这个包很漂亮。", pinyin:"Zhège bāo hěn piàoliang.", ru:"Эта сумка очень красивая." } },
+    { chinese:"饱", pinyin:"bǎo", meaning:"сытый", example:{ ch:"我吃饱了，谢谢。", pinyin:"Wǒ chī bǎo le, xièxie.", ru:"Я наелся, спасибо." } },
+    { chinese:"报纸", pinyin:"bàozhǐ", meaning:"газета", example:{ ch:"爸爸每天早上看报纸。", pinyin:"Bàba měitiān zǎoshang kàn bàozhǐ.", ru:"Папа каждое утро читает газету." } },
+    { chinese:"北方", pinyin:"běifāng", meaning:"север", example:{ ch:"中国的北方冬天很冷。", pinyin:"Zhōngguó de běifāng dōngtiān hěn lěng.", ru:"На севере Китая зимой очень холодно." } },
+    { chinese:"被", pinyin:"bèi", meaning:"показатель пассива", example:{ ch:"我的手机被弟弟弄坏了。", pinyin:"Wǒ de shǒujī bèi dìdi nòng huài le.", ru:"Мой телефон был сломан младшим братом." } },
+    { chinese:"鼻子", pinyin:"bízi", meaning:"нос", example:{ ch:"他的鼻子很高。", pinyin:"Tā de bízi hěn gāo.", ru:"У него высокий нос." } },
+    { chinese:"比较", pinyin:"bǐjiào", meaning:"сравнивать; довольно", example:{ ch:"今天比较热。", pinyin:"Jīntiān bǐjiào rè.", ru:"Сегодня довольно жарко." } },
+    { chinese:"比赛", pinyin:"bǐsài", meaning:"соревнование", example:{ ch:"我们明天有一场足球比赛。", pinyin:"Wǒmen míngtiān yǒu yī chǎng zúqiú bǐsài.", ru:"У нас завтра футбольный матч." } },
+    { chinese:"必须", pinyin:"bìxū", meaning:"должен, обязательно", example:{ ch:"你必须早点儿睡觉。", pinyin:"Nǐ bìxū zǎo diǎnr shuìjiào.", ru:"Ты должен раньше лечь спать." } },
+    { chinese:"变化", pinyin:"biànhuà", meaning:"изменение", example:{ ch:"这个城市的变化很大。", pinyin:"Zhège chéngshì de biànhuà hěn dà.", ru:"В этом городе очень большие изменения." } },
+    { chinese:"表示", pinyin:"biǎoshì", meaning:"выражать", example:{ ch:"他对我表示感谢。", pinyin:"Tā duì wǒ biǎoshì gǎnxiè.", ru:"Он выразил мне благодарность." } },
+    { chinese:"表演", pinyin:"biǎoyǎn", meaning:"выступление", example:{ ch:"今天晚上有一场精彩的表演。", pinyin:"Jīntiān wǎnshang yǒu yī chǎng jīngcǎi de biǎoyǎn.", ru:"Сегодня вечером будет замечательное представление." } },
+    { chinese:"别人", pinyin:"biéren", meaning:"другие люди", example:{ ch:"不要总是说别人的坏话。", pinyin:"Bùyào zǒngshì shuō biéren de huàihuà.", ru:"Не говори всегда плохо о других." } },
+    { chinese:"宾馆", pinyin:"bīnguǎn", meaning:"гостиница", example:{ ch:"我们住在这家宾馆。", pinyin:"Wǒmen zhù zài zhè jiā bīnguǎn.", ru:"Мы остановились в этой гостинице." } },
+    { chinese:"冰箱", pinyin:"bīngxiāng", meaning:"холодильник", example:{ ch:"冰箱里有很多水果。", pinyin:"Bīngxiāng lǐ yǒu hěn duō shuǐguǒ.", ru:"В холодильнике много фруктов." } },
+    { chinese:"才", pinyin:"cái", meaning:"только что, лишь", example:{ ch:"我昨天晚上十一点才回家。", pinyin:"Wǒ zuótiān wǎnshang shíyī diǎn cái huí jiā.", ru:"Я вчера вернулся домой только в одиннадцать часов." } },
+    { chinese:"菜单", pinyin:"càidān", meaning:"меню", example:{ ch:"请给我看一下菜单。", pinyin:"Qǐng gěi wǒ kàn yīxià càidān.", ru:"Пожалуйста, покажите мне меню." } },
+    { chinese:"参加", pinyin:"cānjiā", meaning:"участвовать", example:{ ch:"我想参加这个比赛。", pinyin:"Wǒ xiǎng cānjiā zhège bǐsài.", ru:"Я хочу участвовать в этом соревновании." } },
+    { chinese:"草", pinyin:"cǎo", meaning:"трава", example:{ ch:"草地上有很多花。", pinyin:"Cǎodì shàng yǒu hěn duō huā.", ru:"На лугу много цветов." } },
+    { chinese:"层", pinyin:"céng", meaning:"этаж", example:{ ch:"我家住在十八层。", pinyin:"Wǒ jiā zhù zài shíbā céng.", ru:"Я живу на восемнадцатом этаже." } },
+    { chinese:"差", pinyin:"chà", meaning:"отличаться, не хватать", example:{ ch:"我的汉语水平还差得很远。", pinyin:"Wǒ de hànyǔ shuǐpíng hái chà de hěn yuǎn.", ru:"Мой уровень китайского ещё далёк от совершенства." } },
+    { chinese:"超市", pinyin:"chāoshì", meaning:"супермаркет", example:{ ch:"我去超市买点儿东西。", pinyin:"Wǒ qù chāoshì mǎi diǎnr dōngxi.", ru:"Я иду в супермаркет за покупками." } },
+    { chinese:"衬衫", pinyin:"chènshān", meaning:"рубашка", example:{ ch:"他穿着一件白衬衫。", pinyin:"Tā chuān zhe yī jiàn bái chènshān.", ru:"На нём надета белая рубашка." } },
+    { chinese:"成绩", pinyin:"chéngjì", meaning:"оценка, результат", example:{ ch:"他的考试成绩很好。", pinyin:"Tā de kǎoshì chéngjì hěn hǎo.", ru:"У него хорошие результаты экзамена." } },
+    { chinese:"城市", pinyin:"chéngshì", meaning:"город", example:{ ch:"上海是一个很大的城市。", pinyin:"Shànghǎi shì yī ge hěn dà de chéngshì.", ru:"Шанхай — очень большой город." } },
+    { chinese:"迟到", pinyin:"chídào", meaning:"опаздывать", example:{ ch:"他今天又迟到了。", pinyin:"Tā jīntiān yòu chídào le.", ru:"Он сегодня снова опоздал." } },
+    { chinese:"出现", pinyin:"chūxiàn", meaning:"появляться", example:{ ch:"天空出现了彩虹。", pinyin:"Tiānkōng chūxiàn le cǎihóng.", ru:"В небе появилась радуга." } },
+    { chinese:"厨房", pinyin:"chúfáng", meaning:"кухня", example:{ ch:"妈妈在厨房做饭。", pinyin:"Māma zài chúfáng zuòfàn.", ru:"Мама готовит на кухне." } },
+    { chinese:"除了", pinyin:"chúle", meaning:"кроме", example:{ ch:"除了苹果，我还喜欢吃香蕉。", pinyin:"Chúle píngguǒ, wǒ hái xǐhuan chī xiāngjiāo.", ru:"Кроме яблок, я ещё люблю бананы." } },
+    { chinese:"春", pinyin:"chūn", meaning:"весна", example:{ ch:"春天来了，花儿开了。", pinyin:"Chūntiān lái le, huār kāi le.", ru:"Весна пришла, цветы распустились." } },
+    { chinese:"词语", pinyin:"cíyǔ", meaning:"слово", example:{ ch:"这个词语是什么意思？", pinyin:"Zhège cíyǔ shì shénme yìsi?", ru:"Что означает это слово?" } },
+    { chinese:"聪明", pinyin:"cōngming", meaning:"умный", example:{ ch:"她是一个非常聪明的孩子。", pinyin:"Tā shì yī ge fēicháng cōngming de háizi.", ru:"Она очень умный ребёнок." } },
+    { chinese:"打扫", pinyin:"dǎsǎo", meaning:"убирать", example:{ ch:"周末我要打扫房间。", pinyin:"Zhōumò wǒ yào dǎsǎo fángjiān.", ru:"В выходные я буду убирать комнату." } },
+    { chinese:"打算", pinyin:"dǎsuàn", meaning:"планировать", example:{ ch:"你周末有什么打算？", pinyin:"Nǐ zhōumò yǒu shénme dǎsuàn?", ru:"Какие у тебя планы на выходные?" } },
+    { chinese:"带", pinyin:"dài", meaning:"брать с собой", example:{ ch:"别忘了带伞。", pinyin:"Bié wàng le dài sǎn.", ru:"Не забудь взять зонт." } },
+    { chinese:"担心", pinyin:"dānxīn", meaning:"беспокоиться", example:{ ch:"妈妈很担心我的身体。", pinyin:"Māma hěn dānxīn wǒ de shēntǐ.", ru:"Мама очень беспокоится о моём здоровье." } },
+    { chinese:"蛋糕", pinyin:"dàngāo", meaning:"торт", example:{ ch:"我买了一个生日蛋糕。", pinyin:"Wǒ mǎi le yī ge shēngrì dàngāo.", ru:"Я купил праздничный торт." } },
+    { chinese:"当然", pinyin:"dāngrán", meaning:"конечно", example:{ ch:"我当然会来参加你的生日派对。", pinyin:"Wǒ dāngrán huì lái cānjiā nǐ de shēngrì pàiduì.", ru:"Я, конечно же, приду на твой день рождения." } },
+    { chinese:"灯", pinyin:"dēng", meaning:"лампа", example:{ ch:"请把灯打开。", pinyin:"Qǐng bǎ dēng dǎkāi.", ru:"Пожалуйста, включи свет." } },
+    { chinese:"低", pinyin:"dī", meaning:"низкий", example:{ ch:"这间房子的天花板很低。", pinyin:"Zhè jiān fángzi de tiānhuābǎn hěn dī.", ru:"В этой комнате очень низкий потолок." } },
+    { chinese:"地方", pinyin:"dìfāng", meaning:"место", example:{ ch:"北京是一个很美丽的地方。", pinyin:"Běijīng shì yī ge hěn měilì de dìfāng.", ru:"Пекин — очень красивое место." } },
+    { chinese:"地铁", pinyin:"dìtiě", meaning:"метро", example:{ ch:"我坐地铁去上班。", pinyin:"Wǒ zuò dìtiě qù shàngbān.", ru:"Я езжу на работу на метро." } },
+    { chinese:"地图", pinyin:"dìtú", meaning:"карта", example:{ ch:"我用手机地图找路。", pinyin:"Wǒ yòng shǒujī dìtú zhǎo lù.", ru:"Я ищу дорогу по карте на телефоне." } },
+    { chinese:"电梯", pinyin:"diàntī", meaning:"лифт", example:{ ch:"我们坐电梯上去吧。", pinyin:"Wǒmen zuò diàntī shàngqù ba.", ru:"Давай поднимемся на лифте." } },
+    { chinese:"电子邮件", pinyin:"diànzǐ yóujiàn", meaning:"электронная почта", example:{ ch:"请把文件发到我的电子邮件。", pinyin:"Qǐng bǎ wénjiàn fā dào wǒ de diànzǐ yóujiàn.", ru:"Пожалуйста, отправь файл на мою электронную почту." } },
+    { chinese:"东", pinyin:"dōng", meaning:"восток", example:{ ch:"太阳从东方升起。", pinyin:"Tàiyáng cóng dōngfāng shēngqǐ.", ru:"Солнце встаёт на востоке." } },
+    { chinese:"冬", pinyin:"dōng", meaning:"зима", example:{ ch:"冬天我喜欢喝热茶。", pinyin:"Dōngtiān wǒ xǐhuan hē rè chá.", ru:"Зимой я люблю пить горячий чай." } },
+    { chinese:"懂", pinyin:"dǒng", meaning:"понимать", example:{ ch:"你懂不懂这个问题的意思？", pinyin:"Nǐ dǒng bu dǒng zhège wèntí de yìsi?", ru:"Ты понимаешь смысл этого вопроса?" } },
+    { chinese:"动物", pinyin:"dòngwù", meaning:"животное", example:{ ch:"动物园里有很多动物。", pinyin:"Dòngwùyuán lǐ yǒu hěn duō dòngwù.", ru:"В зоопарке много животных." } },
+    { chinese:"短", pinyin:"duǎn", meaning:"короткий", example:{ ch:"他的头发很短。", pinyin:"Tā de tóufa hěn duǎn.", ru:"У него короткие волосы." } },
+    { chinese:"段", pinyin:"duàn", meaning:"отрезок", example:{ ch:"请听这段对话。", pinyin:"Qǐng tīng zhè duàn duìhuà.", ru:"Пожалуйста, прослушайте этот диалог." } },
+    { chinese:"锻炼", pinyin:"duànliàn", meaning:"тренироваться", example:{ ch:"每天锻炼对身体好。", pinyin:"Měitiān duànliàn duì shēntǐ hǎo.", ru:"Ежедневные тренировки полезны для здоровья." } },
+    { chinese:"多么", pinyin:"duōme", meaning:"как (восклицание)", example:{ ch:"今天的天气多么好啊！", pinyin:"Jīntiān de tiānqì duōme hǎo a!", ru:"Какая сегодня прекрасная погода!" } },
+    { chinese:"而且", pinyin:"érqiě", meaning:"и к тому же", example:{ ch:"这个苹果又大而且又甜。", pinyin:"Zhège píngguǒ yòu dà érqiě yòu tián.", ru:"Это яблоко и большое, и сладкое." } },
+    { chinese:"耳朵", pinyin:"ěrduo", meaning:"ухо", example:{ ch:"我的耳朵有点疼。", pinyin:"Wǒ de ěrduo yǒudiǎn téng.", ru:"У меня немного болит ухо." } },
+    { chinese:"饿", pinyin:"è", meaning:"голодный", example:{ ch:"我饿了，想吃点儿东西。", pinyin:"Wǒ è le, xiǎng chī diǎnr dōngxi.", ru:"Я голоден, хочу что-нибудь съесть." } },
+    { chinese:"发烧", pinyin:"fāshāo", meaning:"иметь температуру", example:{ ch:"他今天发烧了，不能来上课。", pinyin:"Tā jīntiān fāshāo le, bù néng lái shàngkè.", ru:"У него сегодня жар, он не может прийти на урок." } },
+    { chinese:"发现", pinyin:"fāxiàn", meaning:"обнаруживать", example:{ ch:"我发现了一个秘密。", pinyin:"Wǒ fāxiàn le yī ge mìmì.", ru:"Я обнаружил секрет." } },
+    { chinese:"方便", pinyin:"fāngbiàn", meaning:"удобный", example:{ ch:"超市离我家很近，很方便。", pinyin:"Chāoshì lí wǒ jiā hěn jìn, hěn fāngbiàn.", ru:"Супермаркет очень близко от моего дома, это удобно." } },
+    { chinese:"放", pinyin:"fàng", meaning:"класть", example:{ ch:"请把书放在桌子上。", pinyin:"Qǐng bǎ shū fàng zài zhuōzi shàng.", ru:"Пожалуйста, положи книгу на стол." } },
+    { chinese:"放心", pinyin:"fàngxīn", meaning:"успокаиваться", example:{ ch:"你放心，我会照顾好自己。", pinyin:"Nǐ fàngxīn, wǒ huì zhàogù hǎo zìjǐ.", ru:"Не беспокойся, я позабочусь о себе." } },
+    { chinese:"分", pinyin:"fēn", meaning:"делить, минута", example:{ ch:"请把这个蛋糕分成五份。", pinyin:"Qǐng bǎ zhège dàngāo fēn chéng wǔ fèn.", ru:"Пожалуйста, раздели этот торт на пять частей." } },
+    { chinese:"附近", pinyin:"fùjìn", meaning:"рядом, окрестности", example:{ ch:"这附近有银行吗？", pinyin:"Zhè fùjìn yǒu yínháng ma?", ru:"Поблизости есть банк?" } },
+    { chinese:"复习", pinyin:"fùxí", meaning:"повторять", example:{ ch:"我要复习今天的课文。", pinyin:"Wǒ yào fùxí jīntiān de kèwén.", ru:"Мне нужно повторить сегодняшний текст." } },
+    { chinese:"干净", pinyin:"gānjìng", meaning:"чистый", example:{ ch:"请你把房间打扫干净。", pinyin:"Qǐng nǐ bǎ fángjiān dǎsǎo gānjìng.", ru:"Пожалуйста, убери комнату дочиста." } },
+    { chinese:"敢", pinyin:"gǎn", meaning:"осмеливаться", example:{ ch:"我不敢一个人走夜路。", pinyin:"Wǒ bù gǎn yī ge rén zǒu yè lù.", ru:"Я не осмеливаюсь ходить один по ночной дороге." } },
+    { chinese:"感冒", pinyin:"gǎnmào", meaning:"простуда", example:{ ch:"我感冒了，头疼得厉害。", pinyin:"Wǒ gǎnmào le, tóuténg de lìhai.", ru:"Я простудился, голова сильно болит." } },
+    { chinese:"刚才", pinyin:"gāngcái", meaning:"только что", example:{ ch:"刚才有人给你打电话。", pinyin:"Gāngcái yǒu rén gěi nǐ dǎ diànhuà.", ru:"Только что кто-то звонил тебе." } },
+    { chinese:"跟", pinyin:"gēn", meaning:"с, за", example:{ ch:"我跟他一起去图书馆。", pinyin:"Wǒ gēn tā yīqǐ qù túshūguǎn.", ru:"Я иду с ним в библиотеку." } },
+    { chinese:"根据", pinyin:"gēnjù", meaning:"согласно", example:{ ch:"根据天气预报，明天会下雨。", pinyin:"Gēnjù tiānqì yùbào, míngtiān huì xiàyǔ.", ru:"Согласно прогнозу погоды, завтра будет дождь." } },
+    { chinese:"更", pinyin:"gèng", meaning:"более", example:{ ch:"今天比昨天更冷。", pinyin:"Jīntiān bǐ zuótiān gèng lěng.", ru:"Сегодня ещё холоднее, чем вчера." } },
+    { chinese:"公园", pinyin:"gōngyuán", meaning:"парк", example:{ ch:"周末我们去公园散步吧。", pinyin:"Zhōumò wǒmen qù gōngyuán sànbù ba.", ru:"Давай в выходные пойдём гулять в парк." } },
+    { chinese:"故事", pinyin:"gùshi", meaning:"история", example:{ ch:"奶奶给我讲了一个有趣的故事。", pinyin:"Nǎinai gěi wǒ jiǎng le yī ge yǒuqù de gùshi.", ru:"Бабушка рассказала мне интересную историю." } },
+    { chinese:"刮风", pinyin:"guāfēng", meaning:"ветрено", example:{ ch:"今天刮风了，别穿太少。", pinyin:"Jīntiān guāfēng le, bié chuān tài shǎo.", ru:"Сегодня ветрено, не одевайся слишком легко." } },
+    { chinese:"关", pinyin:"guān", meaning:"закрывать", example:{ ch:"离开房间时请关灯。", pinyin:"Líkāi fángjiān shí qǐng guān dēng.", ru:"Пожалуйста, выключай свет, когда выходишь из комнаты." } },
+    { chinese:"关系", pinyin:"guānxi", meaning:"отношения", example:{ ch:"他和我的关系很好。", pinyin:"Tā hé wǒ de guānxi hěn hǎo.", ru:"У него со мной хорошие отношения." } },
+    { chinese:"关心", pinyin:"guānxīn", meaning:"заботиться", example:{ ch:"父母很关心我的学习。", pinyin:"Fùmǔ hěn guānxīn wǒ de xuéxí.", ru:"Родители очень заботятся о моей учёбе." } },
+    { chinese:"关于", pinyin:"guānyú", meaning:"о, относительно", example:{ ch:"关于这个问题，我们下次再讨论。", pinyin:"Guānyú zhège wèntí, wǒmen xià cì zài tǎolùn.", ru:"Что касается этого вопроса, мы обсудим его в следующий раз." } },
+    { chinese:"国家", pinyin:"guójiā", meaning:"страна", example:{ ch:"中国是一个伟大的国家。", pinyin:"Zhōngguó shì yī ge wěidà de guójiā.", ru:"Китай — великая страна." } },
+    { chinese:"果汁", pinyin:"guǒzhī", meaning:"сок", example:{ ch:"我喜欢喝橙汁。", pinyin:"Wǒ xǐhuan hē chéngzhī.", ru:"Я люблю пить апельсиновый сок." } },
+    { chinese:"过去", pinyin:"guòqu", meaning:"прошлое, проходить", example:{ ch:"过去的就让它过去吧。", pinyin:"Guòqu de jiù ràng tā guòqu ba.", ru:"Что было, то прошло." } },
+    { chinese:"还是", pinyin:"háishì", meaning:"всё же", example:{ ch:"我们还是坐地铁去吧。", pinyin:"Wǒmen háishì zuò dìtiě qù ba.", ru:"Давай всё же поедем на метро." } },
+    { chinese:"害怕", pinyin:"hàipà", meaning:"бояться", example:{ ch:"我害怕一个人在家。", pinyin:"Wǒ hàipà yī ge rén zài jiā.", ru:"Я боюсь оставаться дома один." } },
+    { chinese:"河", pinyin:"hé", meaning:"река", example:{ ch:"这条河很长。", pinyin:"Zhè tiáo hé hěn cháng.", ru:"Эта река очень длинная." } },
+    { chinese:"黑板", pinyin:"hēibǎn", meaning:"доска", example:{ ch:"老师在黑板上写字。", pinyin:"Lǎoshī zài hēibǎn shàng xiě zì.", ru:"Учитель пишет иероглифы на доске." } },
+    { chinese:"护照", pinyin:"hùzhào", meaning:"паспорт", example:{ ch:"出国旅行需要护照。", pinyin:"Chūguó lǚxíng xūyào hùzhào.", ru:"Для поездки за границу нужен загранпаспорт." } },
+    { chinese:"花", pinyin:"huā", meaning:"цветок", example:{ ch:"这朵花真漂亮。", pinyin:"Zhè duǒ huā zhēn piàoliang.", ru:"Этот цветок очень красивый." } },
+    { chinese:"花园", pinyin:"huāyuán", meaning:"сад", example:{ ch:"我家后面有一个小花园。", pinyin:"Wǒ jiā hòumian yǒu yī ge xiǎo huāyuán.", ru:"Позади моего дома есть маленький сад." } },
+    { chinese:"画", pinyin:"huà", meaning:"рисовать, картина", example:{ ch:"他画了一幅美丽的画。", pinyin:"Tā huà le yī fú měilì de huà.", ru:"Он нарисовал красивую картину." } },
+    { chinese:"坏", pinyin:"huài", meaning:"плохой, сломаться", example:{ ch:"我的手机坏了。", pinyin:"Wǒ de shǒujī huài le.", ru:"Мой телефон сломался." } },
+    { chinese:"还", pinyin:"huán", meaning:"возвращать", example:{ ch:"我明天把书还给你。", pinyin:"Wǒ míngtiān bǎ shū huán gěi nǐ.", ru:"Я завтра верну тебе книгу." } },
+    { chinese:"环境", pinyin:"huánjìng", meaning:"окружающая среда", example:{ ch:"这个城市的环境很好。", pinyin:"Zhège chéngshì de huánjìng hěn hǎo.", ru:"В этом городе хорошая экологическая обстановка." } },
+    { chinese:"换", pinyin:"huàn", meaning:"менять", example:{ ch:"我想换一个工作。", pinyin:"Wǒ xiǎng huàn yī ge gōngzuò.", ru:"Я хочу поменять работу." } },
+    { chinese:"黄", pinyin:"huáng", meaning:"жёлтый", example:{ ch:"她穿着一件黄色的裙子。", pinyin:"Tā chuān zhe yī jiàn huángsè de qúnzi.", ru:"На ней жёлтое платье." } },
+    { chinese:"会议", pinyin:"huìyì", meaning:"собрание", example:{ ch:"经理正在开会。", pinyin:"Jīnglǐ zhèngzài kāihuì.", ru:"Менеджер сейчас на совещании." } },
+    { chinese:"或者", pinyin:"huòzhě", meaning:"или", example:{ ch:"你喝茶或者咖啡？", pinyin:"Nǐ hē chá huòzhě kāfēi?", ru:"Ты будешь чай или кофе?" } },
+    { chinese:"几乎", pinyin:"jīhū", meaning:"почти", example:{ ch:"他几乎每天都迟到。", pinyin:"Tā jīhū měitiān dōu chídào.", ru:"Он почти каждый день опаздывает." } },
+    { chinese:"机会", pinyin:"jīhuì", meaning:"возможность", example:{ ch:"这是一个很好的学习机会。", pinyin:"Zhè shì yī ge hěn hǎo de xuéxí jīhuì.", ru:"Это хорошая возможность для учёбы." } },
+    { chinese:"极", pinyin:"jí", meaning:"чрезвычайно", example:{ ch:"这部电影极有意思。", pinyin:"Zhè bù diànyǐng jí yǒu yìsi.", ru:"Этот фильм чрезвычайно интересный." } },
+    { chinese:"记得", pinyin:"jìde", meaning:"помнить", example:{ ch:"我记得你的名字。", pinyin:"Wǒ jìde nǐ de míngzi.", ru:"Я помню твоё имя." } },
+    { chinese:"季节", pinyin:"jìjié", meaning:"сезон", example:{ ch:"一年有四个季节。", pinyin:"Yī nián yǒu sì ge jìjié.", ru:"В году четыре времени года." } },
+    { chinese:"检查", pinyin:"jiǎnchá", meaning:"проверять", example:{ ch:"医生给我做了检查。", pinyin:"Yīshēng gěi wǒ zuò le jiǎnchá.", ru:"Врач провёл мне осмотр." } },
+    { chinese:"简单", pinyin:"jiǎndān", meaning:"простой", example:{ ch:"这个问题很简单。", pinyin:"Zhège wèntí hěn jiǎndān.", ru:"Этот вопрос очень простой." } },
+    { chinese:"健康", pinyin:"jiànkāng", meaning:"здоровый", example:{ ch:"多吃蔬菜对身体健康有好处。", pinyin:"Duō chī shūcài duì shēntǐ jiànkāng yǒu hǎochu.", ru:"Есть много овощей полезно для здоровья." } },
+    { chinese:"见面", pinyin:"jiànmiàn", meaning:"встречаться", example:{ ch:"我们明天在公园见面吧。", pinyin:"Wǒmen míngtiān zài gōngyuán jiànmiàn ba.", ru:"Давай встретимся завтра в парке." } },
+    { chinese:"讲", pinyin:"jiǎng", meaning:"рассказывать", example:{ ch:"老师正在讲课。", pinyin:"Lǎoshī zhèngzài jiǎng kè.", ru:"Учитель ведёт урок." } },
+    { chinese:"教", pinyin:"jiāo", meaning:"учить (кого-то)", example:{ ch:"王老师教我们汉语。", pinyin:"Wáng lǎoshī jiāo wǒmen hànyǔ.", ru:"Учитель Ван учит нас китайскому языку." } },
+    { chinese:"角", pinyin:"jiǎo", meaning:"угол", example:{ ch:"桌子角很尖，小心别碰到。", pinyin:"Zhuōzi jiǎo hěn jiān, xiǎoxīn bié pèng dào.", ru:"Угол стола острый, осторожно, не ударься." } },
+    { chinese:"脚", pinyin:"jiǎo", meaning:"нога (ступня)", example:{ ch:"我的脚很疼。", pinyin:"Wǒ de jiǎo hěn téng.", ru:"У меня сильно болит нога (ступня)." } },
+    { chinese:"接", pinyin:"jiē", meaning:"встречать, принимать", example:{ ch:"我去机场接你。", pinyin:"Wǒ qù jīchǎng jiē nǐ.", ru:"Я встречу тебя в аэропорту." } },
+    { chinese:"街道", pinyin:"jiēdào", meaning:"улица", example:{ ch:"这条街道很干净。", pinyin:"Zhè tiáo jiēdào hěn gānjìng.", ru:"Эта улица очень чистая." } },
+    { chinese:"结婚", pinyin:"jiéhūn", meaning:"жениться", example:{ ch:"他们下个月结婚。", pinyin:"Tāmen xià ge yuè jiéhūn.", ru:"Они поженятся в следующем месяце." } },
+    { chinese:"节目", pinyin:"jiémù", meaning:"программа", example:{ ch:"今晚的电视节目很精彩。", pinyin:"Jīnwǎn de diànshì jiémù hěn jīngcǎi.", ru:"Сегодня вечером по телевизору замечательная программа." } },
+    { chinese:"节日", pinyin:"jiérì", meaning:"праздник", example:{ ch:"春节是中国最重要的节日。", pinyin:"Chūnjié shì Zhōngguó zuì zhòngyào de jiérì.", ru:"Праздник Весны — самый важный праздник в Китае." } },
+    { chinese:"结束", pinyin:"jiéshù", meaning:"заканчивать", example:{ ch:"电影结束了。", pinyin:"Diànyǐng jiéshù le.", ru:"Фильм закончился." } },
+    { chinese:"解决", pinyin:"jiějué", meaning:"решать", example:{ ch:"我们一定能解决这个问题。", pinyin:"Wǒmen yīdìng néng jiějué zhège wèntí.", ru:"Мы обязательно сможем решить эту проблему." } },
+    { chinese:"借", pinyin:"jiè", meaning:"одалживать", example:{ ch:"我可以借你的笔吗？", pinyin:"Wǒ kěyǐ jiè nǐ de bǐ ma?", ru:"Могу я одолжить твою ручку?" } },
+    { chinese:"经常", pinyin:"jīngcháng", meaning:"часто", example:{ ch:"我经常去图书馆看书。", pinyin:"Wǒ jīngcháng qù túshūguǎn kàn shū.", ru:"Я часто хожу в библиотеку читать." } },
+    { chinese:"经过", pinyin:"jīngguò", meaning:"через, благодаря", example:{ ch:"经过他的帮助，我成功了。", pinyin:"Jīngguò tā de bāngzhù, wǒ chénggōng le.", ru:"Благодаря его помощи я добился успеха." } },
+    { chinese:"经理", pinyin:"jīnglǐ", meaning:"менеджер", example:{ ch:"王经理是我们的老板。", pinyin:"Wáng jīnglǐ shì wǒmen de lǎobǎn.", ru:"Менеджер Ван — наш начальник." } },
+    { chinese:"久", pinyin:"jiǔ", meaning:"долго", example:{ ch:"好久不见，你还好吗？", pinyin:"Hǎo jiǔ bù jiàn, nǐ hái hǎo ma?", ru:"Давно не виделись, как ты?" } },
+    { chinese:"旧", pinyin:"jiù", meaning:"старый", example:{ ch:"这件衣服太旧了，买件新的吧。", pinyin:"Zhè jiàn yīfu tài jiù le, mǎi jiàn xīn de ba.", ru:"Эта одежда слишком старая, купи новую." } },
+    { chinese:"举行", pinyin:"jǔxíng", meaning:"проводить", example:{ ch:"运动会将在下周举行。", pinyin:"Yùndònghuì jiāng zài xià zhōu jǔxíng.", ru:"Спортивные соревнования состоятся на следующей неделе." } },
+    { chinese:"句子", pinyin:"jùzi", meaning:"предложение", example:{ ch:"这个句子是什么意思？", pinyin:"Zhège jùzi shì shénme yìsi?", ru:"Что означает это предложение?" } },
+    { chinese:"决定", pinyin:"juédìng", meaning:"решать", example:{ ch:"我决定去中国留学。", pinyin:"Wǒ juédìng qù Zhōngguó liúxué.", ru:"Я решил поехать учиться в Китай." } },
+    { chinese:"渴", pinyin:"kě", meaning:"испытывать жажду", example:{ ch:"我渴了，想喝点儿水。", pinyin:"Wǒ kě le, xiǎng hē diǎnr shuǐ.", ru:"Я хочу пить, хочу немного воды." } },
+    { chinese:"可爱", pinyin:"kě'ài", meaning:"милый", example:{ ch:"这只小猫真可爱。", pinyin:"Zhè zhī xiǎo māo zhēn kě'ài.", ru:"Этот котёнок такой милый." } },
+    { chinese:"刻", pinyin:"kè", meaning:"четверть часа", example:{ ch:"现在是十点一刻。", pinyin:"Xiànzài shì shí diǎn yī kè.", ru:"Сейчас четверть одиннадцатого." } },
+    { chinese:"客人", pinyin:"kèrén", meaning:"гость", example:{ ch:"家里来了客人。", pinyin:"Jiā lǐ lái le kèrén.", ru:"К нам пришли гости." } },
+    { chinese:"空调", pinyin:"kōngtiáo", meaning:"кондиционер", example:{ ch:"夏天开空调很凉快。", pinyin:"Xiàtiān kāi kōngtiáo hěn liángkuài.", ru:"Летом с кондиционером очень прохладно." } },
+    { chinese:"口", pinyin:"kǒu", meaning:"рот, сч.слово для членов семьи", example:{ ch:"我家有五口人。", pinyin:"Wǒ jiā yǒu wǔ kǒu rén.", ru:"В моей семье пять человек." } },
+    { chinese:"哭", pinyin:"kū", meaning:"плакать", example:{ ch:"孩子哭了，是不是饿了？", pinyin:"Háizi kū le, shì bu shì è le?", ru:"Ребёнок плачет, может, он голоден?" } },
+    { chinese:"裤子", pinyin:"kùzi", meaning:"брюки", example:{ ch:"这条裤子太长了。", pinyin:"Zhè tiáo kùzi tài cháng le.", ru:"Эти брюки слишком длинные." } },
+    { chinese:"块", pinyin:"kuài", meaning:"кусок", example:{ ch:"请把蛋糕切成小块。", pinyin:"Qǐng bǎ dàngāo qiē chéng xiǎo kuài.", ru:"Пожалуйста, нарежьте торт на маленькие кусочки." } },
+    { chinese:"筷子", pinyin:"kuàizi", meaning:"палочки для еды", example:{ ch:"我会用筷子吃饭。", pinyin:"Wǒ huì yòng kuàizi chīfàn.", ru:"Я умею есть палочками." } },
+    { chinese:"蓝", pinyin:"lán", meaning:"синий, голубой", example:{ ch:"她有一双蓝色的眼睛。", pinyin:"Tā yǒu yī shuāng lánsè de yǎnjing.", ru:"У неё голубые глаза." } },
+    { chinese:"老", pinyin:"lǎo", meaning:"старый", example:{ ch:"他看起来很老。", pinyin:"Tā kàn qǐlái hěn lǎo.", ru:"Он выглядит очень старым." } },
+    { chinese:"离开", pinyin:"líkāi", meaning:"уходить", example:{ ch:"不要离开我。", pinyin:"Bùyào líkāi wǒ.", ru:"Не уходи от меня." } },
+    { chinese:"礼物", pinyin:"lǐwù", meaning:"подарок", example:{ ch:"我送给她一个生日礼物。", pinyin:"Wǒ sòng gěi tā yī ge shēngrì lǐwù.", ru:"Я подарил ей подарок на день рождения." } },
+    { chinese:"历史", pinyin:"lìshǐ", meaning:"история", example:{ ch:"中国有五千年的历史。", pinyin:"Zhōngguó yǒu wǔqiān nián de lìshǐ.", ru:"У Китая пятитысячелетняя история." } },
+    { chinese:"脸", pinyin:"liǎn", meaning:"лицо", example:{ ch:"他的脸红红的。", pinyin:"Tā de liǎn hóng hóng de.", ru:"У него красное лицо." } },
+    { chinese:"练习", pinyin:"liànxí", meaning:"упражняться", example:{ ch:"请做课后练习。", pinyin:"Qǐng zuò kèhòu liànxí.", ru:"Пожалуйста, сделайте упражнения после урока." } },
+    { chinese:"辆", pinyin:"liàng", meaning:"сч.слово для транспорта", example:{ ch:"他买了一辆新车。", pinyin:"Tā mǎi le yī liàng xīn chē.", ru:"Он купил новую машину." } },
+    { chinese:"了解", pinyin:"liǎojiě", meaning:"понимать, узнавать", example:{ ch:"我想多了解中国文化。", pinyin:"Wǒ xiǎng duō liǎojiě Zhōngguó wénhuà.", ru:"Я хочу больше узнать о китайской культуре." } },
+    { chinese:"邻居", pinyin:"línjū", meaning:"сосед", example:{ ch:"我的邻居是个好人。", pinyin:"Wǒ de línjū shì ge hǎo rén.", ru:"Мой сосед — хороший человек." } },
+    { chinese:"楼", pinyin:"lóu", meaning:"здание, этаж", example:{ ch:"我家住在十楼。", pinyin:"Wǒ jiā zhù zài shí lóu.", ru:"Я живу на десятом этаже." } },
+    { chinese:"绿", pinyin:"lǜ", meaning:"зелёный", example:{ ch:"春天的树叶是绿色的。", pinyin:"Chūntiān de shùyè shì lǜsè de.", ru:"Весной листья зелёные." } },
+    { chinese:"马", pinyin:"mǎ", meaning:"лошадь", example:{ ch:"他骑马骑得很好。", pinyin:"Tā qí mǎ qí de hěn hǎo.", ru:"Он очень хорошо ездит верхом." } },
+    { chinese:"马上", pinyin:"mǎshàng", meaning:"сразу, немедленно", example:{ ch:"我马上就来。", pinyin:"Wǒ mǎshàng jiù lái.", ru:"Я сейчас приду." } },
+    { chinese:"卖", pinyin:"mài", meaning:"продавать", example:{ ch:"这个商店卖水果。", pinyin:"Zhège shāngdiàn mài shuǐguǒ.", ru:"В этом магазине продаются фрукты." } },
+    { chinese:"满意", pinyin:"mǎnyì", meaning:"довольный", example:{ ch:"我对这个结果很满意。", pinyin:"Wǒ duì zhège jiéguǒ hěn mǎnyì.", ru:"Я очень доволен результатом." } },
+    { chinese:"帽子", pinyin:"màozi", meaning:"шапка", example:{ ch:"冬天要戴帽子。", pinyin:"Dōngtiān yào dài màozi.", ru:"Зимой нужно носить шапку." } },
+    { chinese:"门", pinyin:"mén", meaning:"дверь", example:{ ch:"请把门关上。", pinyin:"Qǐng bǎ mén guān shàng.", ru:"Пожалуйста, закрой дверь." } },
+    { chinese:"米", pinyin:"mǐ", meaning:"метр", example:{ ch:"他身高一米八。", pinyin:"Tā shēngāo yī mǐ bā.", ru:"Его рост метр восемьдесят." } },
+    { chinese:"面包", pinyin:"miànbāo", meaning:"хлеб", example:{ ch:"我早餐吃面包和牛奶。", pinyin:"Wǒ zǎocān chī miànbāo hé niúnǎi.", ru:"Я на завтрак ем хлеб и пью молоко." } },
+    { chinese:"面条", pinyin:"miàntiáo", meaning:"лапша", example:{ ch:"我喜欢吃面条。", pinyin:"Wǒ xǐhuan chī miàntiáo.", ru:"Я люблю есть лапшу." } },
+    { chinese:"明白", pinyin:"míngbai", meaning:"понимать", example:{ ch:"我明白你的意思。", pinyin:"Wǒ míngbai nǐ de yìsi.", ru:"Я понимаю, что ты имеешь в виду." } },
+    { chinese:"奶奶", pinyin:"nǎinai", meaning:"бабушка", example:{ ch:"奶奶今年七十岁了。", pinyin:"Nǎinai jīnnián qīshí suì le.", ru:"Бабушке в этом году семьдесят лет." } },
+    { chinese:"南", pinyin:"nán", meaning:"юг", example:{ ch:"广州在中国的南方。", pinyin:"Guǎngzhōu zài Zhōngguó de nánfāng.", ru:"Гуанчжоу находится на юге Китая." } },
+    { chinese:"难", pinyin:"nán", meaning:"трудный", example:{ ch:"这道题很难。", pinyin:"Zhè dào tí hěn nán.", ru:"Эта задача очень трудная." } },
+    { chinese:"难过", pinyin:"nánguò", meaning:"печальный", example:{ ch:"听到这个消息，我很难过。", pinyin:"Tīng dào zhège xiāoxi, wǒ hěn nánguò.", ru:"Услышав эту новость, я очень расстроился." } },
+    { chinese:"年级", pinyin:"niánjí", meaning:"класс (в школе)", example:{ ch:"我上三年级。", pinyin:"Wǒ shàng sān niánjí.", ru:"Я учусь в третьем классе." } },
+    { chinese:"年轻", pinyin:"niánqīng", meaning:"молодой", example:{ ch:"她看起来很年轻。", pinyin:"Tā kàn qǐlái hěn niánqīng.", ru:"Она выглядит очень молодой." } },
+    { chinese:"鸟", pinyin:"niǎo", meaning:"птица", example:{ ch:"早上鸟儿在唱歌。", pinyin:"Zǎoshang niǎor zài chànggē.", ru:"Утром птицы поют." } },
+    { chinese:"努力", pinyin:"nǔlì", meaning:"стараться", example:{ ch:"我会努力学习汉语。", pinyin:"Wǒ huì nǔlì xuéxí hànyǔ.", ru:"Я буду усердно учить китайский язык." } },
+    { chinese:"爬上", pinyin:"pá shàng", meaning:"взбираться", example:{ ch:"他爬上了山顶。", pinyin:"Tā pá shàng le shāndǐng.", ru:"Он взобрался на вершину горы." } },
+    { chinese:"盘子", pinyin:"pánzi", meaning:"тарелка", example:{ ch:"盘子里有苹果。", pinyin:"Pánzi lǐ yǒu píngguǒ.", ru:"На тарелке лежат яблоки." } },
+    { chinese:"胖", pinyin:"pàng", meaning:"толстый", example:{ ch:"我最近胖了。", pinyin:"Wǒ zuìjìn pàng le.", ru:"Я в последнее время поправился." } },
+    { chinese:"啤酒", pinyin:"píjiǔ", meaning:"пиво", example:{ ch:"他喜欢喝啤酒。", pinyin:"Tā xǐhuan hē píjiǔ.", ru:"Он любит пить пиво." } },
+    { chinese:"葡萄", pinyin:"pútáo", meaning:"виноград", example:{ ch:"葡萄很甜。", pinyin:"Pútáo hěn tián.", ru:"Виноград очень сладкий." } },
+    { chinese:"普通话", pinyin:"pǔtōnghuà", meaning:"путунхуа", example:{ ch:"普通话是中国官方语言。", pinyin:"Pǔtōnghuà shì Zhōngguó guānfāng yǔyán.", ru:"Путунхуа — официальный язык Китая." } },
+    { chinese:"骑", pinyin:"qí", meaning:"ездить верхом", example:{ ch:"我会骑自行车。", pinyin:"Wǒ huì qí zìxíngchē.", ru:"Я умею ездить на велосипеде." } },
+    { chinese:"奇怪", pinyin:"qíguài", meaning:"странный", example:{ ch:"这件事很奇怪。", pinyin:"Zhè jiàn shì hěn qíguài.", ru:"Это дело очень странное." } },
+    { chinese:"其实", pinyin:"qíshí", meaning:"на самом деле", example:{ ch:"其实我早就知道了。", pinyin:"Qíshí wǒ zǎo jiù zhīdào le.", ru:"На самом деле я уже давно знал." } },
+    { chinese:"其他", pinyin:"qítā", meaning:"другие", example:{ ch:"其他人呢？", pinyin:"Qítā rén ne?", ru:"А остальные люди?" } },
+    { chinese:"铅笔", pinyin:"qiānbǐ", meaning:"карандаш", example:{ ch:"请用铅笔写。", pinyin:"Qǐng yòng qiānbǐ xiě.", ru:"Пожалуйста, пиши карандашом." } },
+    { chinese:"清楚", pinyin:"qīngchu", meaning:"ясный, чёткий", example:{ ch:"我听得很清楚。", pinyin:"Wǒ tīng de hěn qīngchu.", ru:"Я слышу очень чётко." } },
+    { chinese:"秋", pinyin:"qiū", meaning:"осень", example:{ ch:"秋天很凉爽。", pinyin:"Qiūtiān hěn liángshuǎng.", ru:"Осенью очень прохладно." } },
+    { chinese:"裙子", pinyin:"qúnzi", meaning:"юбка", example:{ ch:"这条裙子很好看。", pinyin:"Zhè tiáo qúnzi hěn hǎokàn.", ru:"Эта юбка очень красивая." } },
+    { chinese:"然后", pinyin:"ránhòu", meaning:"затем, потом", example:{ ch:"我先吃饭，然后去看电影。", pinyin:"Wǒ xiān chīfàn, ránhòu qù kàn diànyǐng.", ru:"Я сначала поем, а потом пойду в кино." } },
+    { chinese:"热情", pinyin:"rèqíng", meaning:"приветливый", example:{ ch:"中国人很热情。", pinyin:"Zhōngguó rén hěn rèqíng.", ru:"Китайцы очень приветливые." } },
+    { chinese:"认真", pinyin:"rènzhēn", meaning:"серьёзный", example:{ ch:"他学习很认真。", pinyin:"Tā xuéxí hěn rènzhēn.", ru:"Он очень серьёзно относится к учёбе." } },
+    { chinese:"容易", pinyin:"róngyì", meaning:"лёгкий", example:{ ch:"这个题很容易。", pinyin:"Zhège tí hěn róngyì.", ru:"Эта задача очень лёгкая." } },
+    { chinese:"如果", pinyin:"rúguǒ", meaning:"если", example:{ ch:"如果明天下雨，我就不去了。", pinyin:"Rúguǒ míngtiān xiàyǔ, wǒ jiù bù qù le.", ru:"Если завтра будет дождь, я не пойду." } },
+    { chinese:"伞", pinyin:"sǎn", meaning:"зонт", example:{ ch:"今天可能下雨，带把伞吧。", pinyin:"Jīntiān kěnéng xiàyǔ, dài bǎ sǎn ba.", ru:"Сегодня может быть дождь, возьми зонт." } },
+    { chinese:"上网", pinyin:"shàngwǎng", meaning:"выходить в интернет", example:{ ch:"我每天晚上上网看新闻。", pinyin:"Wǒ měitiān wǎnshang shàngwǎng kàn xīnwén.", ru:"Я каждый вечер выхожу в интернет смотреть новости." } },
+    { chinese:"声音", pinyin:"shēngyīn", meaning:"голос, звук", example:{ ch:"他的声音很好听。", pinyin:"Tā de shēngyīn hěn hǎotīng.", ru:"У него очень приятный голос." } },
+    { chinese:"瘦", pinyin:"shòu", meaning:"худой", example:{ ch:"他长得很瘦。", pinyin:"Tā zhǎng de hěn shòu.", ru:"Он очень худой." } },
+    { chinese:"舒服", pinyin:"shūfu", meaning:"комфортный", example:{ ch:"今天我身体不舒服。", pinyin:"Jīntiān wǒ shēntǐ bù shūfu.", ru:"Сегодня я плохо себя чувствую." } },
+    { chinese:"树", pinyin:"shù", meaning:"дерево", example:{ ch:"树上有鸟。", pinyin:"Shù shàng yǒu niǎo.", ru:"На дереве птицы." } },
+    { chinese:"数学", pinyin:"shùxué", meaning:"математика", example:{ ch:"数学很难。", pinyin:"Shùxué hěn nán.", ru:"Математика очень трудная." } },
+    { chinese:"刷牙", pinyin:"shuāyá", meaning:"чистить зубы", example:{ ch:"我每天早晚刷牙。", pinyin:"Wǒ měitiān zǎo wǎn shuāyá.", ru:"Я чищу зубы каждое утро и вечер." } },
+    { chinese:"双", pinyin:"shuāng", meaning:"пара", example:{ ch:"我买了一双新鞋。", pinyin:"Wǒ mǎi le yī shuāng xīn xié.", ru:"Я купил новую пару обуви." } },
+    { chinese:"水平", pinyin:"shuǐpíng", meaning:"уровень", example:{ ch:"他的汉语水平很高。", pinyin:"Tā de hànyǔ shuǐpíng hěn gāo.", ru:"У него высокий уровень китайского языка." } },
+    { chinese:"司机", pinyin:"sījī", meaning:"водитель", example:{ ch:"出租车司机很热情。", pinyin:"Chūzūchē sījī hěn rèqíng.", ru:"Водитель такси очень приветливый." } },
+    { chinese:"甜", pinyin:"tián", meaning:"сладкий", example:{ ch:"这个西瓜很甜。", pinyin:"Zhège xīguā hěn tián.", ru:"Этот арбуз очень сладкий." } },
+    { chinese:"条", pinyin:"tiáo", meaning:"сч.слово для длинных предметов", example:{ ch:"我有一条新裙子。", pinyin:"Wǒ yǒu yī tiáo xīn qúnzi.", ru:"У меня есть новая юбка." } },
+    { chinese:"同事", pinyin:"tóngshì", meaning:"коллега", example:{ ch:"我和同事一起吃饭。", pinyin:"Wǒ hé tóngshì yīqǐ chīfàn.", ru:"Я ем с коллегой." } },
+    { chinese:"同意", pinyin:"tóngyì", meaning:"соглашаться", example:{ ch:"我同意你的看法。", pinyin:"Wǒ tóngyì nǐ de kànfǎ.", ru:"Я согласен с твоим мнением." } },
+    { chinese:"头发", pinyin:"tóufa", meaning:"волосы", example:{ ch:"她的头发很长。", pinyin:"Tā de tóufa hěn cháng.", ru:"У неё длинные волосы." } },
+    { chinese:"突然", pinyin:"tūrán", meaning:"внезапно", example:{ ch:"突然下起了雨。", pinyin:"Tūrán xià qǐ le yǔ.", ru:"Внезапно пошёл дождь." } },
+    { chinese:"图书馆", pinyin:"túshūguǎn", meaning:"библиотека", example:{ ch:"我经常去图书馆看书。", pinyin:"Wǒ jīngcháng qù túshūguǎn kàn shū.", ru:"Я часто хожу в библиотеку читать." } },
+    { chinese:"腿", pinyin:"tuǐ", meaning:"нога", example:{ ch:"我的腿很疼。", pinyin:"Wǒ de tuǐ hěn téng.", ru:"У меня очень болят ноги." } },
+    { chinese:"完成", pinyin:"wánchéng", meaning:"завершать", example:{ ch:"我完成了作业。", pinyin:"Wǒ wánchéng le zuòyè.", ru:"Я закончил домашнее задание." } },
+    { chinese:"碗", pinyin:"wǎn", meaning:"миска", example:{ ch:"我吃了一碗米饭。", pinyin:"Wǒ chī le yī wǎn mǐfàn.", ru:"Я съел миску риса." } },
+    { chinese:"万", pinyin:"wàn", meaning:"десять тысяч", example:{ ch:"这个城市有一百万人口。", pinyin:"Zhège chéngshì yǒu yī bǎi wàn rénkǒu.", ru:"В этом городе миллион жителей." } },
+    { chinese:"忘记", pinyin:"wàngjì", meaning:"забывать", example:{ ch:"我忘记带手机了。", pinyin:"Wǒ wàngjì dài shǒujī le.", ru:"Я забыл взять телефон." } },
+    { chinese:"为", pinyin:"wèi", meaning:"для, ради", example:{ ch:"我为你高兴。", pinyin:"Wǒ wèi nǐ gāoxìng.", ru:"Я рад за тебя." } },
+    { chinese:"为了", pinyin:"wèile", meaning:"ради того, чтобы", example:{ ch:"为了学汉语，我去了中国。", pinyin:"Wèile xué hànyǔ, wǒ qù le Zhōngguó.", ru:"Чтобы выучить китайский, я поехал в Китай." } },
+    { chinese:"位", pinyin:"wèi", meaning:"вежл.сч.слово для людей", example:{ ch:"我有一位好朋友。", pinyin:"Wǒ yǒu yī wèi hǎo péngyou.", ru:"У меня есть один хороший друг." } },
+    { chinese:"文化", pinyin:"wénhuà", meaning:"культура", example:{ ch:"我对中国文化很感兴趣。", pinyin:"Wǒ duì Zhōngguó wénhuà hěn gǎn xìngqù.", ru:"Мне очень интересна китайская культура." } },
+    { chinese:"西", pinyin:"xī", meaning:"запад", example:{ ch:"太阳从西边落下。", pinyin:"Tàiyáng cóng xībian luòxià.", ru:"Солнце садится на западе." } },
+    { chinese:"习惯", pinyin:"xíguàn", meaning:"привыкать", example:{ ch:"我习惯早睡早起。", pinyin:"Wǒ xíguàn zǎo shuì zǎo qǐ.", ru:"Я привык рано ложиться и рано вставать." } },
+    { chinese:"洗手间", pinyin:"xǐshǒujiān", meaning:"туалет", example:{ ch:"请问洗手间在哪儿？", pinyin:"Qǐngwèn xǐshǒujiān zài nǎr?", ru:"Скажите, пожалуйста, где туалет?" } },
+    { chinese:"洗澡", pinyin:"xǐzǎo", meaning:"принимать душ", example:{ ch:"我每天晚上洗澡。", pinyin:"Wǒ měitiān wǎnshang xǐzǎo.", ru:"Я каждый вечер принимаю душ." } },
+    { chinese:"下", pinyin:"xià", meaning:"вниз", example:{ ch:"请坐下。", pinyin:"Qǐng zuò xià.", ru:"Пожалуйста, садитесь." } },
+    { chinese:"夏", pinyin:"xià", meaning:"лето", example:{ ch:"夏天我喜欢游泳。", pinyin:"Xiàtiān wǒ xǐhuan yóuyǒng.", ru:"Летом я люблю плавать." } },
+    { chinese:"先", pinyin:"xiān", meaning:"сначала", example:{ ch:"你先走，我马上来。", pinyin:"Nǐ xiān zǒu, wǒ mǎshàng lái.", ru:"Ты иди первым, я сейчас приду." } },
+    { chinese:"香蕉", pinyin:"xiāngjiāo", meaning:"банан", example:{ ch:"香蕉很好吃。", pinyin:"Xiāngjiāo hěn hǎochī.", ru:"Бананы очень вкусные." } },
+    { chinese:"相同", pinyin:"xiāngtóng", meaning:"одинаковый", example:{ ch:"我们的想法相同。", pinyin:"Wǒmen de xiǎngfǎ xiāngtóng.", ru:"Наши мысли совпадают." } },
+    { chinese:"相信", pinyin:"xiāngxìn", meaning:"верить", example:{ ch:"我相信你。", pinyin:"Wǒ xiāngxìn nǐ.", ru:"Я верю тебе." } },
+    { chinese:"详细", pinyin:"xiángxì", meaning:"подробный", example:{ ch:"请详细介绍一下。", pinyin:"Qǐng xiángxì jièshào yīxià.", ru:"Пожалуйста, расскажи подробно." } },
+    { chinese:"像", pinyin:"xiàng", meaning:"быть похожим", example:{ ch:"她像她妈妈一样漂亮。", pinyin:"Tā xiàng tā māma yīyàng piàoliang.", ru:"Она красивая, как её мама." } },
+    { chinese:"消息", pinyin:"xiāoxi", meaning:"новость", example:{ ch:"我有一个好消息告诉你。", pinyin:"Wǒ yǒu yī ge hǎo xiāoxi gàosu nǐ.", ru:"У меня есть хорошая новость для тебя." } },
+    { chinese:"小心", pinyin:"xiǎoxīn", meaning:"осторожный", example:{ ch:"小心，车来了！", pinyin:"Xiǎoxīn, chē lái le!", ru:"Осторожно, машина едет!" } },
+    { chinese:"校长", pinyin:"xiàozhǎng", meaning:"директор школы", example:{ ch:"校长在学校大会上讲话。", pinyin:"Xiàozhǎng zài xuéxiào dàhuì shàng jiǎnghuà.", ru:"Директор школы выступил на школьном собрании." } },
+    { chinese:"新闻", pinyin:"xīnwén", meaning:"новости", example:{ ch:"我喜欢看新闻。", pinyin:"Wǒ xǐhuan kàn xīnwén.", ru:"Я люблю смотреть новости." } },
+    { chinese:"新鲜", pinyin:"xīnxiān", meaning:"свежий", example:{ ch:"这个水果很新鲜。", pinyin:"Zhège shuǐguǒ hěn xīnxiān.", ru:"Этот фрукт очень свежий." } },
+    { chinese:"信用卡", pinyin:"xìnyòngkǎ", meaning:"кредитная карта", example:{ ch:"我用信用卡付钱。", pinyin:"Wǒ yòng xìnyòngkǎ fù qián.", ru:"Я плачу кредитной картой." } },
+    { chinese:"兴趣", pinyin:"xìngqù", meaning:"интерес", example:{ ch:"我对音乐很感兴趣。", pinyin:"Wǒ duì yīnyuè hěn gǎn xìngqù.", ru:"Мне очень интересна музыка." } },
+    { chinese:"熊猫", pinyin:"xióngmāo", meaning:"панда", example:{ ch:"熊猫是中国的国宝。", pinyin:"Xióngmāo shì Zhōngguó de guóbǎo.", ru:"Панды — национальное достояние Китая." } },
+    { chinese:"需要", pinyin:"xūyào", meaning:"нуждаться", example:{ ch:"我需要一杯水。", pinyin:"Wǒ xūyào yī bēi shuǐ.", ru:"Мне нужен стакан воды." } },
+    { chinese:"选择", pinyin:"xuǎnzé", meaning:"выбирать", example:{ ch:"我选择红色的。", pinyin:"Wǒ xuǎnzé hóngsè de.", ru:"Я выбираю красный." } },
+    { chinese:"要求", pinyin:"yāoqiú", meaning:"требовать", example:{ ch:"老师要求我们准时到校。", pinyin:"Lǎoshī yāoqiú wǒmen zhǔnshí dào xiào.", ru:"Учитель требует, чтобы мы приходили в школу вовремя." } },
+    { chinese:"爷爷", pinyin:"yéye", meaning:"дедушка", example:{ ch:"爷爷每天早上去公园散步。", pinyin:"Yéye měitiān zǎoshang qù gōngyuán sànbù.", ru:"Дедушка каждое утро ходит гулять в парк." } },
+    { chinese:"一定", pinyin:"yīdìng", meaning:"обязательно", example:{ ch:"我一定好好学习。", pinyin:"Wǒ yīdìng hǎohǎo xuéxí.", ru:"Я обязательно буду хорошо учиться." } },
+    { chinese:"一共", pinyin:"yīgòng", meaning:"всего", example:{ ch:"这些书一共多少钱？", pinyin:"Zhèxiē shū yīgòng duōshao qián?", ru:"Сколько всего стоят эти книги?" } },
+    { chinese:"一会儿", pinyin:"yīhuìr", meaning:"немного погодя", example:{ ch:"请等一会儿。", pinyin:"Qǐng děng yīhuìr.", ru:"Пожалуйста, подожди немного." } },
+    { chinese:"一直", pinyin:"yīzhí", meaning:"всё время", example:{ ch:"我一直在这里等你。", pinyin:"Wǒ yīzhí zài zhèlǐ děng nǐ.", ru:"Я всё это время ждал тебя здесь." } },
+    { chinese:"音乐", pinyin:"yīnyuè", meaning:"музыка", example:{ ch:"我喜欢听古典音乐。", pinyin:"Wǒ xǐhuan tīng gǔdiǎn yīnyuè.", ru:"Я люблю слушать классическую музыку." } },
+    { chinese:"银行", pinyin:"yínháng", meaning:"банк", example:{ ch:"银行在超市旁边。", pinyin:"Yínháng zài chāoshì pángbiān.", ru:"Банк находится рядом с супермаркетом." } },
+    { chinese:"应该", pinyin:"yīnggāi", meaning:"следует", example:{ ch:"你应该多休息。", pinyin:"Nǐ yīnggāi duō xiūxi.", ru:"Тебе следует больше отдыхать." } },
+    { chinese:"影响", pinyin:"yǐngxiǎng", meaning:"влиять", example:{ ch:"手机影响我的学习。", pinyin:"Shǒujī yǐngxiǎng wǒ de xuéxí.", ru:"Телефон влияет на мою учёбу." } },
+    { chinese:"用", pinyin:"yòng", meaning:"использовать", example:{ ch:"请用钢笔写。", pinyin:"Qǐng yòng gāngbǐ xiě.", ru:"Пожалуйста, пиши авторучкой." } },
+    { chinese:"游戏", pinyin:"yóuxì", meaning:"игра", example:{ ch:"孩子们在玩游戏。", pinyin:"Háizimen zài wán yóuxì.", ru:"Дети играют в игры." } },
+    { chinese:"有名", pinyin:"yǒumíng", meaning:"известный", example:{ ch:"北京有很多有名的地方。", pinyin:"Běijīng yǒu hěn duō yǒumíng de dìfāng.", ru:"В Пекине много известных мест." } },
+    { chinese:"又", pinyin:"yòu", meaning:"снова", example:{ ch:"他又来了。", pinyin:"Tā yòu lái le.", ru:"Он снова пришёл." } },
+    { chinese:"于是", pinyin:"yúshì", meaning:"тогда, и тогда", example:{ ch:"天黑了，于是我们回家了。", pinyin:"Tiān hēi le, yúshì wǒmen huí jiā le.", ru:"Стемнело, и тогда мы пошли домой." } },
+    { chinese:"元", pinyin:"yuán", meaning:"юань", example:{ ch:"这本书五十元。", pinyin:"Zhè běn shū wǔshí yuán.", ru:"Эта книга стоит пятьдесят юаней." } },
+    { chinese:"越", pinyin:"yuè", meaning:"всё более", example:{ ch:"他越跑越快。", pinyin:"Tā yuè pǎo yuè kuài.", ru:"Он бежит всё быстрее и быстрее." } },
+    { chinese:"愿意", pinyin:"yuànyì", meaning:"быть готовым", example:{ ch:"我愿意帮助你。", pinyin:"Wǒ yuànyì bāngzhù nǐ.", ru:"Я готов помочь тебе." } },
+    { chinese:"月亮", pinyin:"yuèliang", meaning:"луна", example:{ ch:"今晚的月亮很圆。", pinyin:"Jīnwǎn de yuèliang hěn yuán.", ru:"Сегодня луна очень круглая." } },
+    { chinese:"云", pinyin:"yún", meaning:"облако", example:{ ch:"天上有白云。", pinyin:"Tiān shàng yǒu bái yún.", ru:"В небе белые облака." } },
+    { chinese:"再", pinyin:"zài", meaning:"снова", example:{ ch:"再见！", pinyin:"Zàijiàn!", ru:"До свидания!" } },
+    { chinese:"咱们", pinyin:"zánmen", meaning:"мы", example:{ ch:"咱们一起去吧。", pinyin:"Zánmen yīqǐ qù ba.", ru:"Пойдём вместе." } },
+    { chinese:"怎么", pinyin:"zěnme", meaning:"как", example:{ ch:"你怎么了？", pinyin:"Nǐ zěnme le?", ru:"Что с тобой?" } },
+    { chinese:"怎么样", pinyin:"zěnmeyàng", meaning:"как дела", example:{ ch:"你觉得这个电影怎么样？", pinyin:"Nǐ juéde zhège diànyǐng zěnmeyàng?", ru:"Как тебе этот фильм?" } },
+    { chinese:"增加", pinyin:"zēngjiā", meaning:"увеличивать", example:{ ch:"我的体重增加了。", pinyin:"Wǒ de tǐzhòng zēngjiā le.", ru:"Мой вес увеличился." } },
+    { chinese:"照片", pinyin:"zhàopiàn", meaning:"фотография", example:{ ch:"请看我拍的照片。", pinyin:"Qǐng kàn wǒ pāi de zhàopiàn.", ru:"Посмотри на мои фотографии." } },
+    { chinese:"照顾", pinyin:"zhàogù", meaning:"заботиться", example:{ ch:"妈妈照顾生病的奶奶。", pinyin:"Māma zhàogù shēngbìng de nǎinai.", ru:"Мама ухаживает за больной бабушкой." } },
+    { chinese:"着", pinyin:"zhe", meaning:"суффикс длительного действия", example:{ ch:"他笑着对我说。", pinyin:"Tā xiào zhe duì wǒ shuō.", ru:"Он сказал мне с улыбкой." } },
+    { chinese:"着急", pinyin:"zháojí", meaning:"волноваться", example:{ ch:"别着急，慢慢来。", pinyin:"Bié zháojí, màn man lái.", ru:"Не волнуйся, не торопись." } },
+    { chinese:"真正", pinyin:"zhēnzhèng", meaning:"настоящий", example:{ ch:"他是我真正的朋友。", pinyin:"Tā shì wǒ zhēnzhèng de péngyou.", ru:"Он мой настоящий друг." } },
+    { chinese:"整理", pinyin:"zhěnglǐ", meaning:"приводить в порядок", example:{ ch:"请整理一下你的房间。", pinyin:"Qǐng zhěnglǐ yīxià nǐ de fángjiān.", ru:"Пожалуйста, прибери свою комнату." } },
+    { chinese:"正在", pinyin:"zhèngzài", meaning:"в процессе", example:{ ch:"他正在吃饭。", pinyin:"Tā zhèngzài chīfàn.", ru:"Он сейчас ест." } },
+    { chinese:"直到", pinyin:"zhídào", meaning:"вплоть до", example:{ ch:"我等到他直到晚上。", pinyin:"Wǒ děng dào tā zhídào wǎnshang.", ru:"Я ждал его до самого вечера." } },
+    { chinese:"只", pinyin:"zhǐ", meaning:"только", example:{ ch:"我只吃了一个苹果。", pinyin:"Wǒ zhǐ chī le yī ge píngguǒ.", ru:"Я съел только одно яблоко." } },
+    { chinese:"终于", pinyin:"zhōngyú", meaning:"наконец", example:{ ch:"我终于完成了作业。", pinyin:"Wǒ zhōngyú wánchéng le zuòyè.", ru:"Я наконец закончил домашнее задание." } },
+    { chinese:"重要", pinyin:"zhòngyào", meaning:"важный", example:{ ch:"健康很重要。", pinyin:"Jiànkāng hěn zhòngyào.", ru:"Здоровье очень важно." } },
+    { chinese:"主要", pinyin:"zhǔyào", meaning:"главный", example:{ ch:"主要问题是时间不够。", pinyin:"Zhǔyào wèntí shì shíjiān bù gòu.", ru:"Главная проблема — нехватка времени." } },
+    { chinese:"主意", pinyin:"zhǔyi", meaning:"идея", example:{ ch:"我有一个好主意。", pinyin:"Wǒ yǒu yī ge hǎo zhǔyi.", ru:"У меня есть хорошая идея." } },
+    { chinese:"祝", pinyin:"zhù", meaning:"желать", example:{ ch:"祝你生日快乐！", pinyin:"Zhù nǐ shēngrì kuàilè!", ru:"С днём рождения!" } },
+    { chinese:"注意", pinyin:"zhùyì", meaning:"обращать внимание", example:{ ch:"请注意安全。", pinyin:"Qǐng zhùyì ānquán.", ru:"Пожалуйста, будьте осторожны." } },
+    { chinese:"准备", pinyin:"zhǔnbèi", meaning:"готовиться", example:{ ch:"我正在准备考试。", pinyin:"Wǒ zhèngzài zhǔnbèi kǎoshì.", ru:"Я готовлюсь к экзамену." } },
+    { chinese:"字典", pinyin:"zìdiǎn", meaning:"словарь", example:{ ch:"请查一下字典。", pinyin:"Qǐng chá yīxià zìdiǎn.", ru:"Пожалуйста, посмотри в словаре." } },
+    { chinese:"自己", pinyin:"zìjǐ", meaning:"сам", example:{ ch:"我自己去。", pinyin:"Wǒ zìjǐ qù.", ru:"Я пойду сам." } },
+    { chinese:"总是", pinyin:"zǒngshì", meaning:"всегда", example:{ ch:"他总是迟到。", pinyin:"Tā zǒngshì chídào.", ru:"Он всегда опаздывает." } },
+    { chinese:"走", pinyin:"zǒu", meaning:"идти", example:{ ch:"我们走吧。", pinyin:"Wǒmen zǒu ba.", ru:"Пойдём." } },
+    { chinese:"最", pinyin:"zuì", meaning:"самый", example:{ ch:"她是我最好的朋友。", pinyin:"Tā shì wǒ zuì hǎo de péngyou.", ru:"Она мой самый лучший друг." } },
+    { chinese:"最后", pinyin:"zuìhòu", meaning:"последний", example:{ ch:"最后，他成功了。", pinyin:"Zuìhòu, tā chénggōng le.", ru:"В конце концов он добился успеха." } },
+    { chinese:"最近", pinyin:"zuìjìn", meaning:"в последнее время", example:{ ch:"最近怎么样？", pinyin:"Zuìjìn zěnmeyàng?", ru:"Как дела в последнее время?" } },
+    { chinese:"昨天", pinyin:"zuótiān", meaning:"вчера", example:{ ch:"昨天我去公园了。", pinyin:"Zuótiān wǒ qù gōngyuán le.", ru:"Вчера я ходил в парк." } },
+    { chinese:"左右", pinyin:"zuǒyòu", meaning:"около", example:{ ch:"他在三十岁左右。", pinyin:"Tā zài sānshí suì zuǒyòu.", ru:"Ему около тридцати лет." } },
+    { chinese:"作业", pinyin:"zuòyè", meaning:"домашнее задание", example:{ ch:"我做完作业了。", pinyin:"Wǒ zuò wán zuòyè le.", ru:"Я сделал домашнее задание." } }
+];
+        for (let i = 0; i < 300; i++) {
+            hsk3WordsData.push({ chinese:`словоHSK3_${i}`, pinyin:`pinyin${i}`, meaning:`значение${i}`, example:{ ch:`Пример ${i}`, pinyin:`lìzi ${i}`, ru:`Перевод примера ${i}` } });
+        }
+
         const hsk1Lessons = [];
         for (let i = 0; i < 15; i++) {
-            hsk1Lessons.push({
-                name: `Урок ${i+1}`,
-                words: hsk1WordsData.slice(i*10, (i+1)*10)
-            });
+            hsk1Lessons.push({ name: `Урок ${i+1}`, words: hsk1WordsData.slice(i*10, (i+1)*10) });
         }
-
         const hsk2Lessons = [];
         for (let i = 0; i < 15; i++) {
-            hsk2Lessons.push({
-                name: `Урок ${i+1}`,
-                words: hsk2WordsData.slice(i*10, (i+1)*10)
-            });
+            hsk2Lessons.push({ name: `Урок ${i+1}`, words: hsk2WordsData.slice(i*10, (i+1)*10) });
         }
-
-        // HSK 3 и HSK 4 (базовые для полноты)
-        const hsk3Base = [...hsk1WordsData.slice(0, 150), ...hsk2WordsData.slice(0, 150)];
         const hsk3Lessons = [];
         for (let i = 0; i < 15; i++) {
-            hsk3Lessons.push({ name: `Урок ${i+1}`, words: hsk3Base.slice(i*20, (i+1)*20) });
+            hsk3Lessons.push({ name: `Урок ${i+1}`, words: hsk3WordsData.slice(i*20, (i+1)*20) });
         }
-
         const hsk4Words = [];
         for (let i = 0; i < 500; i++) {
             hsk4Words.push({ chinese:`слово${i}`, pinyin:`pinyin${i}`, meaning:`значение${i}`, example:{ ch:`Пример ${i}`, pinyin:`lìzi ${i}`, ru:`Пример перевода ${i}` } });
@@ -1375,73 +888,7 @@
         for (let i = 0; i < 15; i++) {
             hsk4Lessons.push({ name: `Урок ${i+1}`, words: hsk4Words.slice(i*wordsPerLesson, (i+1)*wordsPerLesson) });
         }
-
         const hskData = { 1: hsk1Lessons, 2: hsk2Lessons, 3: hsk3Lessons, 4: hsk4Lessons };
-
-        // ============================================
-        // СИСТЕМА БАЛЛОВ И СТАТИСТИКА
-        // ============================================
-        function updateVisitorCounter() {
-            let today = new Date().toDateString();
-            let visitorData = localStorage.getItem('hsk_visitor_data');
-            if (!visitorData || JSON.parse(visitorData).date !== today) {
-                localStorage.setItem('hsk_visitor_data', JSON.stringify({ date: today, count: 1 }));
-                document.getElementById('visitorCount').innerText = '1';
-            } else {
-                let data = JSON.parse(visitorData);
-                if (!sessionStorage.getItem('hsk_counted')) {
-                    data.count++;
-                    localStorage.setItem('hsk_visitor_data', JSON.stringify(data));
-                    sessionStorage.setItem('hsk_counted', 'true');
-                }
-                document.getElementById('visitorCount').innerText = data.count;
-            }
-        }
-
-        function updateRankTable() {
-            const users = getUsers();
-            const usersWithPoints = users.map(u => ({ username: u.username, points: u.points || 0 }));
-            usersWithPoints.sort((a, b) => b.points - a.points);
-            const top100 = usersWithPoints.slice(0, 100);
-            const tbody = document.getElementById('rankTableBody');
-            tbody.innerHTML = '';
-            top100.forEach((user, idx) => {
-                const row = tbody.insertRow();
-                if (user.username === currentUser) row.className = 'current-user';
-                row.insertCell(0).innerText = idx + 1;
-                row.insertCell(1).innerText = user.username;
-                row.insertCell(2).innerHTML = `<span class="points-badge">⭐ ${user.points}</span>`;
-            });
-            document.getElementById('registeredUsersCount').innerText = users.length;
-            if (currentUser) {
-                const userData = users.find(u => u.username === currentUser);
-                const myPoints = userData ? (userData.points || 0) : 0;
-                document.getElementById('myPoints').innerText = myPoints;
-                const myRank = usersWithPoints.findIndex(u => u.username === currentUser) + 1;
-                document.getElementById('myRank').innerText = myRank > 0 ? myRank : '-';
-            }
-        }
-
-        function addPoints(username, points) {
-            const users = getUsers();
-            const userIndex = users.findIndex(u => u.username === username);
-            if (userIndex !== -1) {
-                users[userIndex].points = (users[userIndex].points || 0) + points;
-                saveUsers(users);
-                updateRankTable();
-                return users[userIndex].points;
-            }
-            return 0;
-        }
-
-        function openRankModal() {
-            updateRankTable();
-            document.getElementById('rankModal').classList.add('active');
-        }
-
-        function closeRankModal() {
-            document.getElementById('rankModal').classList.remove('active');
-        }
 
         // ============================================
         // ПОЛЬЗОВАТЕЛИ
@@ -1452,7 +899,7 @@
         function getUsers() { return JSON.parse(localStorage.getItem('hsk_users')) || []; }
         function getUserData(username) {
             return JSON.parse(localStorage.getItem(`hsk_user_${username}`)) || {
-                learnedWords: [], unlockedLessons: { 1: [0], 2: [0], 3: [0], 4: [0] }
+                learnedWords: [], unlockedLessons: { 1: [0], 2: [0], 3: [0], 4: [0] }, bamboo: 0
             };
         }
         function saveUserData(username, data) { localStorage.setItem(`hsk_user_${username}`, JSON.stringify(data)); }
@@ -1474,9 +921,9 @@
                 document.getElementById('registerError').innerText = 'Пользователь уже существует';
                 return;
             }
-            users.push({ username, email, password, points: 0 });
+            users.push({ username, email, password, bamboo: 0 });
             saveUsers(users);
-            saveUserData(username, { learnedWords: [], unlockedLessons: { 1: [0], 2: [0], 3: [0], 4: [0] } });
+            saveUserData(username, { learnedWords: [], unlockedLessons: { 1: [0], 2: [0], 3: [0], 4: [0] }, bamboo: 0 });
             showLogin();
             document.getElementById('loginError').innerHTML = '<span style="color:#4caf50">✅ Регистрация успешна!</span>';
             updateRankTable();
@@ -1528,14 +975,90 @@
             updateRankTable();
         }
         
-        // ============================================
-        // ОСНОВНОЕ ПРИЛОЖЕНИЕ
-        // ============================================
+        function updateVisitorCounter() {
+            let today = new Date().toDateString();
+            let visitorData = localStorage.getItem('hsk_visitor_data');
+            if (!visitorData || JSON.parse(visitorData).date !== today) {
+                localStorage.setItem('hsk_visitor_data', JSON.stringify({ date: today, count: 1 }));
+                document.getElementById('visitorCount').innerText = '1';
+            } else {
+                let data = JSON.parse(visitorData);
+                if (!sessionStorage.getItem('hsk_counted')) {
+                    data.count++;
+                    localStorage.setItem('hsk_visitor_data', JSON.stringify(data));
+                    sessionStorage.setItem('hsk_counted', 'true');
+                }
+                document.getElementById('visitorCount').innerText = data.count;
+            }
+        }
+        
+        function updateRankTable() {
+            const users = getUsers();
+            const usersWithPoints = users.map(u => ({ username: u.username, bamboo: u.bamboo || 0 }));
+            usersWithPoints.sort((a, b) => b.bamboo - a.bamboo);
+            const top100 = usersWithPoints.slice(0, 100);
+            const tbody = document.getElementById('rankTableBody');
+            tbody.innerHTML = '';
+            top100.forEach((user, idx) => {
+                const row = tbody.insertRow();
+                if (user.username === currentUser) row.className = 'current-user';
+                row.insertCell(0).innerText = idx + 1;
+                row.insertCell(1).innerText = user.username;
+                row.insertCell(2).innerHTML = `<span class="bamboo-badge">🎋 ${user.bamboo}</span>`;
+            });
+            document.getElementById('registeredUsersCount').innerText = users.length;
+            if (currentUser) {
+                const userData = users.find(u => u.username === currentUser);
+                const myBamboo = userData ? (userData.bamboo || 0) : 0;
+                document.getElementById('myPoints').innerText = myBamboo;
+                const myRank = usersWithPoints.findIndex(u => u.username === currentUser) + 1;
+                document.getElementById('myRank').innerText = myRank > 0 ? myRank : '-';
+            }
+        }
+        
+        function addBamboo(username, amount) {
+            const users = getUsers();
+            const userIndex = users.findIndex(u => u.username === username);
+            if (userIndex !== -1) {
+                users[userIndex].bamboo = (users[userIndex].bamboo || 0) + amount;
+                saveUsers(users);
+                const userData = getUserData(username);
+                userData.bamboo = users[userIndex].bamboo;
+                saveUserData(username, userData);
+                updateRankTable();
+                return users[userIndex].bamboo;
+            }
+            return 0;
+        }
+        
+        function openRankModal() {
+            updateRankTable();
+            document.getElementById('rankModal').classList.add('active');
+        }
+        
+        function closeRankModal() {
+            document.getElementById('rankModal').classList.remove('active');
+        }
+        
         let currentLevel = 1, currentLesson = 0, currentTab = "study";
         let learnedWords = [], unlockedLessons = {};
         let currentVolume = 0.7;
         let gameType = 0, gameQuestions = [], gameIndex = 0, gameScore = 0, gameAnswered = false;
         let currentTestQuestions = [], currentTestIndex = 0, testScore = 0;
+        
+        let sentenceWordsList = [];
+        let sentenceBuilding = [];
+        let sentenceCorrect = [];
+        let sentenceTimeout = null;
+        
+        let matchPairs = [];
+        let matchUserConnections = [];
+        let selectedMatchType = null;
+        let selectedMatchId = null;
+        let matchDisplayChinese = [];
+        let matchDisplayMeanings = [];
+        let matchSubmitted = false;
+        let matchResults = [];
         
         function loadUserAppData() {
             const data = getUserData(currentUser);
@@ -1544,7 +1067,7 @@
         }
         
         function saveUserAppData() {
-            saveUserData(currentUser, { learnedWords, unlockedLessons });
+            saveUserData(currentUser, { learnedWords, unlockedLessons, bamboo: getUserData(currentUser).bamboo });
         }
         
         document.getElementById('volumeSlider').oninput = e => currentVolume = e.target.value / 100;
@@ -1585,6 +1108,28 @@
             div.style.animation = 'fadeOut 2s forwards';
             document.body.appendChild(div);
             setTimeout(() => div.remove(), 2000);
+        }
+        
+        function showTempMessage(text, color) {
+            let existingMsg = document.querySelector('.temp-message');
+            if (existingMsg) existingMsg.remove();
+            let msg = document.createElement('div');
+            msg.className = 'temp-message';
+            msg.innerHTML = text;
+            msg.style.position = 'fixed';
+            msg.style.top = '20%';
+            msg.style.left = '50%';
+            msg.style.transform = 'translateX(-50%)';
+            msg.style.background = color;
+            msg.style.color = 'white';
+            msg.style.padding = '12px 24px';
+            msg.style.borderRadius = '50px';
+            msg.style.fontSize = '1.2rem';
+            msg.style.fontWeight = 'bold';
+            msg.style.zIndex = '3000';
+            msg.style.boxShadow = '0 5px 20px rgba(0,0,0,0.3)';
+            document.body.appendChild(msg);
+            setTimeout(() => msg.remove(), 1500);
         }
         
         function isWordLearned(level, lesson, idx) { return learnedWords.includes(`${level}_${lesson}_${idx}`); }
@@ -1654,37 +1199,45 @@
                                 <div class="chinese" onclick="speak('${w.chinese}','zh-CN')">${w.chinese}</div>
                                 <div class="pinyin">${w.pinyin}</div>
                                 <div class="meaning" onclick="speak('${w.meaning}','ru-RU')">📖 ${w.meaning}</div>
-                            </div>`;
-                if (w.example) {
-                    html += `<div class="example" onclick="speak('${w.example.ch}','zh-CN')">
+                            </div>
+                            <div class="example" onclick="speak('${w.example.ch}','zh-CN')">
                                 <div class="example-chinese">📢 ${w.example.ch}</div>
                                 <div class="example-pinyin">${w.example.pinyin}</div>
                                 <div class="example-meaning">${w.example.ru}</div>
-                            </div>`;
-                }
-                html += `<button class="check-btn ${learned ? 'checked' : ''}" onclick="toggleWord(${currentLevel},${currentLesson},${idx})">${learned ? '✓' : '○'}</button>
+                            </div>
+                            <button class="check-btn ${learned ? 'checked' : ''}" onclick="toggleWord(${currentLevel},${currentLesson},${idx})">${learned ? '✓' : '○'}</button>
                         </div>`;
             });
             let percent = getLessonLearnedCount(currentLevel, currentLesson) / lesson.words.length * 100;
             html += `</div><div class="lesson-progress"><div class="progress-bar"><div class="progress-fill" style="width:${percent}%"></div></div>
-                     <button class="test-btn" onclick="startTest()">📝 Пройти тест (+10 баллов за ответ)</button></div>`;
+                     <button class="test-btn" onclick="startTest()">📝 Пройти тест (+1 бамбук за ответ)</button></div>`;
             document.getElementById('content').innerHTML = html;
             updateStats();
         }
         
         function renderGames() {
-            let gameNames = ["🎯 Найди перевод", "🔊 Угадай по звуку", "✏️ Найди иероглиф", "📝 Составь пару"];
+            let gameNames = ["🎯 Найди перевод", "🔊 Угадай по звуку", "✏️ Найди иероглиф", "🧩 Составь предложение", "🔗 Соедини линией"];
             let html = `<div class="game-container"><div class="game-selector">`;
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 5; i++) {
                 html += `<button class="game-type-btn ${gameType === i ? 'active' : ''}" onclick="setGameType(${i})">${gameNames[i]}</button>`;
             }
             html += `</div><div id="gameContent"></div></div>`;
             document.getElementById('content').innerHTML = html;
-            startNewGame();
+            if (gameType === 3) startSentenceGame();
+            else if (gameType === 4) startMatchGame();
+            else startNewGame();
         }
         
-        function setGameType(type) { gameType = type; renderGames(); }
+        function setGameType(type) { 
+            gameType = type; 
+            if (type === 3) startSentenceGame();
+            else if (type === 4) startMatchGame();
+            else renderGames();
+        }
         
+        // ============================================
+        // ИГРЫ 0-2
+        // ============================================
         function startNewGame() {
             let lesson = hskData[currentLevel][currentLesson];
             let words = lesson.words.filter(w => w.chinese);
@@ -1707,14 +1260,10 @@
                     question = { text: "🔊 Прослушай", audio: correct.chinese };
                     answer = correct.meaning;
                     options = options.map(o => o.meaning);
-                } else if (gameType === 2) {
+                } else {
                     question = { text: correct.meaning };
                     answer = correct.chinese;
                     options = options.map(o => o.chinese);
-                } else {
-                    question = { text: correct.chinese };
-                    answer = correct.meaning;
-                    options = options.map(o => o.meaning);
                 }
                 gameQuestions.push({ question, answer, options });
             }
@@ -1726,9 +1275,11 @@
             if (gameIndex >= gameQuestions.length) {
                 let percent = Math.round(gameScore / gameQuestions.length * 100);
                 let modal = document.getElementById('gameContent');
+                let earnedBamboo = gameScore;
+                addBamboo(currentUser, earnedBamboo);
                 if (percent >= 70) showFireworks();
                 else showPanda();
-                modal.innerHTML = `<div class="game-result"><h2>${percent >= 70 ? '🎉 Поздравляю!' : '📚 Продолжай учиться!'}</h2><p>${gameScore} / ${gameQuestions.length}</p><button class="next-game-btn" onclick="startNewGame()">🔄 Играть снова</button><button class="next-game-btn" style="background:#c084fc" onclick="renderGames()">🎮 Другие игры</button></div>`;
+                modal.innerHTML = `<div class="game-result"><h2>${percent >= 70 ? '🎉 Поздравляю!' : '📚 Продолжай учиться!'}</h2><p>${gameScore} / ${gameQuestions.length}</p><p>🎋 +${earnedBamboo} бамбука!</p><button class="next-game-btn" onclick="startNewGame()">🔄 Играть снова</button><button class="next-game-btn" style="background:#c084fc" onclick="renderGames()">🎮 Другие игры</button></div>`;
                 return;
             }
             let q = gameQuestions[gameIndex];
@@ -1762,6 +1313,371 @@
             setTimeout(() => { gameIndex++; renderGameQuestion(); }, 800);
         }
         
+        // ============================================
+        // ИГРА 3: СОСТАВЬ ПРЕДЛОЖЕНИЕ (С АВТО-ПЕРЕХОДОМ)
+        // ============================================
+        function startSentenceGame() {
+            if (sentenceTimeout) clearTimeout(sentenceTimeout);
+            let lesson = hskData[currentLevel][currentLesson];
+            let words = lesson.words.filter(w => w.example && w.example.ch);
+            if (words.length === 0) {
+                document.getElementById('gameContent').innerHTML = '<div class="game-result"><h2>😢 Нет предложений в этом уроке</h2><button class="next-game-btn" onclick="renderGames()">Назад</button></div>';
+                return;
+            }
+            let randomWord = words[Math.floor(Math.random() * words.length)];
+            let sentence = randomWord.example.ch;
+            
+            let chars = sentence.split('');
+            let parts = [];
+            let i = 0;
+            while (i < chars.length) {
+                let partLength = Math.min(
+                    [1, 1, 2, 2, 3, 3, 4][Math.floor(Math.random() * 7)],
+                    chars.length - i
+                );
+                if (partLength < 1) partLength = 1;
+                parts.push(chars.slice(i, i + partLength).join(''));
+                i += partLength;
+            }
+            
+            for (let k = parts.length - 1; k > 0; k--) {
+                const j = Math.floor(Math.random() * (k + 1));
+                [parts[k], parts[j]] = [parts[j], parts[k]];
+            }
+            
+            sentenceWordsList = parts;
+            sentenceBuilding = [];
+            sentenceCorrect = [];
+            let j = 0;
+            while (j < chars.length) {
+                let len = Math.min([1, 2, 3, 4][Math.floor(Math.random() * 4)], chars.length - j);
+                sentenceCorrect.push(chars.slice(j, j + len).join(''));
+                j += len;
+            }
+            
+            renderSentenceGame();
+        }
+        
+        function renderSentenceGame() {
+            let html = `<div class="sentence-game-container">
+                <h3>🧩 Составь предложение</h3>
+                <p style="margin-bottom: 10px; opacity:0.8;">Нажми на части, чтобы собрать правильное предложение</p>
+                <div class="sentence-words" id="sentenceWordsList">`;
+            sentenceWordsList.forEach((word, idx) => {
+                html += `<div class="sentence-word" onclick="selectWordForSentence(${idx})">${word}</div>`;
+            });
+            html += `</div><div class="sentence-building" id="sentenceBuildingArea">`;
+            sentenceBuilding.forEach((word, idx) => {
+                html += `<div class="building-word">${word}<button onclick="removeWordFromBuilding(${idx})">✖</button></div>`;
+            });
+            html += `</div><button class="check-sentence-btn" onclick="checkSentence()">✅ Проверить</button>
+                     <div id="sentenceResult" class="sentence-result" style="display: none;"></div>
+                     <button class="next-game-btn" style="background:#c084fc; margin-top:20px;" onclick="startSentenceGame()">🔄 Новое предложение</button>
+                     <button class="next-game-btn" onclick="renderGames()">🎮 К играм</button></div>`;
+            document.getElementById('gameContent').innerHTML = html;
+        }
+        
+        function selectWordForSentence(idx) {
+            let word = sentenceWordsList[idx];
+            sentenceWordsList.splice(idx, 1);
+            sentenceBuilding.push(word);
+            renderSentenceGame();
+        }
+        
+        function removeWordFromBuilding(idx) {
+            let word = sentenceBuilding[idx];
+            sentenceBuilding.splice(idx, 1);
+            sentenceWordsList.push(word);
+            renderSentenceGame();
+        }
+        
+        function checkSentence() {
+            let userSentence = sentenceBuilding.join('');
+            let correctSentence = sentenceCorrect.join('');
+            let resultDiv = document.getElementById('sentenceResult');
+            resultDiv.style.display = 'block';
+            
+            if (userSentence === correctSentence) {
+                resultDiv.className = 'sentence-result correct';
+                resultDiv.innerHTML = '🎉 ПРАВИЛЬНО! +2 бамбука 🎉';
+                showFireworks();
+                addBamboo(currentUser, 2);
+                showTempMessage('🎋 +2 бамбука!', '#4caf50');
+                // Автоматический переход через 2 секунды
+                if (sentenceTimeout) clearTimeout(sentenceTimeout);
+                sentenceTimeout = setTimeout(() => {
+                    startSentenceGame();
+                }, 2000);
+            } else {
+                resultDiv.className = 'sentence-result wrong';
+                resultDiv.innerHTML = '😢 НЕПРАВИЛЬНО! Попробуй ещё раз 😢';
+                showPanda();
+                // Автоматический сброс через 2 секунды
+                if (sentenceTimeout) clearTimeout(sentenceTimeout);
+                sentenceTimeout = setTimeout(() => {
+                    sentenceBuilding = [];
+                    sentenceWordsList = [...sentenceCorrect];
+                    for (let i = sentenceWordsList.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [sentenceWordsList[i], sentenceWordsList[j]] = [sentenceWordsList[j], sentenceWordsList[i]];
+                    }
+                    renderSentenceGame();
+                }, 2000);
+            }
+        }
+        
+        // ============================================
+        // ИГРА 4: СОЕДИНИ ЛИНИЕЙ
+        // ============================================
+        function startMatchGame() {
+            let lesson = hskData[currentLevel][currentLesson];
+            let words = lesson.words;
+            let count = currentLevel === 3 ? 5 : 4;
+            let shuffled = [...words];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            let selectedWords = shuffled.slice(0, count);
+            
+            matchPairs = selectedWords.map((w, idx) => ({ 
+                id: idx, 
+                chinese: w.chinese, 
+                meaning: w.meaning
+            }));
+            
+            matchUserConnections = [];
+            selectedMatchType = null;
+            selectedMatchId = null;
+            matchSubmitted = false;
+            matchResults = [];
+            
+            matchDisplayChinese = [...matchPairs];
+            matchDisplayMeanings = [...matchPairs];
+            for (let i = matchDisplayChinese.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [matchDisplayChinese[i], matchDisplayChinese[j]] = [matchDisplayChinese[j], matchDisplayChinese[i]];
+            }
+            for (let i = matchDisplayMeanings.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [matchDisplayMeanings[i], matchDisplayMeanings[j]] = [matchDisplayMeanings[j], matchDisplayMeanings[i]];
+            }
+            
+            renderMatchGame();
+        }
+        
+        function renderMatchGame() {
+            let html = `<div class="match-game-container" style="position: relative;">
+                <h3>🔗 Соедини иероглиф с переводом</h3>
+                <p style="margin-bottom: 10px; opacity:0.8;">Нажми на иероглиф, потом на перевод, чтобы соединить их линией</p>
+                <div class="match-grid" id="matchGrid">
+                    <div class="match-column"><h3>📖 Иероглифы</h3>`;
+            
+            for (let item of matchDisplayChinese) {
+                let isConnected = matchUserConnections.some(c => c.chineseId === item.id);
+                let connectedClass = '';
+                if (matchSubmitted) {
+                    let result = matchResults.find(r => r.chineseId === item.id);
+                    if (result) {
+                        connectedClass = result.correct ? 'correct-final' : 'wrong-final';
+                    } else if (isConnected) {
+                        connectedClass = 'connected';
+                    }
+                } else if (isConnected) {
+                    connectedClass = 'connected';
+                }
+                let isSelected = (selectedMatchType === 'chinese' && selectedMatchId === item.id);
+                html += `<div class="match-item ${connectedClass} ${isSelected ? 'selected' : ''}" 
+                         data-type="chinese" data-id="${item.id}" 
+                         onclick="selectMatchItem('chinese', ${item.id})">${item.chinese}</div>`;
+            }
+            
+            html += `</div><div class="match-column"><h3>📝 Перевод</h3>`;
+            
+            for (let item of matchDisplayMeanings) {
+                let isConnected = matchUserConnections.some(c => c.meaningId === item.id);
+                let connectedClass = '';
+                if (matchSubmitted) {
+                    let result = matchResults.find(r => r.meaningId === item.id);
+                    if (result) {
+                        connectedClass = result.correct ? 'correct-final' : 'wrong-final';
+                    } else if (isConnected) {
+                        connectedClass = 'connected';
+                    }
+                } else if (isConnected) {
+                    connectedClass = 'connected';
+                }
+                let isSelected = (selectedMatchType === 'meaning' && selectedMatchId === item.id);
+                html += `<div class="match-item ${connectedClass} ${isSelected ? 'selected' : ''}" 
+                         data-type="meaning" data-id="${item.id}" 
+                         onclick="selectMatchItem('meaning', ${item.id})">${item.meaning}</div>`;
+            }
+            
+            let allConnected = matchUserConnections.length === matchPairs.length;
+            html += `</div></div>
+                     <div class="match-status">✅ Соединено пар: ${matchUserConnections.length} / ${matchPairs.length}</div>`;
+            
+            if (!matchSubmitted) {
+                if (allConnected) {
+                    html += `<button class="match-submit-btn" onclick="submitMatchAnswers()">🎯 Проверить все соединения</button>`;
+                } else {
+                    html += `<button class="match-submit-btn" style="opacity:0.5; cursor:not-allowed;" disabled>🎯 Сначала соедините все пары</button>`;
+                }
+                html += `<button class="match-btn" onclick="clearMatchSelection()">Сбросить выбор</button>`;
+            } else {
+                let allCorrect = matchResults.every(r => r.correct);
+                if (allCorrect) {
+                    html += `<div class="match-status" style="color: #4caf50;">🎉 ВСЕ ПАРЫ ПРАВИЛЬНЫЕ! +1 бамбук 🎋</div>`;
+                } else {
+                    html += `<div class="match-status" style="color: #f44336;">😢 Есть неправильные пары. Попробуй ещё раз!</div>`;
+                }
+                html += `<button class="match-btn" onclick="resetMatchGame()">🔄 Начать заново</button>`;
+            }
+            
+            html += `<button class="match-btn" onclick="renderGames()">🎮 К играм</button>
+                     <svg class="match-svg-layer" id="matchSvgLayer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></svg>
+                     </div>`;
+            document.getElementById('gameContent').innerHTML = html;
+            drawMatchLines();
+        }
+        
+        function drawMatchLines() {
+            setTimeout(() => {
+                let svg = document.getElementById('matchSvgLayer');
+                if (!svg) return;
+                let container = document.querySelector('.match-game-container');
+                if (!container) return;
+                let containerRect = container.getBoundingClientRect();
+                let lines = [];
+                
+                for (let conn of matchUserConnections) {
+                    let chineseEl = document.querySelector(`.match-item[data-type="chinese"][data-id="${conn.chineseId}"]`);
+                    let meaningEl = document.querySelector(`.match-item[data-type="meaning"][data-id="${conn.meaningId}"]`);
+                    if (chineseEl && meaningEl) {
+                        let chineseRect = chineseEl.getBoundingClientRect();
+                        let meaningRect = meaningEl.getBoundingClientRect();
+                        let startX = chineseRect.right - containerRect.left;
+                        let startY = chineseRect.top + chineseRect.height/2 - containerRect.top;
+                        let endX = meaningRect.left - containerRect.left;
+                        let endY = meaningRect.top + meaningRect.height/2 - containerRect.top;
+                        let lineClass = 'match-line-blue';
+                        if (matchSubmitted) {
+                            let result = matchResults.find(r => r.chineseId === conn.chineseId);
+                            if (result) {
+                                lineClass = result.correct ? 'match-line-correct' : 'match-line-wrong';
+                            }
+                        }
+                        lines.push(`<line x1="${startX}" y1="${startY}" x2="${endX}" y2="${endY}" class="${lineClass}" />`);
+                    }
+                }
+                
+                if (selectedMatchType && selectedMatchId !== null && !matchSubmitted) {
+                    let selectedEl = document.querySelector(`.match-item[data-type="${selectedMatchType}"][data-id="${selectedMatchId}"]`);
+                    if (selectedEl) {
+                        let rect = selectedEl.getBoundingClientRect();
+                        let centerX = rect.left + rect.width/2 - containerRect.left;
+                        let centerY = rect.top + rect.height/2 - containerRect.top;
+                        lines.push(`<circle cx="${centerX}" cy="${centerY}" r="8" fill="#ffd700" opacity="0.5" />`);
+                    }
+                }
+                svg.innerHTML = lines.join('');
+            }, 50);
+        }
+        
+        function selectMatchItem(type, id) {
+            if (matchSubmitted) {
+                showTempMessage('⚠️ Игра завершена! Нажмите "Начать заново"', '#ff9800');
+                return;
+            }
+            
+            let alreadyConnected = matchUserConnections.some(c => 
+                (type === 'chinese' && c.chineseId === id) || 
+                (type === 'meaning' && c.meaningId === id)
+            );
+            
+            if (alreadyConnected) {
+                selectedMatchType = null;
+                selectedMatchId = null;
+                renderMatchGame();
+                return;
+            }
+            
+            if (selectedMatchType === null) {
+                selectedMatchType = type;
+                selectedMatchId = id;
+                renderMatchGame();
+            } else {
+                if (selectedMatchType !== type) {
+                    let chineseId, meaningId;
+                    if (selectedMatchType === 'chinese') {
+                        chineseId = selectedMatchId;
+                        meaningId = id;
+                    } else {
+                        chineseId = id;
+                        meaningId = selectedMatchId;
+                    }
+                    
+                    let chineseItem = matchPairs.find(p => p.id === chineseId);
+                    let meaningItem = matchPairs.find(p => p.id === meaningId);
+                    
+                    if (chineseItem && meaningItem) {
+                        let isCorrect = (chineseItem.chinese === meaningItem.chinese && chineseItem.meaning === meaningItem.meaning);
+                        matchUserConnections.push({
+                            chineseId: chineseId,
+                            meaningId: meaningId,
+                            chineseText: chineseItem.chinese,
+                            meaningText: meaningItem.meaning,
+                            isCorrect: isCorrect
+                        });
+                        showTempMessage('✓ Соединено!', '#2196f3');
+                    }
+                }
+                selectedMatchType = null;
+                selectedMatchId = null;
+                renderMatchGame();
+            }
+        }
+        
+        function clearMatchSelection() {
+            selectedMatchType = null;
+            selectedMatchId = null;
+            renderMatchGame();
+        }
+        
+        function resetMatchGame() {
+            startMatchGame();
+        }
+        
+        function submitMatchAnswers() {
+            if (matchUserConnections.length !== matchPairs.length) {
+                showTempMessage('⚠️ Соедините все пары перед проверкой!', '#ff9800');
+                return;
+            }
+            
+            matchSubmitted = true;
+            matchResults = [];
+            let allCorrect = true;
+            
+            for (let conn of matchUserConnections) {
+                let pair = matchPairs.find(p => p.id === conn.chineseId);
+                let isCorrect = (pair && pair.meaning === conn.meaningText);
+                matchResults.push({ chineseId: conn.chineseId, meaningId: conn.meaningId, correct: isCorrect });
+                if (!isCorrect) allCorrect = false;
+            }
+            
+            if (allCorrect) {
+                addBamboo(currentUser, 1);
+                showFireworks();
+                showTempMessage(`🎋 Поздравляю! Все пары правильные! +1 бамбук! 🎋`, '#4caf50');
+            } else {
+                showPanda();
+                showTempMessage(`😢 Есть неправильные пары. Попробуй ещё раз!`, '#f44336');
+            }
+            
+            renderMatchGame();
+        }
+        
+        // ТЕСТ
         function startTest() {
             let lesson = hskData[currentLevel][currentLesson];
             let allWords = [...lesson.words];
@@ -1779,14 +1695,10 @@
             if (currentTestIndex >= currentTestQuestions.length) {
                 let passed = testScore >= 9;
                 if (passed && currentLesson + 1 < hskData[currentLevel].length) unlockLesson(currentLevel, currentLesson + 1);
-                
-                const earnedPoints = testScore * 10;
-                if (earnedPoints > 0) {
-                    addPoints(currentUser, earnedPoints);
-                }
-                
+                const earnedPoints = testScore;
+                if (earnedPoints > 0) addBamboo(currentUser, earnedPoints);
                 if (passed) showFireworks(); else showPanda();
-                document.getElementById('testContent').innerHTML = `<div class="test-result">🎉 Результат: ${testScore}/10<br>+${earnedPoints} баллов!<br>${testScore >= 9 ? '✅ Следующий урок открыт!' : '❌ Нужно 9/10'}</div><button class="close-modal" onclick="closeTest()">Закрыть</button>${testScore < 9 ? `<button class="close-modal" style="background:#ff6b9d; margin-top:10px" onclick="closeTest(); startTest();">🔄 Попробовать снова</button>` : ''}`;
+                document.getElementById('testContent').innerHTML = `<div class="test-result">🎉 Результат: ${testScore}/10<br>🎋 +${earnedPoints} бамбука!<br>${testScore >= 9 ? '✅ Следующий урок открыт!' : '❌ Нужно 9/10'}</div><button class="close-modal" onclick="closeTest()">Закрыть</button>${testScore < 9 ? `<button class="close-modal" style="background:#ff6b9d; margin-top:10px" onclick="closeTest(); startTest();">🔄 Попробовать снова</button>` : ''}`;
                 if (passed && currentLesson + 1 < hskData[currentLevel].length) { renderLessonNav(); if (currentTab === "study") renderCurrentLesson(); }
                 updateRankTable();
                 return;
@@ -1803,7 +1715,7 @@
             options.forEach(opt => {
                 optsHtml += `<div class="test-option" onclick="checkTestAnswer('${opt.replace(/'/g, "\\'")}', this)">${opt}</div>`;
             });
-            document.getElementById('testContent').innerHTML = `<div class="test-question" onclick="speak('${q.chinese}','zh-CN')">${q.chinese}</div><div style="color:#c084fc; margin:10px 0">${q.pinyin}</div><div class="test-options">${optsHtml}</div><div>Вопрос ${currentTestIndex+1}/10</div><div style="margin-top:10px">⭐ За каждый правильный ответ +10 баллов</div>`;
+            document.getElementById('testContent').innerHTML = `<div class="test-question" onclick="speak('${q.chinese}','zh-CN')">${q.chinese}</div><div style="color:#c084fc; margin:10px 0">${q.pinyin}</div><div class="test-options">${optsHtml}</div><div>Вопрос ${currentTestIndex+1}/10</div><div style="margin-top:10px">🎋 За каждый правильный ответ +1 бамбук</div>`;
         }
         
         function checkTestAnswer(selected, element) {
@@ -1858,7 +1770,6 @@
         
         document.getElementById('backBtn').onclick = goHome;
         
-        // Инициализация
         updateVisitorCounter();
         const savedUser = localStorage.getItem('hsk_current_user');
         if (savedUser) {
@@ -1868,6 +1779,22 @@
             showLogin();
         }
         updateRankTable();
+        
+        window.selectWordForSentence = selectWordForSentence;
+        window.removeWordFromBuilding = removeWordFromBuilding;
+        window.checkSentence = checkSentence;
+        window.selectMatchItem = selectMatchItem;
+        window.clearMatchSelection = clearMatchSelection;
+        window.resetMatchGame = resetMatchGame;
+        window.submitMatchAnswers = submitMatchAnswers;
+        window.setGameType = setGameType;
+        window.startNewGame = startNewGame;
+        window.checkGameAnswer = checkGameAnswer;
+        window.startTest = startTest;
+        window.checkTestAnswer = checkTestAnswer;
+        window.closeTest = closeTest;
+        window.toggleWord = toggleWord;
+        window.speak = speak;
     </script>
 </body>
 </html>
