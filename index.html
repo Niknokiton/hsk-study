@@ -408,7 +408,7 @@
         while (hsk1WordsData.length < 150) {
             hsk1WordsData.push({ chinese:`слово${hsk1WordsData.length+1}`, pinyin:`pinyin${hsk1WordsData.length+1}`, meaning:`значение${hsk1WordsData.length+1}`, example:{ ch:`Пример ${hsk1WordsData.length+1}`, pinyin:`lìzi ${hsk1WordsData.length+1}`, ru:`Перевод примера ${hsk1WordsData.length+1}` } });
         }
-        
+
         // ============================================
         // HSK 2 — ПОЛНЫЙ СПИСОК (150 слов)
         // ============================================
@@ -567,7 +567,7 @@
         while (hsk2WordsData.length < 150) {
             hsk2WordsData.push({ chinese:`словоHSK2_${hsk2WordsData.length+1}`, pinyin:`pinyin${hsk2WordsData.length+1}`, meaning:`значение${hsk2WordsData.length+1}`, example:{ ch:`Пример ${hsk2WordsData.length+1}`, pinyin:`lìzi ${hsk2WordsData.length+1}`, ru:`Перевод примера ${hsk2WordsData.length+1}` } });
         }
-        
+
         // ============================================
         // HSK 3 — 300 слов
         // ============================================
@@ -872,7 +872,7 @@
         while (hsk3WordsData.length < 300) {
             hsk3WordsData.push({ chinese:`словоHSK3_${hsk3WordsData.length+1}`, pinyin:`pinyin${hsk3WordsData.length+1}`, meaning:`значение${hsk3WordsData.length+1}`, example:{ ch:`Пример ${hsk3WordsData.length+1}`, pinyin:`lìzi ${hsk3WordsData.length+1}`, ru:`Перевод примера ${hsk3WordsData.length+1}` } });
         }
-        
+
         // ============================================
         // HSK 4 — 600 слов (полный список из вашего задания)
         // ============================================
@@ -1409,7 +1409,6 @@
             { chinese:"穷", pinyin:"qióng", meaning:"Бедный", example:{ ch:"他家很穷。", pinyin:"Tā jiā hěn qióng.", ru:"Его семья очень бедная." } },
             { chinese:"然而", pinyin:"rán'ér", meaning:"Однако", example:{ ch:"天气很冷，然而他穿得很少。", pinyin:"Tiānqì hěn lěng, rán'ér tā chuān de hěn shǎo.", ru:"Погода холодная, однако он одет очень легко." } }
         ];
-
         
         // ============================================
         // ДОПОЛНЕНИЕ МАССИВОВ ДО НУЖНОГО РАЗМЕРА
@@ -1462,12 +1461,30 @@
             localStorage.setItem('hsk_users', JSON.stringify(users));
         }
         
+        // Функция для создания начальных разблокированных уроков для каждого уровня
+        function getDefaultUnlockedLessons() {
+            return {
+                1: [0],     // HSK 1: первый урок (индекс 0) разблокирован
+                2: [0],     // HSK 2: первый урок разблокирован
+                3: [0],     // HSK 3: первый урок разблокирован
+                4: [0]      // HSK 4: первый урок (индекс 0) разблокирован
+            };
+        }
+        
         function getUserData(username) {
             const data = localStorage.getItem(`hsk_user_${username}`);
-            if (data) return JSON.parse(data);
+            if (data) {
+                const parsed = JSON.parse(data);
+                // Проверяем, есть ли у пользователя unlockedLessons для HSK 4
+                if (!parsed.unlockedLessons || !parsed.unlockedLessons[4]) {
+                    parsed.unlockedLessons = parsed.unlockedLessons || {};
+                    parsed.unlockedLessons[4] = [0];
+                }
+                return parsed;
+            }
             return {
                 learnedWords: [],
-                unlockedLessons: { 1: [0], 2: [0], 3: [0], 4: [0] },
+                unlockedLessons: getDefaultUnlockedLessons(),
                 bamboo: 0
             };
         }
@@ -1499,7 +1516,11 @@
             const newUser = { username, email, password, bamboo: 0 };
             users.push(newUser);
             saveUsers(users);
-            saveUserData(username, { learnedWords: [], unlockedLessons: { 1: [0], 2: [0], 3: [0], 4: [0] }, bamboo: 0 });
+            saveUserData(username, { 
+                learnedWords: [], 
+                unlockedLessons: getDefaultUnlockedLessons(), 
+                bamboo: 0 
+            });
             
             showLogin();
             document.getElementById('loginError').innerHTML = '<span style="color:#4caf50">✅ Регистрация успешна! Войдите</span>';
@@ -1646,7 +1667,13 @@
         function loadUserAppData() {
             const data = getUserData(currentUser);
             learnedWords = data.learnedWords || [];
-            unlockedLessons = data.unlockedLessons || { 1: [0], 2: [0], 3: [0], 4: [0] };
+            unlockedLessons = data.unlockedLessons || getDefaultUnlockedLessons();
+            
+            // Убеждаемся, что для HSK 4 есть разблокированный первый урок
+            if (!unlockedLessons[4] || unlockedLessons[4].length === 0) {
+                unlockedLessons[4] = [0];
+                saveUserAppData();
+            }
         }
         
         function saveUserAppData() {
@@ -1746,10 +1773,12 @@
             if (!unlockedLessons[level].includes(lesson)) {
                 unlockedLessons[level].push(lesson);
                 saveUserAppData();
+                renderLessonNav();
             }
         }
         
         function getLessonLearnedCount(level, lesson) {
+            if (!hskData[level] || !hskData[level][lesson]) return 0;
             return hskData[level][lesson].words.filter((_, i) => isWordLearned(level, lesson, i)).length;
         }
         
@@ -1766,7 +1795,8 @@
         function renderLessonNav() {
             const nav = document.getElementById('lessonNav');
             nav.innerHTML = '';
-            for (let i = 0; i < hskData[currentLevel].length; i++) {
+            const totalLessons = hskData[currentLevel].length;
+            for (let i = 0; i < totalLessons; i++) {
                 const btn = document.createElement('button');
                 btn.className = 'lesson-btn';
                 if (i === currentLesson) btn.classList.add('active');
@@ -1787,6 +1817,7 @@
         
         function renderCurrentLesson() {
             const lesson = hskData[currentLevel][currentLesson];
+            if (!lesson) return;
             let html = `<div class="words-grid">`;
             lesson.words.forEach((w, idx) => {
                 const learned = isWordLearned(currentLevel, currentLesson, idx);
@@ -1833,6 +1864,7 @@
         
         function startNewGame() {
             const lesson = hskData[currentLevel][currentLesson];
+            if (!lesson) return;
             const words = lesson.words.filter(w => w.chinese);
             if (words.length < 4) return;
             gameQuestions = [];
@@ -1908,6 +1940,7 @@
         function startSentenceGame() {
             if (sentenceTimeout) clearTimeout(sentenceTimeout);
             const lesson = hskData[currentLevel][currentLesson];
+            if (!lesson) return;
             const words = lesson.words.filter(w => w.example && w.example.ch);
             if (words.length === 0) {
                 document.getElementById('gameContent').innerHTML = '<div class="game-result"><h2>😢 Нет предложений в этом уроке</h2><button class="next-game-btn" onclick="renderGames()">Назад</button></div>';
@@ -2006,6 +2039,7 @@
         
         function startMatchGame() {
             const lesson = hskData[currentLevel][currentLesson];
+            if (!lesson) return;
             const words = lesson.words;
             const count = currentLevel === 3 ? 5 : 4;
             const shuffled = [...words];
@@ -2228,6 +2262,7 @@
         
         function startTest() {
             const lesson = hskData[currentLevel][currentLesson];
+            if (!lesson) return;
             const allWords = [...lesson.words];
             for (let i = allWords.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -2243,12 +2278,17 @@
         function renderTestQuestion() {
             if (currentTestIndex >= currentTestQuestions.length) {
                 const passed = testScore >= 9;
-                if (passed && currentLesson + 1 < hskData[currentLevel].length) unlockLesson(currentLevel, currentLesson + 1);
+                if (passed && currentLesson + 1 < hskData[currentLevel].length) {
+                    unlockLesson(currentLevel, currentLesson + 1);
+                }
                 const earnedPoints = testScore;
                 if (earnedPoints > 0) addBamboo(currentUser, earnedPoints);
                 if (passed) showFireworks(); else showPanda();
                 document.getElementById('testContent').innerHTML = `<div class="test-result">🎉 Результат: ${testScore}/10<br>🎋 +${earnedPoints} бамбука!<br>${testScore >= 9 ? '✅ Следующий урок открыт!' : '❌ Нужно 9/10'}</div><button class="close-modal" onclick="closeTest()">Закрыть</button>${testScore < 9 ? `<button class="close-modal" style="background:#ff6b9d; margin-top:10px" onclick="closeTest(); startTest();">🔄 Попробовать снова</button>` : ''}`;
-                if (passed && currentLesson + 1 < hskData[currentLevel].length) { renderLessonNav(); if (currentTab === "study") renderCurrentLesson(); }
+                if (passed && currentLesson + 1 < hskData[currentLevel].length) { 
+                    renderLessonNav(); 
+                    if (currentTab === "study") renderCurrentLesson(); 
+                }
                 updateRankTable();
                 return;
             }
@@ -2326,6 +2366,12 @@
         const savedUser = localStorage.getItem('hsk_current_user');
         if (savedUser) {
             currentUser = savedUser;
+            // Принудительно обновляем данные пользователя при загрузке
+            const userData = getUserData(currentUser);
+            if (!userData.unlockedLessons[4] || userData.unlockedLessons[4].length === 0) {
+                userData.unlockedLessons[4] = [0];
+                saveUserData(currentUser, userData);
+            }
             showMainPage();
         } else {
             showLogin();
