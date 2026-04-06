@@ -247,10 +247,9 @@
 
     <script>
         // ============================================
-        // ВСТАВЬТЕ СЮДА ВАШИ МАССИВЫ СЛОВ ДЛЯ КАЖДОГО УРОВНЯ
+        // ВСТАВЬТЕ ВАШИ МАССИВЫ СЛОВ СЮДА
         // ============================================
         
-        // ---------- HSK 1 (150 слов) ----------
         // ============================================
         // HSK 1 — ПОЛНЫЙ СПИСОК (150 слов)
         // ============================================
@@ -1444,35 +1443,44 @@
             hsk3Lessons.push({ name: `Урок ${i+1}`, words: hsk3WordsData.slice(i*20, (i+1)*20) });
         }
         const hsk4Lessons = [];
-        const wordsPerLessonHSK4 = 20;
         for (let i = 0; i < 30; i++) {
-            hsk4Lessons.push({ 
-                name: `Урок ${i+1}`, 
-                words: hsk4WordsData.slice(i * wordsPerLessonHSK4, (i + 1) * wordsPerLessonHSK4) 
-            });
+            hsk4Lessons.push({ name: `Урок ${i+1}`, words: hsk4WordsData.slice(i*20, (i+1)*20) });
         }
         const hskData = { 1: hsk1Lessons, 2: hsk2Lessons, 3: hsk3Lessons, 4: hsk4Lessons };
 
         // ============================================
-        // ПОЛЬЗОВАТЕЛИ И СТАТИСТИКА
+        // ПОЛЬЗОВАТЕЛИ
         // ============================================
         let currentUser = null;
         
-        function saveUsers(users) { localStorage.setItem('hsk_users', JSON.stringify(users)); }
-        function getUsers() { return JSON.parse(localStorage.getItem('hsk_users')) || []; }
+        function getUsers() {
+            const users = localStorage.getItem('hsk_users');
+            return users ? JSON.parse(users) : [];
+        }
+        
+        function saveUsers(users) {
+            localStorage.setItem('hsk_users', JSON.stringify(users));
+        }
+        
         function getUserData(username) {
-            return JSON.parse(localStorage.getItem(`hsk_user_${username}`)) || {
-                learnedWords: [], 
-                unlockedLessons: { 1: [0], 2: [0], 3: [0], 4: [0] }, 
+            const data = localStorage.getItem(`hsk_user_${username}`);
+            if (data) return JSON.parse(data);
+            return {
+                learnedWords: [],
+                unlockedLessons: { 1: [0], 2: [0], 3: [0], 4: [0] },
                 bamboo: 0
             };
         }
-        function saveUserData(username, data) { localStorage.setItem(`hsk_user_${username}`, JSON.stringify(data)); }
+        
+        function saveUserData(username, data) {
+            localStorage.setItem(`hsk_user_${username}`, JSON.stringify(data));
+        }
         
         function register() {
             const username = document.getElementById('regUsername').value.trim();
             const email = document.getElementById('regEmail').value.trim();
             const password = document.getElementById('regPassword').value;
+            
             if (!username || !email || !password) {
                 document.getElementById('registerError').innerText = 'Заполните все поля';
                 return;
@@ -1481,18 +1489,21 @@
                 document.getElementById('registerError').innerText = 'Пароль минимум 4 символа';
                 return;
             }
+            
             const users = getUsers();
             if (users.find(u => u.username === username)) {
                 document.getElementById('registerError').innerText = 'Пользователь уже существует';
                 return;
             }
-            users.push({ username, email, password, bamboo: 0 });
+            
+            const newUser = { username, email, password, bamboo: 0 };
+            users.push(newUser);
             saveUsers(users);
             saveUserData(username, { learnedWords: [], unlockedLessons: { 1: [0], 2: [0], 3: [0], 4: [0] }, bamboo: 0 });
+            
             showLogin();
-            document.getElementById('loginError').innerHTML = '<span style="color:#4caf50">✅ Регистрация успешна!</span>';
-            updateRankTable();
-            updateVisitorCounter();
+            document.getElementById('loginError').innerHTML = '<span style="color:#4caf50">✅ Регистрация успешна! Войдите</span>';
+            updateAllStats();
         }
         
         function login() {
@@ -1500,14 +1511,15 @@
             const password = document.getElementById('loginPassword').value;
             const users = getUsers();
             const user = users.find(u => u.username === username && u.password === password);
+            
             if (!user) {
                 document.getElementById('loginError').innerText = 'Неверное имя или пароль';
                 return;
             }
+            
             currentUser = username;
             localStorage.setItem('hsk_current_user', username);
-            updateRankTable();
-            updateVisitorCounter();
+            updateAllStats();
             showMainPage();
         }
         
@@ -1539,22 +1551,23 @@
             document.getElementById('mainPage').classList.remove('hide');
             document.getElementById('appContainer').classList.add('hide');
             document.getElementById('userWelcome').innerHTML = `👋 Добро пожаловать, ${currentUser}!`;
-            updateRankTable();
-            updateVisitorCounter();
+            updateAllStats();
         }
         
         function updateVisitorCounter() {
-            let today = new Date().toDateString();
+            const today = new Date().toDateString();
             let visitorData = localStorage.getItem('hsk_visitor_data');
+            
             if (!visitorData || JSON.parse(visitorData).date !== today) {
                 localStorage.setItem('hsk_visitor_data', JSON.stringify({ date: today, count: 1 }));
                 document.getElementById('visitorCount').innerText = '1';
             } else {
-                let data = JSON.parse(visitorData);
-                if (!sessionStorage.getItem('hsk_counted_' + today)) {
+                const data = JSON.parse(visitorData);
+                const sessionKey = 'hsk_counted_' + today;
+                if (!sessionStorage.getItem(sessionKey)) {
                     data.count++;
                     localStorage.setItem('hsk_visitor_data', JSON.stringify(data));
-                    sessionStorage.setItem('hsk_counted_' + today, 'true');
+                    sessionStorage.setItem(sessionKey, 'true');
                 }
                 document.getElementById('visitorCount').innerText = data.count;
             }
@@ -1562,24 +1575,27 @@
         
         function updateRankTable() {
             const users = getUsers();
-            const usersWithPoints = users.map(u => ({ username: u.username, bamboo: u.bamboo || 0 }));
-            usersWithPoints.sort((a, b) => b.bamboo - a.bamboo);
-            const top100 = usersWithPoints.slice(0, 100);
+            const sortedUsers = [...users].sort((a, b) => (b.bamboo || 0) - (a.bamboo || 0));
+            const topUsers = sortedUsers.slice(0, 100);
             const tbody = document.getElementById('rankTableBody');
             tbody.innerHTML = '';
-            top100.forEach((user, idx) => {
+            
+            topUsers.forEach((user, index) => {
                 const row = tbody.insertRow();
-                if (user.username === currentUser) row.className = 'current-user';
-                row.insertCell(0).innerText = idx + 1;
+                if (user.username === currentUser) row.classList.add('current-user');
+                row.insertCell(0).innerText = index + 1;
                 row.insertCell(1).innerText = user.username;
-                row.insertCell(2).innerHTML = `<span class="bamboo-badge">🎋 ${user.bamboo}</span>`;
+                row.insertCell(2).innerHTML = `<span class="bamboo-badge">🎋 ${user.bamboo || 0}</span>`;
             });
+            
             document.getElementById('registeredUsersCount').innerText = users.length;
+            
             if (currentUser) {
-                const userData = users.find(u => u.username === currentUser);
-                const myBamboo = userData ? (userData.bamboo || 0) : 0;
+                const currentUserData = users.find(u => u.username === currentUser);
+                const myBamboo = currentUserData ? (currentUserData.bamboo || 0) : 0;
                 document.getElementById('myPoints').innerText = myBamboo;
-                const myRank = usersWithPoints.findIndex(u => u.username === currentUser) + 1;
+                
+                const myRank = sortedUsers.findIndex(u => u.username === currentUser) + 1;
                 document.getElementById('myRank').innerText = myRank > 0 ? myRank : '-';
             }
         }
@@ -1590,16 +1606,20 @@
             if (userIndex !== -1) {
                 users[userIndex].bamboo = (users[userIndex].bamboo || 0) + amount;
                 saveUsers(users);
+                
                 const userData = getUserData(username);
                 userData.bamboo = users[userIndex].bamboo;
                 saveUserData(username, userData);
+                
                 updateRankTable();
-                if (currentUser === username) {
-                    document.getElementById('myPoints').innerText = users[userIndex].bamboo;
-                }
                 return users[userIndex].bamboo;
             }
             return 0;
+        }
+        
+        function updateAllStats() {
+            updateVisitorCounter();
+            updateRankTable();
         }
         
         function openRankModal() {
@@ -1619,20 +1639,9 @@
         let currentVolume = 0.7;
         let gameType = 0, gameQuestions = [], gameIndex = 0, gameScore = 0, gameAnswered = false;
         let currentTestQuestions = [], currentTestIndex = 0, testScore = 0;
-        
-        let sentenceWordsList = [];
-        let sentenceBuilding = [];
-        let sentenceCorrect = [];
-        let sentenceTimeout = null;
-        
-        let matchPairs = [];
-        let matchUserConnections = [];
-        let selectedMatchType = null;
-        let selectedMatchId = null;
-        let matchDisplayChinese = [];
-        let matchDisplayMeanings = [];
-        let matchSubmitted = false;
-        let matchResults = [];
+        let sentenceWordsList = [], sentenceBuilding = [], sentenceCorrect = [], sentenceTimeout = null;
+        let matchPairs = [], matchUserConnections = [], selectedMatchType = null, selectedMatchId = null;
+        let matchDisplayChinese = [], matchDisplayMeanings = [], matchSubmitted = false, matchResults = [];
         
         function loadUserAppData() {
             const data = getUserData(currentUser);
@@ -1646,20 +1655,23 @@
         
         document.getElementById('volumeSlider').oninput = e => currentVolume = e.target.value / 100;
         
-        function speak(text, lang) { 
+        function speak(text, lang) {
             if (!text) return;
-            let u = new SpeechSynthesisUtterance(text); 
-            u.lang = lang; 
-            u.volume = currentVolume; 
-            speechSynthesis.cancel(); 
-            speechSynthesis.speak(u); 
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang;
+            utterance.volume = currentVolume;
+            speechSynthesis.cancel();
+            speechSynthesis.speak(utterance);
         }
         
         function showFireworks() {
-            let container = document.createElement('div'); container.className = 'firework';
+            const container = document.createElement('div');
+            container.className = 'firework';
             for (let i = 0; i < 40; i++) {
-                let span = document.createElement('span');
-                span.style.position = 'absolute'; span.style.bottom = '0'; span.style.left = Math.random() * 100 + '%';
+                const span = document.createElement('span');
+                span.style.position = 'absolute';
+                span.style.bottom = '0';
+                span.style.left = Math.random() * 100 + '%';
                 span.style.fontSize = (20 + Math.random() * 30) + 'px';
                 span.style.animation = 'fly 1s ease-out forwards';
                 span.innerHTML = ['🎉', '✨', '🎊', '🌟', '💥', '🎆'][Math.floor(Math.random() * 6)];
@@ -1670,10 +1682,13 @@
         }
         
         function showPanda() {
-            let div = document.createElement('div');
+            const div = document.createElement('div');
             div.innerHTML = '🐼 Грустная панда... Попробуй ещё раз! 🐼';
-            div.style.position = 'fixed'; div.style.bottom = '30%'; div.style.left = '50%';
-            div.style.transform = 'translateX(-50%)'; div.style.background = 'rgba(0,0,0,0.8)';
+            div.style.position = 'fixed';
+            div.style.bottom = '30%';
+            div.style.left = '50%';
+            div.style.transform = 'translateX(-50%)';
+            div.style.background = 'rgba(0,0,0,0.8)';
             div.style.backdropFilter = 'blur(10px)';
             div.style.color = 'white';
             div.style.padding = '20px';
@@ -1685,9 +1700,9 @@
         }
         
         function showTempMessage(text, color) {
-            let existingMsg = document.querySelector('.temp-message');
+            const existingMsg = document.querySelector('.temp-message');
             if (existingMsg) existingMsg.remove();
-            let msg = document.createElement('div');
+            const msg = document.createElement('div');
             msg.className = 'temp-message';
             msg.innerHTML = text;
             msg.style.position = 'fixed';
@@ -1706,18 +1721,25 @@
             setTimeout(() => msg.remove(), 1500);
         }
         
-        function isWordLearned(level, lesson, idx) { return learnedWords.includes(`${level}_${lesson}_${idx}`); }
+        function isWordLearned(level, lesson, idx) {
+            return learnedWords.includes(`${level}_${lesson}_${idx}`);
+        }
         
         function toggleWord(level, lesson, idx) {
-            let key = `${level}_${lesson}_${idx}`;
-            if (learnedWords.includes(key)) learnedWords = learnedWords.filter(k => k !== key);
-            else learnedWords.push(key);
+            const key = `${level}_${lesson}_${idx}`;
+            if (learnedWords.includes(key)) {
+                learnedWords = learnedWords.filter(k => k !== key);
+            } else {
+                learnedWords.push(key);
+            }
             saveUserAppData();
             if (currentTab === "study") renderCurrentLesson();
             updateStats();
         }
         
-        function isLessonUnlocked(level, lesson) { return unlockedLessons[level]?.includes(lesson); }
+        function isLessonUnlocked(level, lesson) {
+            return unlockedLessons[level]?.includes(lesson);
+        }
         
         function unlockLesson(level, lesson) {
             if (!unlockedLessons[level]) unlockedLessons[level] = [];
@@ -1732,20 +1754,20 @@
         }
         
         function updateStats() {
-            let totalLearned = learnedWords.length;
-            let currentCount = getLessonLearnedCount(currentLevel, currentLesson);
-            let totalWords = hskData[currentLevel].reduce((sum, l) => sum + l.words.length, 0);
-            let percent = totalWords ? Math.round(totalLearned / totalWords * 100) : 0;
+            const totalLearned = learnedWords.length;
+            const currentCount = getLessonLearnedCount(currentLevel, currentLesson);
+            const totalWords = hskData[currentLevel].reduce((sum, l) => sum + l.words.length, 0);
+            const percent = totalWords ? Math.round(totalLearned / totalWords * 100) : 0;
             document.getElementById('totalLearned').innerText = totalLearned;
             document.getElementById('currentLessonLearned').innerText = currentCount;
             document.getElementById('progressPercent').innerText = percent + '%';
         }
         
         function renderLessonNav() {
-            let nav = document.getElementById('lessonNav');
+            const nav = document.getElementById('lessonNav');
             nav.innerHTML = '';
             for (let i = 0; i < hskData[currentLevel].length; i++) {
-                let btn = document.createElement('button');
+                const btn = document.createElement('button');
                 btn.className = 'lesson-btn';
                 if (i === currentLesson) btn.classList.add('active');
                 if (getLessonLearnedCount(currentLevel, i) === hskData[currentLevel][i].words.length) btn.classList.add('learned');
@@ -1764,10 +1786,10 @@
         }
         
         function renderCurrentLesson() {
-            let lesson = hskData[currentLevel][currentLesson];
+            const lesson = hskData[currentLevel][currentLesson];
             let html = `<div class="words-grid">`;
             lesson.words.forEach((w, idx) => {
-                let learned = isWordLearned(currentLevel, currentLesson, idx);
+                const learned = isWordLearned(currentLevel, currentLesson, idx);
                 html += `<div class="word-card">
                             <div class="word-header">
                                 <div class="chinese" onclick="speak('${w.chinese}','zh-CN')">${w.chinese}</div>
@@ -1782,7 +1804,7 @@
                             <button class="check-btn ${learned ? 'checked' : ''}" onclick="toggleWord(${currentLevel},${currentLesson},${idx})">${learned ? '✓' : '○'}</button>
                         </div>`;
             });
-            let percent = getLessonLearnedCount(currentLevel, currentLesson) / lesson.words.length * 100;
+            const percent = getLessonLearnedCount(currentLevel, currentLesson) / lesson.words.length * 100;
             html += `</div><div class="lesson-progress"><div class="progress-bar"><div class="progress-fill" style="width:${percent}%"></div></div>
                      <button class="test-btn" onclick="startTest()">📝 Пройти тест (+1 бамбук за ответ)</button></div>`;
             document.getElementById('content').innerHTML = html;
@@ -1790,7 +1812,7 @@
         }
         
         function renderGames() {
-            let gameNames = ["🎯 Найди перевод", "🔊 Угадай по звуку", "✏️ Найди иероглиф", "🧩 Составь предложение", "🔗 Соедини линией"];
+            const gameNames = ["🎯 Найди перевод", "🔊 Угадай по звуку", "✏️ Найди иероглиф", "🧩 Составь предложение", "🔗 Соедини линией"];
             let html = `<div class="game-container"><div class="game-selector">`;
             for (let i = 0; i < 5; i++) {
                 html += `<button class="game-type-btn ${gameType === i ? 'active' : ''}" onclick="setGameType(${i})">${gameNames[i]}</button>`;
@@ -1802,26 +1824,23 @@
             else startNewGame();
         }
         
-        function setGameType(type) { 
-            gameType = type; 
+        function setGameType(type) {
+            gameType = type;
             if (type === 3) startSentenceGame();
             else if (type === 4) startMatchGame();
             else renderGames();
         }
         
-        // ============================================
-        // ИГРЫ 0-2
-        // ============================================
         function startNewGame() {
-            let lesson = hskData[currentLevel][currentLesson];
-            let words = lesson.words.filter(w => w.chinese);
+            const lesson = hskData[currentLevel][currentLesson];
+            const words = lesson.words.filter(w => w.chinese);
             if (words.length < 4) return;
             gameQuestions = [];
             for (let i = 0; i < 10; i++) {
-                let correct = words[Math.floor(Math.random() * words.length)];
+                const correct = words[Math.floor(Math.random() * words.length)];
                 let options = [correct];
                 while (options.length < 4) {
-                    let opt = words[Math.floor(Math.random() * words.length)];
+                    const opt = words[Math.floor(Math.random() * words.length)];
                     if (!options.includes(opt)) options.push(opt);
                 }
                 options.sort(() => Math.random() - 0.5);
@@ -1847,16 +1866,15 @@
         
         function renderGameQuestion() {
             if (gameIndex >= gameQuestions.length) {
-                let percent = Math.round(gameScore / gameQuestions.length * 100);
-                let modal = document.getElementById('gameContent');
-                let earnedBamboo = gameScore;
+                const percent = Math.round(gameScore / gameQuestions.length * 100);
+                const earnedBamboo = gameScore;
                 addBamboo(currentUser, earnedBamboo);
                 if (percent >= 70) showFireworks();
                 else showPanda();
-                modal.innerHTML = `<div class="game-result"><h2>${percent >= 70 ? '🎉 Поздравляю!' : '📚 Продолжай учиться!'}</h2><p>${gameScore} / ${gameQuestions.length}</p><p>🎋 +${earnedBamboo} бамбука!</p><button class="next-game-btn" onclick="startNewGame()">🔄 Играть снова</button><button class="next-game-btn" style="background:#c084fc" onclick="renderGames()">🎮 Другие игры</button></div>`;
+                document.getElementById('gameContent').innerHTML = `<div class="game-result"><h2>${percent >= 70 ? '🎉 Поздравляю!' : '📚 Продолжай учиться!'}</h2><p>${gameScore} / ${gameQuestions.length}</p><p>🎋 +${earnedBamboo} бамбука!</p><button class="next-game-btn" onclick="startNewGame()">🔄 Играть снова</button><button class="next-game-btn" style="background:#c084fc" onclick="renderGames()">🎮 Другие игры</button></div>`;
                 return;
             }
-            let q = gameQuestions[gameIndex];
+            const q = gameQuestions[gameIndex];
             let html = `<div class="game-score">${gameScore} / ${gameIndex} | Вопрос ${gameIndex+1}/${gameQuestions.length}</div>`;
             if (q.question.audio) {
                 html += `<div class="game-question" onclick="speak('${q.question.audio}','zh-CN')">${q.question.text}</div>`;
@@ -1876,8 +1894,8 @@
         function checkGameAnswer(selected, element) {
             if (gameAnswered) return;
             gameAnswered = true;
-            let correct = gameQuestions[gameIndex].answer;
-            let allOpts = document.querySelectorAll('.game-option');
+            const correct = gameQuestions[gameIndex].answer;
+            const allOpts = document.querySelectorAll('.game-option');
             allOpts.forEach(opt => {
                 opt.style.pointerEvents = 'none';
                 if (opt.innerText === correct) opt.classList.add('correct');
@@ -1887,21 +1905,17 @@
             setTimeout(() => { gameIndex++; renderGameQuestion(); }, 800);
         }
         
-        // ============================================
-        // ИГРА 3: СОСТАВЬ ПРЕДЛОЖЕНИЕ
-        // ============================================
         function startSentenceGame() {
             if (sentenceTimeout) clearTimeout(sentenceTimeout);
-            let lesson = hskData[currentLevel][currentLesson];
-            let words = lesson.words.filter(w => w.example && w.example.ch);
+            const lesson = hskData[currentLevel][currentLesson];
+            const words = lesson.words.filter(w => w.example && w.example.ch);
             if (words.length === 0) {
                 document.getElementById('gameContent').innerHTML = '<div class="game-result"><h2>😢 Нет предложений в этом уроке</h2><button class="next-game-btn" onclick="renderGames()">Назад</button></div>';
                 return;
             }
-            let randomWord = words[Math.floor(Math.random() * words.length)];
-            let sentence = randomWord.example.ch;
-            
-            let chars = sentence.split('');
+            const randomWord = words[Math.floor(Math.random() * words.length)];
+            const sentence = randomWord.example.ch;
+            const chars = sentence.split('');
             let parts = [];
             let i = 0;
             while (i < chars.length) {
@@ -1910,22 +1924,19 @@
                 parts.push(chars.slice(i, i + partLength).join(''));
                 i += partLength;
             }
-            
             for (let k = parts.length - 1; k > 0; k--) {
                 const j = Math.floor(Math.random() * (k + 1));
                 [parts[k], parts[j]] = [parts[j], parts[k]];
             }
-            
             sentenceWordsList = parts;
             sentenceBuilding = [];
             sentenceCorrect = [];
             let j = 0;
             while (j < chars.length) {
-                let len = Math.min([1, 2, 3, 4][Math.floor(Math.random() * 4)], chars.length - j);
+                const len = Math.min([1, 2, 3, 4][Math.floor(Math.random() * 4)], chars.length - j);
                 sentenceCorrect.push(chars.slice(j, j + len).join(''));
                 j += len;
             }
-            
             renderSentenceGame();
         }
         
@@ -1949,23 +1960,23 @@
         }
         
         function selectWordForSentence(idx) {
-            let word = sentenceWordsList[idx];
+            const word = sentenceWordsList[idx];
             sentenceWordsList.splice(idx, 1);
             sentenceBuilding.push(word);
             renderSentenceGame();
         }
         
         function removeWordFromBuilding(idx) {
-            let word = sentenceBuilding[idx];
+            const word = sentenceBuilding[idx];
             sentenceBuilding.splice(idx, 1);
             sentenceWordsList.push(word);
             renderSentenceGame();
         }
         
         function checkSentence() {
-            let userSentence = sentenceBuilding.join('');
-            let correctSentence = sentenceCorrect.join('');
-            let resultDiv = document.getElementById('sentenceResult');
+            const userSentence = sentenceBuilding.join('');
+            const correctSentence = sentenceCorrect.join('');
+            const resultDiv = document.getElementById('sentenceResult');
             resultDiv.style.display = 'block';
             
             if (userSentence === correctSentence) {
@@ -1975,9 +1986,7 @@
                 addBamboo(currentUser, 2);
                 showTempMessage('🎋 +2 бамбука!', '#4caf50');
                 if (sentenceTimeout) clearTimeout(sentenceTimeout);
-                sentenceTimeout = setTimeout(() => {
-                    startSentenceGame();
-                }, 2000);
+                sentenceTimeout = setTimeout(() => startSentenceGame(), 2000);
             } else {
                 resultDiv.className = 'sentence-result wrong';
                 resultDiv.innerHTML = '😢 НЕПРАВИЛЬНО! Попробуй ещё раз 😢';
@@ -1995,34 +2004,26 @@
             }
         }
         
-        // ============================================
-        // ИГРА 4: СОЕДИНИ ЛИНИЕЙ
-        // ============================================
         function startMatchGame() {
-            let lesson = hskData[currentLevel][currentLesson];
-            let words = lesson.words;
-            let count = currentLevel === 3 ? 5 : 4;
-            let shuffled = [...words];
+            const lesson = hskData[currentLevel][currentLesson];
+            const words = lesson.words;
+            const count = currentLevel === 3 ? 5 : 4;
+            const shuffled = [...words];
             for (let i = shuffled.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
             }
-            let selectedWords = shuffled.slice(0, count);
+            const selectedWords = shuffled.slice(0, count);
             
-            matchPairs = selectedWords.map((w, idx) => ({ 
-                id: idx, 
-                chinese: w.chinese, 
-                meaning: w.meaning
-            }));
-            
+            matchPairs = selectedWords.map((w, idx) => ({ id: idx, chinese: w.chinese, meaning: w.meaning }));
             matchUserConnections = [];
             selectedMatchType = null;
             selectedMatchId = null;
             matchSubmitted = false;
             matchResults = [];
-            
             matchDisplayChinese = [...matchPairs];
             matchDisplayMeanings = [...matchPairs];
+            
             for (let i = matchDisplayChinese.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [matchDisplayChinese[i], matchDisplayChinese[j]] = [matchDisplayChinese[j], matchDisplayChinese[i]];
@@ -2031,7 +2032,6 @@
                 const j = Math.floor(Math.random() * (i + 1));
                 [matchDisplayMeanings[i], matchDisplayMeanings[j]] = [matchDisplayMeanings[j], matchDisplayMeanings[i]];
             }
-            
             renderMatchGame();
         }
         
@@ -2042,49 +2042,34 @@
                 <div class="match-grid" id="matchGrid">
                     <div class="match-column"><h3>📖 Иероглифы</h3>`;
             
-            for (let item of matchDisplayChinese) {
-                let isConnected = matchUserConnections.some(c => c.chineseId === item.id);
+            for (const item of matchDisplayChinese) {
+                const isConnected = matchUserConnections.some(c => c.chineseId === item.id);
                 let connectedClass = '';
                 if (matchSubmitted) {
-                    let result = matchResults.find(r => r.chineseId === item.id);
-                    if (result) {
-                        connectedClass = result.correct ? 'correct-final' : 'wrong-final';
-                    } else if (isConnected) {
-                        connectedClass = 'connected';
-                    }
-                } else if (isConnected) {
-                    connectedClass = 'connected';
-                }
-                let isSelected = (selectedMatchType === 'chinese' && selectedMatchId === item.id);
-                html += `<div class="match-item ${connectedClass} ${isSelected ? 'selected' : ''}" 
-                         data-type="chinese" data-id="${item.id}" 
-                         onclick="selectMatchItem('chinese', ${item.id})">${item.chinese}</div>`;
+                    const result = matchResults.find(r => r.chineseId === item.id);
+                    if (result) connectedClass = result.correct ? 'correct-final' : 'wrong-final';
+                    else if (isConnected) connectedClass = 'connected';
+                } else if (isConnected) connectedClass = 'connected';
+                const isSelected = (selectedMatchType === 'chinese' && selectedMatchId === item.id);
+                html += `<div class="match-item ${connectedClass} ${isSelected ? 'selected' : ''}" data-type="chinese" data-id="${item.id}" onclick="selectMatchItem('chinese', ${item.id})">${item.chinese}</div>`;
             }
             
             html += `</div><div class="match-column"><h3>📝 Перевод</h3>`;
             
-            for (let item of matchDisplayMeanings) {
-                let isConnected = matchUserConnections.some(c => c.meaningId === item.id);
+            for (const item of matchDisplayMeanings) {
+                const isConnected = matchUserConnections.some(c => c.meaningId === item.id);
                 let connectedClass = '';
                 if (matchSubmitted) {
-                    let result = matchResults.find(r => r.meaningId === item.id);
-                    if (result) {
-                        connectedClass = result.correct ? 'correct-final' : 'wrong-final';
-                    } else if (isConnected) {
-                        connectedClass = 'connected';
-                    }
-                } else if (isConnected) {
-                    connectedClass = 'connected';
-                }
-                let isSelected = (selectedMatchType === 'meaning' && selectedMatchId === item.id);
-                html += `<div class="match-item ${connectedClass} ${isSelected ? 'selected' : ''}" 
-                         data-type="meaning" data-id="${item.id}" 
-                         onclick="selectMatchItem('meaning', ${item.id})">${item.meaning}</div>`;
+                    const result = matchResults.find(r => r.meaningId === item.id);
+                    if (result) connectedClass = result.correct ? 'correct-final' : 'wrong-final';
+                    else if (isConnected) connectedClass = 'connected';
+                } else if (isConnected) connectedClass = 'connected';
+                const isSelected = (selectedMatchType === 'meaning' && selectedMatchId === item.id);
+                html += `<div class="match-item ${connectedClass} ${isSelected ? 'selected' : ''}" data-type="meaning" data-id="${item.id}" onclick="selectMatchItem('meaning', ${item.id})">${item.meaning}</div>`;
             }
             
-            let allConnected = matchUserConnections.length === matchPairs.length;
-            html += `</div></div>
-                     <div class="match-status">✅ Соединено пар: ${matchUserConnections.length} / ${matchPairs.length}</div>`;
+            const allConnected = matchUserConnections.length === matchPairs.length;
+            html += `</div></div><div class="match-status">✅ Соединено пар: ${matchUserConnections.length} / ${matchPairs.length}</div>`;
             
             if (!matchSubmitted) {
                 if (allConnected) {
@@ -2094,7 +2079,7 @@
                 }
                 html += `<button class="match-btn" onclick="clearMatchSelection()">Сбросить выбор</button>`;
             } else {
-                let allCorrect = matchResults.every(r => r.correct);
+                const allCorrect = matchResults.every(r => r.correct);
                 if (allCorrect) {
                     html += `<div class="match-status" style="color: #4caf50;">🎉 ВСЕ ПАРЫ ПРАВИЛЬНЫЕ! +1 бамбук 🎋</div>`;
                 } else {
@@ -2112,40 +2097,38 @@
         
         function drawMatchLines() {
             setTimeout(() => {
-                let svg = document.getElementById('matchSvgLayer');
+                const svg = document.getElementById('matchSvgLayer');
                 if (!svg) return;
-                let container = document.querySelector('.match-game-container');
+                const container = document.querySelector('.match-game-container');
                 if (!container) return;
-                let containerRect = container.getBoundingClientRect();
-                let lines = [];
+                const containerRect = container.getBoundingClientRect();
+                const lines = [];
                 
-                for (let conn of matchUserConnections) {
-                    let chineseEl = document.querySelector(`.match-item[data-type="chinese"][data-id="${conn.chineseId}"]`);
-                    let meaningEl = document.querySelector(`.match-item[data-type="meaning"][data-id="${conn.meaningId}"]`);
+                for (const conn of matchUserConnections) {
+                    const chineseEl = document.querySelector(`.match-item[data-type="chinese"][data-id="${conn.chineseId}"]`);
+                    const meaningEl = document.querySelector(`.match-item[data-type="meaning"][data-id="${conn.meaningId}"]`);
                     if (chineseEl && meaningEl) {
-                        let chineseRect = chineseEl.getBoundingClientRect();
-                        let meaningRect = meaningEl.getBoundingClientRect();
-                        let startX = chineseRect.right - containerRect.left;
-                        let startY = chineseRect.top + chineseRect.height/2 - containerRect.top;
-                        let endX = meaningRect.left - containerRect.left;
-                        let endY = meaningRect.top + meaningRect.height/2 - containerRect.top;
+                        const chineseRect = chineseEl.getBoundingClientRect();
+                        const meaningRect = meaningEl.getBoundingClientRect();
+                        const startX = chineseRect.right - containerRect.left;
+                        const startY = chineseRect.top + chineseRect.height/2 - containerRect.top;
+                        const endX = meaningRect.left - containerRect.left;
+                        const endY = meaningRect.top + meaningRect.height/2 - containerRect.top;
                         let lineClass = 'match-line-blue';
                         if (matchSubmitted) {
-                            let result = matchResults.find(r => r.chineseId === conn.chineseId);
-                            if (result) {
-                                lineClass = result.correct ? 'match-line-correct' : 'match-line-wrong';
-                            }
+                            const result = matchResults.find(r => r.chineseId === conn.chineseId);
+                            if (result) lineClass = result.correct ? 'match-line-correct' : 'match-line-wrong';
                         }
                         lines.push(`<line x1="${startX}" y1="${startY}" x2="${endX}" y2="${endY}" class="${lineClass}" />`);
                     }
                 }
                 
                 if (selectedMatchType && selectedMatchId !== null && !matchSubmitted) {
-                    let selectedEl = document.querySelector(`.match-item[data-type="${selectedMatchType}"][data-id="${selectedMatchId}"]`);
+                    const selectedEl = document.querySelector(`.match-item[data-type="${selectedMatchType}"][data-id="${selectedMatchId}"]`);
                     if (selectedEl) {
-                        let rect = selectedEl.getBoundingClientRect();
-                        let centerX = rect.left + rect.width/2 - containerRect.left;
-                        let centerY = rect.top + rect.height/2 - containerRect.top;
+                        const rect = selectedEl.getBoundingClientRect();
+                        const centerX = rect.left + rect.width/2 - containerRect.left;
+                        const centerY = rect.top + rect.height/2 - containerRect.top;
                         lines.push(`<circle cx="${centerX}" cy="${centerY}" r="8" fill="#ffd700" opacity="0.5" />`);
                     }
                 }
@@ -2159,7 +2142,7 @@
                 return;
             }
             
-            let alreadyConnected = matchUserConnections.some(c => 
+            const alreadyConnected = matchUserConnections.some(c => 
                 (type === 'chinese' && c.chineseId === id) || 
                 (type === 'meaning' && c.meaningId === id)
             );
@@ -2186,17 +2169,15 @@
                         meaningId = selectedMatchId;
                     }
                     
-                    let chineseItem = matchPairs.find(p => p.id === chineseId);
-                    let meaningItem = matchPairs.find(p => p.id === meaningId);
+                    const chineseItem = matchPairs.find(p => p.id === chineseId);
+                    const meaningItem = matchPairs.find(p => p.id === meaningId);
                     
                     if (chineseItem && meaningItem) {
-                        let isCorrect = (chineseItem.chinese === meaningItem.chinese && chineseItem.meaning === meaningItem.meaning);
                         matchUserConnections.push({
                             chineseId: chineseId,
                             meaningId: meaningId,
                             chineseText: chineseItem.chinese,
-                            meaningText: meaningItem.meaning,
-                            isCorrect: isCorrect
+                            meaningText: meaningItem.meaning
                         });
                         showTempMessage('✓ Соединено!', '#2196f3');
                     }
@@ -2227,9 +2208,9 @@
             matchResults = [];
             let allCorrect = true;
             
-            for (let conn of matchUserConnections) {
-                let pair = matchPairs.find(p => p.id === conn.chineseId);
-                let isCorrect = (pair && pair.meaning === conn.meaningText);
+            for (const conn of matchUserConnections) {
+                const pair = matchPairs.find(p => p.id === conn.chineseId);
+                const isCorrect = (pair && pair.meaning === conn.meaningText);
                 matchResults.push({ chineseId: conn.chineseId, meaningId: conn.meaningId, correct: isCorrect });
                 if (!isCorrect) allCorrect = false;
             }
@@ -2237,32 +2218,31 @@
             if (allCorrect) {
                 addBamboo(currentUser, 1);
                 showFireworks();
-                showTempMessage(`🎋 Поздравляю! Все пары правильные! +1 бамбук! 🎋`, '#4caf50');
+                showTempMessage('🎋 Поздравляю! Все пары правильные! +1 бамбук! 🎋', '#4caf50');
             } else {
                 showPanda();
-                showTempMessage(`😢 Есть неправильные пары. Попробуй ещё раз!`, '#f44336');
+                showTempMessage('😢 Есть неправильные пары. Попробуй ещё раз!', '#f44336');
             }
-            
             renderMatchGame();
         }
         
-        // ТЕСТ
         function startTest() {
-            let lesson = hskData[currentLevel][currentLesson];
-            let allWords = [...lesson.words];
+            const lesson = hskData[currentLevel][currentLesson];
+            const allWords = [...lesson.words];
             for (let i = allWords.length - 1; i > 0; i--) {
-                let j = Math.floor(Math.random() * (i + 1));
+                const j = Math.floor(Math.random() * (i + 1));
                 [allWords[i], allWords[j]] = [allWords[j], allWords[i]];
             }
             currentTestQuestions = allWords.slice(0, Math.min(10, allWords.length));
-            currentTestIndex = 0; testScore = 0;
+            currentTestIndex = 0;
+            testScore = 0;
             renderTestQuestion();
             document.getElementById('testModal').classList.add('active');
         }
         
         function renderTestQuestion() {
             if (currentTestIndex >= currentTestQuestions.length) {
-                let passed = testScore >= 9;
+                const passed = testScore >= 9;
                 if (passed && currentLesson + 1 < hskData[currentLevel].length) unlockLesson(currentLevel, currentLesson + 1);
                 const earnedPoints = testScore;
                 if (earnedPoints > 0) addBamboo(currentUser, earnedPoints);
@@ -2272,11 +2252,11 @@
                 updateRankTable();
                 return;
             }
-            let q = currentTestQuestions[currentTestIndex];
-            let allMeanings = hskData[currentLevel][currentLesson].words.map(w => w.meaning);
-            let options = [q.meaning];
+            const q = currentTestQuestions[currentTestIndex];
+            const allMeanings = hskData[currentLevel][currentLesson].words.map(w => w.meaning);
+            const options = [q.meaning];
             while (options.length < 4) {
-                let r = allMeanings[Math.floor(Math.random() * allMeanings.length)];
+                const r = allMeanings[Math.floor(Math.random() * allMeanings.length)];
                 if (!options.includes(r)) options.push(r);
             }
             options.sort(() => Math.random() - 0.5);
@@ -2288,8 +2268,8 @@
         }
         
         function checkTestAnswer(selected, element) {
-            let correct = currentTestQuestions[currentTestIndex].meaning;
-            let allOpts = document.querySelectorAll('.test-option');
+            const correct = currentTestQuestions[currentTestIndex].meaning;
+            const allOpts = document.querySelectorAll('.test-option');
             allOpts.forEach(opt => {
                 opt.style.pointerEvents = 'none';
                 if (opt.innerText === correct) opt.classList.add('correct');
@@ -2299,7 +2279,9 @@
             setTimeout(() => { currentTestIndex++; renderTestQuestion(); }, 800);
         }
         
-        function closeTest() { document.getElementById('testModal').classList.remove('active'); }
+        function closeTest() {
+            document.getElementById('testModal').classList.remove('active');
+        }
         
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -2314,7 +2296,7 @@
         function startApp(level) {
             currentLevel = level;
             currentLesson = 0;
-            const levelNames = {1:"HSK 1",2:"HSK 2",3:"HSK 3",4:"HSK 4"};
+            const levelNames = {1: "HSK 1", 2: "HSK 2", 3: "HSK 3", 4: "HSK 4"};
             document.getElementById('appTitle').innerHTML = `📚 ${levelNames[level]} | Изучение`;
             loadUserAppData();
             renderLessonNav();
@@ -2340,7 +2322,7 @@
         document.getElementById('backBtn').onclick = goHome;
         
         // ИНИЦИАЛИЗАЦИЯ
-        updateVisitorCounter();
+        updateAllStats();
         const savedUser = localStorage.getItem('hsk_current_user');
         if (savedUser) {
             currentUser = savedUser;
@@ -2348,9 +2330,8 @@
         } else {
             showLogin();
         }
-        updateRankTable();
         
-        // ЭКСПОРТ ФУНКЦИЙ В ГЛОБАЛЬНУЮ ОБЛАСТЬ
+        // ЭКСПОРТ В ГЛОБАЛЬНУЮ ОБЛАСТЬ
         window.selectWordForSentence = selectWordForSentence;
         window.removeWordFromBuilding = removeWordFromBuilding;
         window.checkSentence = checkSentence;
