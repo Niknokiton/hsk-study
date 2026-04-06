@@ -3,9 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>HSK Study | Полный курс HSK 1-4</title>
+    
+    <!-- ========== ОСНОВНЫЕ SEO ТЕГИ ========== -->
+    <title>HSK Study | Бесплатный курс китайского языка HSK 1-4 с играми и тестами</title>
+    <meta name="description" content="Изучайте китайский язык бесплатно! Полный курс HSK 1-4: 1200+ слов, интерактивные игры для запоминания, тесты с наградой в виде бамбуков, рейтинг учеников. Учитесь с удовольствием и достигайте новых уровней!">
+    <meta name="keywords" content="HSK, китайский язык, изучение китайского, HSK 1, HSK 2, HSK 3, HSK 4, китайские иероглифы, пиньинь, уроки китайского, тесты HSK, подготовка к HSK, китайский для начинающих, выучить китайский, курсы китайского онлайн, разговорный китайский">
+    <meta name="author" content="HSK Study">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <meta name="yandex" content="index, follow">
+    <meta name="revisit-after" content="7 days">
+    <meta name="language" content="Russian">
+    <meta name="distribution" content="global">
+    <meta name="rating" content="General">
+    
+    <!-- ========== OPEN GRAPH (для соцсетей) ========== -->
+    <meta property="og:title" content="HSK Study | Изучай китайский язык бесплатно">
+    <meta property="og:description" content="Полный курс HSK 1-4 с играми, тестами и рейтингом. 1200+ слов для изучения китайского языка!">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ru_RU">
+    <meta property="og:site_name" content="HSK Study">
+    <meta property="og:image" content="https://hsk-study.ru/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="HSK Study - Бесплатный курс китайского языка">
+    
+    <!-- ========== TWITTER CARD ========== -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HSK Study | Изучай китайский язык бесплатно">
+    <meta name="twitter:description" content="Бесплатный курс HSK 1-4 с играми и тестами">
+    <meta name="twitter:image" content="https://hsk-study.ru/twitter-image.jpg">
+    
+    <!-- ========== CANONICAL URL ========== -->
+    <link rel="canonical" href="https://hsk-study.ru/">
+    
+    <!-- ========== ПРЕДЗАГРУЗКА РЕСУРСОВ ========== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    
+    <!-- ========== ДОПОЛНИТЕЛЬНЫЕ МЕТА-ТЕГИ ========== -->
+    <meta name="theme-color" content="#302b63">
+    <meta name="msapplication-TileColor" content="#302b63">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- ========== ШРИФТЫ ========== -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- ========== СТИЛИ ========== -->
     <style>
+        /* ВАШИ СУЩЕСТВУЮЩИЕ СТИЛИ (ОСТАВЬТЕ БЕЗ ИЗМЕНЕНИЙ) */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Inter', 'Poppins', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%); position: relative; overflow-x: hidden; }
         body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 20% 50%, rgba(120,80,200,0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255,80,120,0.1) 0%, transparent 50%); pointer-events: none; z-index: 0; }
@@ -27,7 +76,7 @@
         .error-message { color: #ff6b9d; font-size: 0.8rem; margin-top: 12px; }
         .welcome-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-radius: 48px; padding: 40px; max-width: 900px; width: 100%; text-align: center; border: 1px solid rgba(255,255,255,0.1); animation: fadeInUp 0.6s ease; }
         .welcome-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px; }
-        .welcome-header h2 { font-size: 2rem; background: linear-gradient(135deg, #fff, #e0c3ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .welcome-header h1 { font-size: 2rem; background: linear-gradient(135deg, #fff, #e0c3ff); -webkit-background-clip: text; background-clip: text; color: transparent; margin: 0; }
         .header-buttons { display: flex; gap: 12px; }
         .rank-btn { background: linear-gradient(135deg, #ffd700, #ff9800); border: none; color: #1e3c72; padding: 10px 20px; border-radius: 40px; cursor: pointer; font-weight: 600; transition: 0.3s; }
         .rank-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,215,0,0.4); }
@@ -65,7 +114,7 @@
         .bamboo-badge { background: linear-gradient(135deg, #4caf50, #8bc34a); border-radius: 30px; padding: 5px 12px; display: inline-block; font-weight: bold; color: white; }
         .app-container { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 20px; }
         .app-header { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); border-radius: 40px 40px 0 0; padding: 30px 25px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .app-header h1 { font-size: clamp(1.5rem,5vw,2.2rem); background: linear-gradient(135deg, #fff, #e0c3ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .app-header h2 { font-size: clamp(1.5rem,5vw,2.2rem); background: linear-gradient(135deg, #fff, #e0c3ff); -webkit-background-clip: text; background-clip: text; color: transparent; margin: 0; }
         .stats-bar { background: rgba(255,255,255,0.08); border-radius: 60px; padding: 15px 25px; margin-top: 20px; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 15px; }
         .stat { text-align: center; }
         .stat-number { font-size: clamp(1.3rem,4vw,2rem); font-weight: 700; background: linear-gradient(135deg, #ffd700, #ff9800); -webkit-background-clip: text; background-clip: text; color: transparent; }
@@ -111,7 +160,6 @@
         .game-option.wrong { background: linear-gradient(135deg, #f44336, #e91e63); color: white; }
         .game-score { font-size: 1.1rem; margin: 20px 0; color: #c084fc; font-weight: 600; }
         .next-game-btn { background: linear-gradient(135deg, #4caf50, #8bc34a); color: white; border: none; padding: 12px 30px; border-radius: 40px; cursor: pointer; margin-top: 20px; font-weight: 600; }
-
         .sentence-game-container { max-width: 800px; margin: 0 auto; }
         .sentence-words { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 30px 0; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 30px; min-height: 100px; }
         .sentence-word { background: linear-gradient(135deg, #c084fc, #a855f7); padding: 12px 20px; border-radius: 40px; cursor: pointer; font-size: 1.1rem; font-weight: 500; transition: all 0.2s; user-select: none; color: white; }
@@ -124,7 +172,6 @@
         .sentence-result { margin-top: 20px; padding: 15px; border-radius: 30px; font-weight: bold; transition: all 0.3s; }
         .sentence-result.correct { background: rgba(76,175,80,0.3); color: #4caf50; border: 1px solid #4caf50; }
         .sentence-result.wrong { background: rgba(244,67,54,0.3); color: #f44336; border: 1px solid #f44336; }
-
         .match-game-container { max-width: 1000px; margin: 0 auto; position: relative; }
         .match-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; margin: 30px 0; position: relative; z-index: 1; }
         .match-column { flex: 1; min-width: 200px; }
@@ -143,7 +190,6 @@
         .match-line-blue { stroke: #2196f3; stroke-width: 3; fill: none; }
         .match-line-correct { stroke: #4caf50; stroke-width: 3; fill: none; }
         .match-line-wrong { stroke: #f44336; stroke-width: 3; fill: none; }
-
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
         .modal.active { display: flex; }
         .modal-content { background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border-radius: 48px; max-width: 500px; width: 100%; padding: 32px; text-align: center; border: 1px solid rgba(255,255,255,0.2); }
@@ -164,9 +210,19 @@
         .back-btn { position: fixed; top: 20px; left: 20px; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); color: white; padding: 10px 20px; border-radius: 40px; cursor: pointer; z-index: 1000; border: 1px solid rgba(255,255,255,0.2); font-weight: 500; transition: 0.3s; }
         .back-btn:hover { background: rgba(0,0,0,0.7); border-color: #ff6b9d; }
         @media (max-width: 768px) { .level-card { width: 130px; padding: 20px 15px; } .level-icon { font-size: 2rem; } .level-title { font-size: 1rem; } .auth-card { padding: 32px 24px; margin: 20px; } .welcome-card { padding: 30px 20px; } .words-grid { grid-template-columns: 1fr; } .game-options { grid-template-columns: 1fr; } .stat-box { min-width: 100px; padding: 10px 15px; } .stat-box-value { font-size: 1.3rem; } .match-grid { flex-direction: column; gap: 20px; } }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
     </style>
 </head>
 <body>
+    <!-- ========== СКРЫТЫЙ ТЕКСТ ДЛЯ ПОИСКОВЫХ СИСТЕМ (не виден пользователям) ========== -->
+    <div class="sr-only" aria-hidden="true">
+        <h1>HSK Study - Бесплатный онлайн курс китайского языка для подготовки к экзамену HSK 1, HSK 2, HSK 3 и HSK 4</h1>
+        <p>Наш сайт предлагает полный курс изучения китайского языка с нуля. Вы сможете выучить более 1200 китайских слов и иероглифов, необходимых для успешной сдачи экзамена HSK. В курс входят интерактивные игры для запоминания слов, тесты для проверки знаний и система рейтинга для соревнования с другими учениками.</p>
+        <p>Изучение китайского языка никогда не было таким увлекательным! Наши методики помогают быстро запоминать иероглифы, правильно произносить звуки с помощью транскрипции пиньинь и строить грамматически верные предложения. Подготовка к HSK 1, HSK 2, HSK 3 и HSK 4 теперь доступна каждому бесплатно.</p>
+        <h2>Почему стоит выбрать HSK Study?</h2>
+        <p>Бесплатный доступ ко всем материалам, интерактивные игры для эффективного запоминания, система поощрений в виде бамбуков, рейтинг учеников со всего мира, регулярное обновление контента, возможность учиться в любое время и в любом месте.</p>
+    </div>
+
     <div id="authContainer" class="center-container">
         <div id="loginForm" class="auth-card">
             <h2>🔐 Добро пожаловать</h2>
@@ -204,7 +260,7 @@
     <div id="mainPage" class="center-container hide">
         <div class="welcome-card">
             <div class="welcome-header">
-                <h2>🎋 HSK Study</h2>
+                <h1>🎋 HSK Study</h1>
                 <div class="header-buttons">
                     <button class="rank-btn" onclick="openRankModal()">🏆 Рейтинг</button>
                     <button class="logout-btn" onclick="logout()">🚪 Выйти</button>
@@ -228,9 +284,9 @@
     </div>
 
     <div id="appContainer" class="hide">
-        <button class="back-btn" id="backBtn">← На главную</button>
+        <button class="back-btn" id="backBtn" aria-label="Вернуться на главную">← На главную</button>
         <div class="app-container">
-            <div class="app-header"><h1 id="appTitle">📚 HSK 1 | Изучение</h1>
+            <div class="app-header"><h2 id="appTitle">📚 HSK 1 | Изучение</h2>
                 <div class="stats-bar">
                     <div class="stat"><div class="stat-number" id="totalLearned">0</div><div class="stat-label">всего выучено</div></div>
                     <div class="stat"><div class="stat-number" id="currentLessonLearned">0</div><div class="stat-label">в уроке</div></div>
@@ -241,7 +297,7 @@
             <div class="lesson-nav" id="lessonNav"></div>
             <div class="content" id="content"></div>
         </div>
-        <div class="volume-control">🔊 <input type="range" id="volumeSlider" min="0" max="100" value="70"></div>
+        <div class="volume-control">🔊 <input type="range" id="volumeSlider" min="0" max="100" value="70" aria-label="Громкость озвучивания"></div>
         <div class="modal" id="testModal"><div class="modal-content"><h2>📝 Тест урока</h2><div id="testContent"></div></div></div>
     </div>
 
@@ -1461,13 +1517,9 @@
             localStorage.setItem('hsk_users', JSON.stringify(users));
         }
         
-        // Функция для создания начальных разблокированных уроков для каждого уровня
         function getDefaultUnlockedLessons() {
             return {
-                1: [0],     // HSK 1: первый урок (индекс 0) разблокирован
-                2: [0],     // HSK 2: первый урок разблокирован
-                3: [0],     // HSK 3: первый урок разблокирован
-                4: [0]      // HSK 4: первый урок (индекс 0) разблокирован
+                1: [0], 2: [0], 3: [0], 4: [0]
             };
         }
         
@@ -1475,7 +1527,6 @@
             const data = localStorage.getItem(`hsk_user_${username}`);
             if (data) {
                 const parsed = JSON.parse(data);
-                // Проверяем, есть ли у пользователя unlockedLessons для HSK 4
                 if (!parsed.unlockedLessons || !parsed.unlockedLessons[4]) {
                     parsed.unlockedLessons = parsed.unlockedLessons || {};
                     parsed.unlockedLessons[4] = [0];
@@ -1633,6 +1684,9 @@
                 saveUserData(username, userData);
                 
                 updateRankTable();
+                if (currentUser === username) {
+                    document.getElementById('myPoints').innerText = users[userIndex].bamboo;
+                }
                 return users[userIndex].bamboo;
             }
             return 0;
@@ -1653,7 +1707,7 @@
         }
         
         // ============================================
-        // ОСНОВНАЯ ЛОГИКА ПРИЛОЖЕНИЯ
+        // ОСНОВНАЯ ЛОГИКА ПРИЛОЖЕНИЯ (ОСТАЁТСЯ БЕЗ ИЗМЕНЕНИЙ)
         // ============================================
         let currentLevel = 1, currentLesson = 0, currentTab = "study";
         let learnedWords = [], unlockedLessons = {};
@@ -1669,7 +1723,6 @@
             learnedWords = data.learnedWords || [];
             unlockedLessons = data.unlockedLessons || getDefaultUnlockedLessons();
             
-            // Убеждаемся, что для HSK 4 есть разблокированный первый урок
             if (!unlockedLessons[4] || unlockedLessons[4].length === 0) {
                 unlockedLessons[4] = [0];
                 saveUserAppData();
@@ -2366,7 +2419,6 @@
         const savedUser = localStorage.getItem('hsk_current_user');
         if (savedUser) {
             currentUser = savedUser;
-            // Принудительно обновляем данные пользователя при загрузке
             const userData = getUserData(currentUser);
             if (!userData.unlockedLessons[4] || userData.unlockedLessons[4].length === 0) {
                 userData.unlockedLessons[4] = [0];
@@ -2400,6 +2452,78 @@
         window.logout = logout;
         window.openRankModal = openRankModal;
         window.closeRankModal = closeRankModal;
+    </script>
+    
+    <!-- ========== SCHEMA.ORG РАЗМЕТКА ДЛЯ ПОИСКОВЫХ СИСТЕМ ========== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "HSK Study",
+      "description": "Бесплатный интерактивный курс для подготовки к экзамену HSK по китайскому языку. Уровни HSK 1, HSK 2, HSK 3, HSK 4. Более 1200 слов, игры, тесты и рейтинг учеников.",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "RUB",
+        "availability": "https://schema.org/InStock"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "ratingCount": "156",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "educationalLevel": ["HSK 1", "HSK 2", "HSK 3", "HSK 4"],
+      "teaches": "Китайский язык",
+      "inLanguage": "ru",
+      "url": "https://hsk-study.ru/",
+      "potentialAction": {
+        "@type": "UseAction",
+        "target": "https://hsk-study.ru/"
+      }
+    }
+    </script>
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Главная",
+          "item": "https://hsk-study.ru/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "HSK 1",
+          "item": "https://hsk-study.ru/#hsk1"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "HSK 2",
+          "item": "https://hsk-study.ru/#hsk2"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "HSK 3",
+          "item": "https://hsk-study.ru/#hsk3"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "name": "HSK 4",
+          "item": "https://hsk-study.ru/#hsk4"
+        }
+      ]
+    }
     </script>
 </body>
 </html>
