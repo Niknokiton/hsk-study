@@ -247,6 +247,11 @@
 
     <script>
         // ============================================
+        // ВСТАВЬТЕ СЮДА ВАШИ МАССИВЫ СЛОВ ДЛЯ КАЖДОГО УРОВНЯ
+        // ============================================
+        
+        // ---------- HSK 1 (150 слов) ----------
+        // ============================================
         // HSK 1 — ПОЛНЫЙ СПИСОК (150 слов)
         // ============================================
         const hsk1WordsData = [
@@ -404,7 +409,7 @@
         while (hsk1WordsData.length < 150) {
             hsk1WordsData.push({ chinese:`слово${hsk1WordsData.length+1}`, pinyin:`pinyin${hsk1WordsData.length+1}`, meaning:`значение${hsk1WordsData.length+1}`, example:{ ch:`Пример ${hsk1WordsData.length+1}`, pinyin:`lìzi ${hsk1WordsData.length+1}`, ru:`Перевод примера ${hsk1WordsData.length+1}` } });
         }
-
+        
         // ============================================
         // HSK 2 — ПОЛНЫЙ СПИСОК (150 слов)
         // ============================================
@@ -563,7 +568,7 @@
         while (hsk2WordsData.length < 150) {
             hsk2WordsData.push({ chinese:`словоHSK2_${hsk2WordsData.length+1}`, pinyin:`pinyin${hsk2WordsData.length+1}`, meaning:`значение${hsk2WordsData.length+1}`, example:{ ch:`Пример ${hsk2WordsData.length+1}`, pinyin:`lìzi ${hsk2WordsData.length+1}`, ru:`Перевод примера ${hsk2WordsData.length+1}` } });
         }
-
+        
         // ============================================
         // HSK 3 — 300 слов
         // ============================================
@@ -868,7 +873,7 @@
         while (hsk3WordsData.length < 300) {
             hsk3WordsData.push({ chinese:`словоHSK3_${hsk3WordsData.length+1}`, pinyin:`pinyin${hsk3WordsData.length+1}`, meaning:`значение${hsk3WordsData.length+1}`, example:{ ch:`Пример ${hsk3WordsData.length+1}`, pinyin:`lìzi ${hsk3WordsData.length+1}`, ru:`Перевод примера ${hsk3WordsData.length+1}` } });
         }
-
+        
         // ============================================
         // HSK 4 — 600 слов (полный список из вашего задания)
         // ============================================
@@ -1406,8 +1411,25 @@
             { chinese:"然而", pinyin:"rán'ér", meaning:"Однако", example:{ ch:"天气很冷，然而他穿得很少。", pinyin:"Tiānqì hěn lěng, rán'ér tā chuān de hěn shǎo.", ru:"Погода холодная, однако он одет очень легко." } }
         ];
 
+        
         // ============================================
-        // Разбивка на уроки
+        // ДОПОЛНЕНИЕ МАССИВОВ ДО НУЖНОГО РАЗМЕРА
+        // ============================================
+        while (hsk1WordsData.length < 150) {
+            hsk1WordsData.push({ chinese:`слово${hsk1WordsData.length+1}`, pinyin:`pinyin${hsk1WordsData.length+1}`, meaning:`значение${hsk1WordsData.length+1}`, example:{ ch:`Пример ${hsk1WordsData.length+1}`, pinyin:`lìzi ${hsk1WordsData.length+1}`, ru:`Перевод примера ${hsk1WordsData.length+1}` } });
+        }
+        while (hsk2WordsData.length < 150) {
+            hsk2WordsData.push({ chinese:`словоHSK2_${hsk2WordsData.length+1}`, pinyin:`pinyin${hsk2WordsData.length+1}`, meaning:`значение${hsk2WordsData.length+1}`, example:{ ch:`Пример ${hsk2WordsData.length+1}`, pinyin:`lìzi ${hsk2WordsData.length+1}`, ru:`Перевод примера ${hsk2WordsData.length+1}` } });
+        }
+        while (hsk3WordsData.length < 300) {
+            hsk3WordsData.push({ chinese:`словоHSK3_${hsk3WordsData.length+1}`, pinyin:`pinyin${hsk3WordsData.length+1}`, meaning:`значение${hsk3WordsData.length+1}`, example:{ ch:`Пример ${hsk3WordsData.length+1}`, pinyin:`lìzi ${hsk3WordsData.length+1}`, ru:`Перевод примера ${hsk3WordsData.length+1}` } });
+        }
+        while (hsk4WordsData.length < 600) {
+            hsk4WordsData.push({ chinese:`словоHSK4_${hsk4WordsData.length+1}`, pinyin:`pinyin${hsk4WordsData.length+1}`, meaning:`значение${hsk4WordsData.length+1}`, example:{ ch:`Пример ${hsk4WordsData.length+1}`, pinyin:`lìzi ${hsk4WordsData.length+1}`, ru:`Перевод примера ${hsk4WordsData.length+1}` } });
+        }
+
+        // ============================================
+        // РАЗБИВКА НА УРОКИ
         // ============================================
         const hsk1Lessons = [];
         for (let i = 0; i < 15; i++) {
@@ -1432,7 +1454,7 @@
         const hskData = { 1: hsk1Lessons, 2: hsk2Lessons, 3: hsk3Lessons, 4: hsk4Lessons };
 
         // ============================================
-        // ПОЛЬЗОВАТЕЛИ
+        // ПОЛЬЗОВАТЕЛИ И СТАТИСТИКА
         // ============================================
         let currentUser = null;
         
@@ -1440,7 +1462,9 @@
         function getUsers() { return JSON.parse(localStorage.getItem('hsk_users')) || []; }
         function getUserData(username) {
             return JSON.parse(localStorage.getItem(`hsk_user_${username}`)) || {
-                learnedWords: [], unlockedLessons: { 1: [0], 2: [0], 3: [0], 4: [0] }, bamboo: 0
+                learnedWords: [], 
+                unlockedLessons: { 1: [0], 2: [0], 3: [0], 4: [0] }, 
+                bamboo: 0
             };
         }
         function saveUserData(username, data) { localStorage.setItem(`hsk_user_${username}`, JSON.stringify(data)); }
@@ -1468,6 +1492,7 @@
             showLogin();
             document.getElementById('loginError').innerHTML = '<span style="color:#4caf50">✅ Регистрация успешна!</span>';
             updateRankTable();
+            updateVisitorCounter();
         }
         
         function login() {
@@ -1482,6 +1507,7 @@
             currentUser = username;
             localStorage.setItem('hsk_current_user', username);
             updateRankTable();
+            updateVisitorCounter();
             showMainPage();
         }
         
@@ -1514,6 +1540,7 @@
             document.getElementById('appContainer').classList.add('hide');
             document.getElementById('userWelcome').innerHTML = `👋 Добро пожаловать, ${currentUser}!`;
             updateRankTable();
+            updateVisitorCounter();
         }
         
         function updateVisitorCounter() {
@@ -1524,10 +1551,10 @@
                 document.getElementById('visitorCount').innerText = '1';
             } else {
                 let data = JSON.parse(visitorData);
-                if (!sessionStorage.getItem('hsk_counted')) {
+                if (!sessionStorage.getItem('hsk_counted_' + today)) {
                     data.count++;
                     localStorage.setItem('hsk_visitor_data', JSON.stringify(data));
-                    sessionStorage.setItem('hsk_counted', 'true');
+                    sessionStorage.setItem('hsk_counted_' + today, 'true');
                 }
                 document.getElementById('visitorCount').innerText = data.count;
             }
@@ -1567,6 +1594,9 @@
                 userData.bamboo = users[userIndex].bamboo;
                 saveUserData(username, userData);
                 updateRankTable();
+                if (currentUser === username) {
+                    document.getElementById('myPoints').innerText = users[userIndex].bamboo;
+                }
                 return users[userIndex].bamboo;
             }
             return 0;
@@ -1581,6 +1611,9 @@
             document.getElementById('rankModal').classList.remove('active');
         }
         
+        // ============================================
+        // ОСНОВНАЯ ЛОГИКА ПРИЛОЖЕНИЯ
+        // ============================================
         let currentLevel = 1, currentLesson = 0, currentTab = "study";
         let learnedWords = [], unlockedLessons = {};
         let currentVolume = 0.7;
@@ -2306,6 +2339,7 @@
         
         document.getElementById('backBtn').onclick = goHome;
         
+        // ИНИЦИАЛИЗАЦИЯ
         updateVisitorCounter();
         const savedUser = localStorage.getItem('hsk_current_user');
         if (savedUser) {
@@ -2316,6 +2350,7 @@
         }
         updateRankTable();
         
+        // ЭКСПОРТ ФУНКЦИЙ В ГЛОБАЛЬНУЮ ОБЛАСТЬ
         window.selectWordForSentence = selectWordForSentence;
         window.removeWordFromBuilding = removeWordFromBuilding;
         window.checkSentence = checkSentence;
@@ -2331,6 +2366,13 @@
         window.closeTest = closeTest;
         window.toggleWord = toggleWord;
         window.speak = speak;
+        window.login = login;
+        window.register = register;
+        window.showLogin = showLogin;
+        window.showRegister = showRegister;
+        window.logout = logout;
+        window.openRankModal = openRankModal;
+        window.closeRankModal = closeRankModal;
     </script>
 </body>
 </html>
