@@ -21860,171 +21860,7 @@ window.startReading = function() {
 };
 </script>
 
-<script>
-// ==================== СИСТЕМА АДМИНИСТРАТОРА (ПОЛНОСТЬЮ ИСПРАВЛЕННАЯ) ====================
 
-// Конфигурация администратора
-const ADMIN_CONFIG = {
-    username: "admin",
-    password: "admin123nokiton",
-    isAdmin: true
-};
-
-// Функция проверки, является ли пользователь администратором
-function isAdminUser() {
-    return currentUser === ADMIN_CONFIG.username;
-}
-
-// Функция для открытия всех уроков администратору
-function unlockAllLessonsForAdmin() {
-    if (!isAdminUser()) return;
-    
-    let userData = getUserData(currentUser);
-    let allUnlocked = {};
-    
-    for (let level = 1; level <= 6; level++) {
-        const lessonsCount = hskData[level]?.length || 0;
-        const unlockedLessons = [];
-        for (let i = 0; i < lessonsCount; i++) {
-            unlockedLessons.push(i);
-        }
-        allUnlocked[level] = unlockedLessons;
-    }
-    
-    userData.unlockedLessons = allUnlocked;
-    saveUserData(currentUser, userData);
-    if (typeof unlockedLessons !== 'undefined') unlockedLessons = allUnlocked;
-    console.log('🔓 Все уроки открыты для администратора');
-}
-
-// Функция для удаления кнопки админа
-function removeAdminButton() {
-    let adminBtn = document.getElementById('adminPanelBtn');
-    if (adminBtn) adminBtn.remove();
-}
-
-// Добавляем кнопку админа (только для админа)
-function addAdminButton() {
-    if (!isAdminUser()) return;
-    
-    let headerButtons = document.querySelector('.welcome-header .header-buttons');
-    if (!headerButtons) headerButtons = document.querySelector('.header-buttons');
-    if (!headerButtons) return;
-    
-    // Удаляем старую кнопку
-    let oldBtn = document.getElementById('adminPanelBtn');
-    if (oldBtn) oldBtn.remove();
-    
-    const adminBtn = document.createElement('button');
-    adminBtn.id = 'adminPanelBtn';
-    adminBtn.innerHTML = '👑 Admin';
-    adminBtn.style.cssText = 'background:linear-gradient(135deg,#ff6b9d,#c084fc);border:none;color:white;padding:10px 20px;border-radius:40px;cursor:pointer;font-weight:600;margin-left:10px;';
-    adminBtn.onclick = openAdminPanel;
-    
-    let logoutBtn = headerButtons.querySelector('.logout-btn');
-    if (logoutBtn) headerButtons.insertBefore(adminBtn, logoutBtn);
-    else headerButtons.appendChild(adminBtn);
-}
-
-// Перехватываем вход
-const originalLoginForAdmin = window.login;
-window.login = function() {
-    let username = document.getElementById('loginUsername')?.value.trim() || '';
-    let password = document.getElementById('loginPassword')?.value || '';
-    
-    if (username === ADMIN_CONFIG.username && password === ADMIN_CONFIG.password) {
-        currentUser = ADMIN_CONFIG.username;
-        localStorage.setItem('hsk_current_user', currentUser);
-        
-        let adminData = getUserData(currentUser);
-        if (!adminData.unlockedLessons || Object.keys(adminData.unlockedLessons).length === 0) {
-            adminData.unlockedLessons = {};
-            saveUserData(currentUser, adminData);
-        }
-        
-        unlockAllLessonsForAdmin();
-        
-        let errorEl = document.getElementById('loginError');
-        if (errorEl) errorEl.innerHTML = '';
-        
-        showMainPage();
-        updateAllStats();
-        setTimeout(() => addAdminButton(), 500);
-        return;
-    }
-    
-    if (originalLoginForAdmin) originalLoginForAdmin();
-};
-
-// Перехватываем выход
-const originalLogoutForAdmin = window.logout;
-window.logout = function() {
-    if (originalLogoutForAdmin) originalLogoutForAdmin();
-    removeAdminButton();
-};
-
-// Перехватываем показ главной страницы
-const originalShowMainPageForAdmin = window.showMainPage;
-window.showMainPage = function() {
-    if (originalShowMainPageForAdmin) originalShowMainPageForAdmin();
-    setTimeout(() => {
-        if (isAdminUser()) {
-            addAdminButton();
-        } else {
-            removeAdminButton();
-        }
-    }, 500);
-};
-
-// Модифицируем isLessonUnlocked
-const originalIsLessonUnlocked = window.isLessonUnlocked;
-window.isLessonUnlocked = function(lvl, lesson) {
-    if (isAdminUser()) return true;
-    return originalIsLessonUnlocked ? originalIsLessonUnlocked(lvl, lesson) : (window.unlockedLessons?.[lvl]?.includes(lesson));
-};
-
-// Функция обновления видимости статистики
-function updateStatsVisibility() {
-    const statBoxes = document.querySelectorAll('.stat-box');
-    
-    if (!isAdminUser()) {
-        statBoxes.forEach(box => {
-            const label = box.querySelector('.stat-box-label');
-            if (label) {
-                const text = label.innerText;
-                if (text.includes('посетителей') || text.includes('Visitors') ||
-                    text.includes('зарегистрировано') || text.includes('Registered')) {
-                    box.style.display = 'none';
-                } else {
-                    box.style.display = 'flex';
-                }
-            }
-        });
-    } else {
-        statBoxes.forEach(box => box.style.display = 'flex');
-    }
-}
-
-// Обновляем статистику
-const originalUpdateAllStatsForStats = window.updateAllStats;
-if (originalUpdateAllStatsForStats) {
-    window.updateAllStats = function() {
-        originalUpdateAllStatsForStats();
-        setTimeout(updateStatsVisibility, 100);
-    };
-}
-
-// При загрузке
-setTimeout(() => {
-    if (currentUser) {
-        updateStatsVisibility();
-        if (isAdminUser()) addAdminButton();
-        else removeAdminButton();
-    }
-}, 500);
-
-console.log('✅ Админ-панель настроена! Кнопка видна только админу.');
-</script>
 
 <script>
 // ==================== СКРЫТИЕ СТАТИСТИКИ ДЛЯ ОБЫЧНЫХ ПОЛЬЗОВАТЕЛЕЙ ====================
@@ -22116,6 +21952,337 @@ statsObserver2.observe(document.body, { childList: true, subtree: true });
 console.log('✅ Настройка видимости статистики активирована (только через JS)');
 </script>
 
+<script>
+// ==================== АДМИН-ПАНЕЛЬ (РАБОЧАЯ) ====================
 
+// ---------- СТАТИСТИКА ПОСЕТИТЕЛЕЙ ----------
+function getVisitorStats() {
+    let today = new Date().toDateString();
+    let weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    let monthAgo = new Date();
+    monthAgo.setMonth(monthAgo.getMonth() - 1);
+    
+    let visits = JSON.parse(localStorage.getItem('hsk_visits_history') || '[]');
+    
+    let uniqueToday = new Set();
+    let uniqueWeek = new Set();
+    let uniqueMonth = new Set();
+    
+    for (let visit of visits) {
+        let visitDate = new Date(visit.date).toDateString();
+        if (visitDate === today) uniqueToday.add(visit.username);
+        if (new Date(visit.date) >= weekAgo) uniqueWeek.add(visit.username);
+        if (new Date(visit.date) >= monthAgo) uniqueMonth.add(visit.username);
+    }
+    
+    return {
+        today: uniqueToday.size,
+        week: uniqueWeek.size,
+        month: uniqueMonth.size,
+        total: getUsers().filter(u => u.username !== 'admin').length
+    };
+}
+
+// ---------- РЕГИСТРАЦИЯ ПОСЕЩЕНИЯ ----------
+function registerUserVisit() {
+    if (!currentUser || currentUser === 'admin') return;
+    let visits = JSON.parse(localStorage.getItem('hsk_visits_history') || '[]');
+    let today = new Date().toDateString();
+    let alreadyVisited = visits.some(v => v.username === currentUser && new Date(v.date).toDateString() === today);
+    if (!alreadyVisited) {
+        visits.push({ username: currentUser, date: new Date().toISOString() });
+        localStorage.setItem('hsk_visits_history', JSON.stringify(visits.slice(-1000)));
+    }
+}
+
+// ---------- ДОБАВЛЕНИЕ КНОПКИ АДМИНА ----------
+function addAdminButton() {
+    if (!currentUser || currentUser !== 'admin') {
+        let btn = document.getElementById('adminPanelBtn');
+        if (btn) btn.remove();
+        return;
+    }
+    
+    let headerButtons = document.querySelector('.welcome-header .header-buttons');
+    if (!headerButtons) headerButtons = document.querySelector('.header-buttons');
+    if (!headerButtons) return;
+    if (document.getElementById('adminPanelBtn')) return;
+    
+    let adminBtn = document.createElement('button');
+    adminBtn.id = 'adminPanelBtn';
+    adminBtn.innerHTML = '👑 Admin';
+    adminBtn.style.cssText = 'background:linear-gradient(135deg,#ff6b9d,#c084fc);border:none;color:white;padding:10px 20px;border-radius:40px;cursor:pointer;font-weight:600;margin-left:10px;transition:0.3s;';
+    adminBtn.onmouseenter = () => { adminBtn.style.transform = 'translateY(-2px)'; adminBtn.style.boxShadow = '0 5px 15px rgba(192,132,252,0.5)'; };
+    adminBtn.onmouseleave = () => { adminBtn.style.transform = 'translateY(0)'; adminBtn.style.boxShadow = 'none'; };
+    adminBtn.onclick = openAdminPanel;
+    
+    let logoutBtn = headerButtons.querySelector('.logout-btn');
+    if (logoutBtn) headerButtons.insertBefore(adminBtn, logoutBtn);
+    else headerButtons.appendChild(adminBtn);
+}
+
+// ---------- ЗАКРЫТИЕ ВСЕХ ОКОН ----------
+function closeAdminModals() {
+    let modal1 = document.getElementById('adminMainModal');
+    let modal2 = document.getElementById('adminEditModal');
+    if (modal1) modal1.remove();
+    if (modal2) modal2.remove();
+}
+
+// ---------- ОТКРЫТИЕ АДМИН-ПАНЕЛИ ----------
+function openAdminPanel() {
+    if (!currentUser || currentUser !== 'admin') { 
+        alert('Доступ запрещён!'); 
+        return; 
+    }
+    closeAdminModals();
+    
+    const isRu = currentLanguage !== 'en';
+    let usersList = getUsers();
+    let regularUsers = usersList.filter(u => u.username !== 'admin');
+    let visitorStats = getVisitorStats();
+    
+    let usersHtml = '';
+    for (let user of regularUsers) {
+        let userData = getUserData(user.username);
+        usersHtml += `
+            <div style="background:rgba(255,255,255,0.05);border-radius:15px;padding:10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                <span style="color:#ffd700;">👤 ${escapeHtml(user.username)}</span>
+                <span>📚 ${userData.learnedWords?.length || 0}</span>
+                <span>🎋 ${user.bamboo || 0}</span>
+                <span>⏱️ ${formatTime(userData.studyTime || 0)}</span>
+                <div>
+                    <button onclick="adminEditUser('${user.username}')" style="background:#2196f3;border:none;color:white;padding:4px 12px;border-radius:20px;cursor:pointer;margin-right:5px;">✏️</button>
+                    <button onclick="adminDeleteUser('${user.username}')" style="background:#f44336;border:none;color:white;padding:4px 12px;border-radius:20px;cursor:pointer;">🗑️</button>
+                </div>
+            </div>
+        `;
+    }
+    
+    if (regularUsers.length === 0) {
+        usersHtml = '<div style="text-align:center;padding:20px;">' + (isRu ? 'Нет пользователей' : 'No users') + '</div>';
+    }
+    
+    let modal = document.createElement('div');
+    modal.id = 'adminMainModal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);backdrop-filter:blur(20px);z-index:20000;display:flex;justify-content:center;align-items:center;';
+    
+    modal.innerHTML = `
+        <div style="background:linear-gradient(145deg,rgba(30,30,60,0.98),rgba(20,20,50,0.98));border-radius:40px;max-width:700px;width:90%;max-height:85vh;border:1px solid rgba(255,255,255,0.15);display:flex;flex-direction:column;overflow:hidden;">
+            <div style="padding:15px 20px;background:linear-gradient(135deg,rgba(255,107,157,0.15),rgba(192,132,252,0.15));display:flex;justify-content:space-between;align-items:center;">
+                <h2 style="margin:0;background:linear-gradient(135deg,#ffd700,#ff9800);-webkit-background-clip:text;background-clip:text;color:transparent;">👑 ${isRu ? 'Панель администратора' : 'Admin Panel'}</h2>
+                <button onclick="closeAdminModals()" style="background:#ff6b9d;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;color:white;">✖</button>
+            </div>
+            <div style="padding:20px;overflow-y:auto;">
+                <div style="background:linear-gradient(135deg,rgba(255,107,157,0.1),rgba(192,132,252,0.1));border-radius:20px;padding:15px;margin-bottom:15px;border:1px solid rgba(255,255,255,0.1);">
+                    <h3 style="color:#ffd700;margin:0 0 10px 0;">📊 ${isRu ? 'Статистика посещений' : 'Visit Statistics'}</h3>
+                    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;text-align:center;">
+                        <div><div style="font-size:2rem;font-weight:bold;color:#c084fc;">${visitorStats.today}</div><div style="font-size:0.7rem;">👥 ${isRu ? 'сегодня' : 'today'}</div></div>
+                        <div><div style="font-size:2rem;font-weight:bold;color:#ffd700;">${visitorStats.week}</div><div style="font-size:0.7rem;">📅 ${isRu ? 'неделя' : 'week'}</div></div>
+                        <div><div style="font-size:2rem;font-weight:bold;color:#4caf50;">${visitorStats.month}</div><div style="font-size:0.7rem;">📆 ${isRu ? 'месяц' : 'month'}</div></div>
+                        <div><div style="font-size:2rem;font-weight:bold;color:#ff9800;">${visitorStats.total}</div><div style="font-size:0.7rem;">📝 ${isRu ? 'всего' : 'total'}</div></div>
+                    </div>
+                </div>
+                
+                <div style="display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap;">
+                    <button onclick="adminAddBambooToAll(10)" style="background:#4caf50;border:none;color:white;padding:8px 15px;border-radius:25px;cursor:pointer;">🎋 +10 ${isRu ? 'бамбуков всем' : 'bamboo to all'}</button>
+                    <button onclick="adminResetAllProgress()" style="background:#ff9800;border:none;color:white;padding:8px 15px;border-radius:25px;cursor:pointer;">🔄 ${isRu ? 'Сброс прогресса' : 'Reset progress'}</button>
+                </div>
+                
+                <h3 style="color:#c084fc;margin:0 0 10px 0;">👥 ${isRu ? 'Пользователи' : 'Users'} (${regularUsers.length})</h3>
+                <div style="max-height:300px;overflow-y:auto;">${usersHtml}</div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+// ---------- РЕДАКТИРОВАНИЕ ПОЛЬЗОВАТЕЛЯ ----------
+function adminEditUser(username) {
+    let mainModal = document.getElementById('adminMainModal');
+    if (mainModal) mainModal.remove();
+    
+    let userData = getUserData(username);
+    let usersList = getUsers();
+    let user = usersList.find(u => u.username === username);
+    const isRu = currentLanguage !== 'en';
+    
+    let modal = document.createElement('div');
+    modal.id = 'adminEditModal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);backdrop-filter:blur(20px);z-index:20001;display:flex;justify-content:center;align-items:center;';
+    
+    modal.innerHTML = `
+        <div style="background:linear-gradient(145deg,rgba(30,30,60,0.98),rgba(20,20,50,0.98));border-radius:40px;max-width:400px;width:90%;padding:25px;border:1px solid rgba(255,255,255,0.15);">
+            <h3 style="color:#ffd700;margin-top:0;text-align:center;">✏️ ${isRu ? 'Редактировать' : 'Edit'}: ${escapeHtml(username)}</h3>
+            <div style="margin-bottom:12px;"><label style="color:#c084fc;">🎋 ${isRu ? 'Бамбуки' : 'Bamboo'}</label><input type="number" id="editBambooVal" value="${user?.bamboo || 0}" style="width:100%;padding:10px;border-radius:25px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;"></div>
+            <div style="margin-bottom:12px;"><label style="color:#c084fc;">📚 ${isRu ? 'Выученные слова' : 'Learned'}</label><input type="number" id="editLearnedVal" value="${userData.learnedWords?.length || 0}" style="width:100%;padding:10px;border-radius:25px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;"></div>
+            <div style="margin-bottom:12px;"><label style="color:#c084fc;">⏱️ ${isRu ? 'Время (сек)' : 'Time (sec)'}</label><input type="number" id="editTimeVal" value="${userData.studyTime || 0}" style="width:100%;padding:10px;border-radius:25px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;"></div>
+            <div style="display:flex;gap:10px;margin-top:20px;">
+                <button onclick="adminSaveUser('${username}')" style="flex:1;background:#4caf50;border:none;color:white;padding:10px;border-radius:25px;cursor:pointer;">✅ ${isRu ? 'Сохранить' : 'Save'}</button>
+                <button onclick="cancelEdit()" style="flex:1;background:#c084fc;border:none;color:white;padding:10px;border-radius:25px;cursor:pointer;">✖ ${isRu ? 'Отмена' : 'Cancel'}</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+function cancelEdit() {
+    let editModal = document.getElementById('adminEditModal');
+    if (editModal) editModal.remove();
+    openAdminPanel();
+}
+
+function adminSaveUser(username) {
+    let bamboo = parseInt(document.getElementById('editBambooVal')?.value) || 0;
+    let learnedCount = parseInt(document.getElementById('editLearnedVal')?.value) || 0;
+    let studyTime = parseInt(document.getElementById('editTimeVal')?.value) || 0;
+    
+    let usersList = getUsers();
+    let userIndex = usersList.findIndex(u => u.username === username);
+    if (userIndex !== -1) usersList[userIndex].bamboo = bamboo;
+    saveUsers(usersList);
+    
+    let userData = getUserData(username);
+    let currentLearned = userData.learnedWords || [];
+    if (learnedCount > currentLearned.length) {
+        for (let i = currentLearned.length; i < learnedCount; i++) currentLearned.push(`fake_${i}`);
+    } else if (learnedCount < currentLearned.length) {
+        currentLearned = currentLearned.slice(0, learnedCount);
+    }
+    userData.learnedWords = currentLearned;
+    userData.studyTime = studyTime;
+    saveUserData(username, userData);
+    
+    showTempMessage(`✅ ${username} ${currentLanguage === 'en' ? 'updated' : 'обновлён'}!`, '#4caf50');
+    
+    let editModal = document.getElementById('adminEditModal');
+    if (editModal) editModal.remove();
+    openAdminPanel();
+}
+
+function adminDeleteUser(username) {
+    if (!confirm(currentLanguage === 'en' ? `Delete user "${username}"?` : `Удалить пользователя "${username}"?`)) {
+        return;
+    }
+    
+    let usersList = getUsers().filter(u => u.username !== username && u.username !== 'admin');
+    saveUsers(usersList);
+    localStorage.removeItem(`hsk_user_${username}`);
+    localStorage.removeItem(`hsk_progress_${username}`);
+    localStorage.removeItem(`friends_${username}`);
+    localStorage.removeItem(`last_visit_${username}`);
+    
+    showTempMessage(`🗑️ ${username} ${currentLanguage === 'en' ? 'deleted' : 'удалён'}!`, '#ff9800');
+    openAdminPanel();
+}
+
+function adminAddBambooToAll(amount) {
+    let usersList = getUsers();
+    for (let user of usersList) {
+        if (user.username === 'admin') continue;
+        user.bamboo = (user.bamboo || 0) + amount;
+        let userData = getUserData(user.username);
+        userData.bamboo = user.bamboo;
+        saveUserData(user.username, userData);
+    }
+    saveUsers(usersList);
+    showTempMessage(`🎋 +${amount} ${currentLanguage === 'en' ? 'bamboo to all' : 'бамбуков всем'}!`, '#4caf50');
+    openAdminPanel();
+}
+
+function adminResetAllProgress() {
+    if (!confirm(currentLanguage === 'en' ? 'Reset ALL users progress? This cannot be undone!' : 'Сбросить прогресс ВСЕХ пользователей? Это нельзя отменить!')) return;
+    
+    let usersList = getUsers();
+    for (let user of usersList) {
+        if (user.username === 'admin') continue;
+        localStorage.removeItem(`hsk_user_${user.username}`);
+        saveUserData(user.username, { 
+            learnedWords: [], 
+            unlockedLessons: getDefaultUnlockedLessons(), 
+            bamboo: 0, 
+            errors: [], 
+            studyTime: 0, 
+            favoriteWords: [], 
+            userStats: { dailyQuests: {}, achievements: {}, streak: 0, lastLoginDate: null, level: 1, xp: 0, wordErrors: {} } 
+        });
+    }
+    showTempMessage(`🔄 ${currentLanguage === 'en' ? 'All progress reset!' : 'Весь прогресс сброшен!'}`, '#ff9800');
+    openAdminPanel();
+}
+
+function adminUnlockAllLessons() {
+    if (!currentUser || currentUser !== 'admin') return;
+    let userData = getUserData('admin');
+    let allUnlocked = {};
+    for (let lvl = 1; lvl <= 6; lvl++) {
+        let lessons = [];
+        for (let i = 0; i < (window.hskData?.[lvl]?.length || 0); i++) lessons.push(i);
+        allUnlocked[lvl] = lessons;
+    }
+    userData.unlockedLessons = allUnlocked;
+    saveUserData('admin', userData);
+    if (typeof unlockedLessons !== 'undefined') unlockedLessons = allUnlocked;
+}
+
+// ---------- ПЕРЕОПРЕДЕЛЕНИЕ ФУНКЦИЙ ДЛЯ АДМИНА ----------
+if (typeof window.isLessonUnlocked === 'function') {
+    let originalFn = window.isLessonUnlocked;
+    window.isLessonUnlocked = function(lvl, lesson) {
+        if (currentUser === 'admin') return true;
+        return originalFn(lvl, lesson);
+    };
+}
+
+// ---------- ПЕРЕХВАТ СОБЫТИЙ ----------
+let oldLogin = window.login;
+window.login = function() {
+    if (oldLogin) oldLogin();
+    setTimeout(() => { 
+        registerUserVisit(); 
+        addAdminButton(); 
+        if (currentUser === 'admin') adminUnlockAllLessons(); 
+    }, 500);
+};
+
+let oldShowMainPage = window.showMainPage;
+window.showMainPage = function() {
+    if (oldShowMainPage) oldShowMainPage();
+    setTimeout(() => { 
+        registerUserVisit(); 
+        addAdminButton(); 
+    }, 300);
+};
+
+let oldLogout = window.logout;
+window.logout = function() {
+    if (oldLogout) oldLogout();
+    setTimeout(() => { 
+        let btn = document.getElementById('adminPanelBtn'); 
+        if (btn) btn.remove(); 
+    }, 100);
+};
+
+// ---------- ЗАПУСК ----------
+setTimeout(() => {
+    if (currentUser === 'admin') {
+        adminUnlockAllLessons();
+        addAdminButton();
+    } else if (currentUser) {
+        registerUserVisit();
+    }
+}, 500);
+
+setInterval(() => {
+    if (currentUser === 'admin') addAdminButton();
+    else { 
+        let btn = document.getElementById('adminPanelBtn'); 
+        if (btn) btn.remove(); 
+    }
+}, 2000);
+
+console.log('👑 Админ-панель готова! Логин: admin, Пароль: admin123');
+</script>
 </body>
 </html>
