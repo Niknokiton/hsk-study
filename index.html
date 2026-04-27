@@ -7984,24 +7984,45 @@ function closeProfileLearnedModal() {
     function switchRankTab(tab) { currentRankTab = tab; let bt = document.getElementById('rankBambooBtn'), tt = document.getElementById('rankTimeBtn'), btbl = document.getElementById('rankBambooTable'), ttbl = document.getElementById('rankTimeTable'); if(tab === 'bamboo') { bt.classList.add('active'); tt.classList.remove('active'); btbl.classList.remove('hide'); ttbl.classList.add('hide'); } else { bt.classList.remove('active'); tt.classList.add('active'); btbl.classList.add('hide'); ttbl.classList.remove('hide'); } }
     
     function register() {
-        let u = document.getElementById('regUsername').value.trim(), e = document.getElementById('regEmail').value.trim(), p = document.getElementById('regPassword').value;
-        if(!u || !e || !p) { document.getElementById('registerError').innerText = t('fillAllFields'); return; }
-        if(p.length < 4) { document.getElementById('registerError').innerText = t('passwordMin'); return; }
-        let users = getUsers();
-        if(users.find(us => us.username === u)) { document.getElementById('registerError').innerText = t('userExists'); return; }
-        users.push({ username: u, email: e, password: p, bamboo: 0 });
-        saveUsers(users);
-        saveUserData(u, { learnedWords: [], unlockedLessons: getDefaultUnlockedLessons(), bamboo: 0, errors: [], studyTime: 0, favoriteWords: [], userStats: { dailyQuests: {}, achievements: {}, streak: 0, lastLoginDate: null, level: 1, xp: 0, wordErrors: {} } });
-        document.getElementById('regUsername').value = '';
-        document.getElementById('regEmail').value = '';
-        document.getElementById('regPassword').value = '';
-        showLogin();
-        let le = document.getElementById('loginError');
-        if(le) { le.innerHTML = `<span style="color:#4caf50">✅ ${t('registrationSuccess')}</span>`; setTimeout(() => { if(le) le.innerHTML = ''; }, 3000); }
-        updateAllStats();
-        updateAllStats();  // Обновит все счётчики
-    updateRankTable(); // Обновит таблицу рейтинга
+    let u = document.getElementById('regUsername').value.trim();
+    let e = document.getElementById('regEmail').value.trim();
+    let p = document.getElementById('regPassword').value;
+    
+    if(!u || !e || !p) { 
+        document.getElementById('registerError').innerText = t('fillAllFields'); 
+        return; 
     }
+    if(p.length < 4) { 
+        document.getElementById('registerError').innerText = t('passwordMin'); 
+        return; 
+    }
+    
+    let users = getUsers();
+    if(users.find(us => us.username === u)) { 
+        document.getElementById('registerError').innerText = t('userExists'); 
+        return; 
+    }
+    
+    users.push({ username: u, email: e, password: p, bamboo: 0 });
+    saveUsers(users);
+    saveUserData(u, { learnedWords: [], unlockedLessons: getDefaultUnlockedLessons(), bamboo: 0, errors: [], studyTime: 0, favoriteWords: [], userStats: { dailyQuests: {}, achievements: {}, streak: 0, lastLoginDate: null, level: 1, xp: 0, wordErrors: {} } });
+    
+    document.getElementById('regUsername').value = '';
+    document.getElementById('regEmail').value = '';
+    document.getElementById('regPassword').value = '';
+    showLogin();
+    
+    let le = document.getElementById('loginError');
+    if(le) { 
+        le.innerHTML = `<span style="color:#4caf50">✅ ${t('registrationSuccess')}</span>`; 
+        setTimeout(() => { if(le) le.innerHTML = ''; }, 3000); 
+    }
+    
+    // ========== ДОБАВЬТЕ ЭТИ ДВЕ СТРОЧКИ ЗДЕСЬ ==========
+    updateAllStats();
+    updateRankTable();
+    // ==================================================
+}
     
     function login() {
         let u = document.getElementById('loginUsername').value.trim(), p = document.getElementById('loginPassword').value;
