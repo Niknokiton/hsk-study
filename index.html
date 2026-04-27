@@ -22655,20 +22655,7 @@ setInterval(() => {
 document.getElementById('loginBtn').onclick = login;
 </script>
 <script>
-// ФИКС СЧЁТЧИКОВ - ВСТАВИТЬ ПЕРЕД </script>
-(function fixCounters() {
-    // Обновляем при загрузке
-    let users = JSON.parse(localStorage.getItem('hsk_users') || '[]');
-    let regEl = document.getElementById('registeredUsersCount');
-    if(regEl) regEl.innerText = users.length;
-    
-    // Обновляем каждые 5 секунд
-    setInterval(function() {
-        let u = JSON.parse(localStorage.getItem('hsk_users') || '[]');
-        let r = document.getElementById('registeredUsersCount');
-        if(r) r.innerText = u.length;
-    }, 5000);
-})();
+
 </script>
 </body>
 </html>
