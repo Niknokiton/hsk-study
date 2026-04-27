@@ -7999,6 +7999,8 @@ function closeProfileLearnedModal() {
         let le = document.getElementById('loginError');
         if(le) { le.innerHTML = `<span style="color:#4caf50">✅ ${t('registrationSuccess')}</span>`; setTimeout(() => { if(le) le.innerHTML = ''; }, 3000); }
         updateAllStats();
+        updateAllStats();  // Обновит все счётчики
+    updateRankTable(); // Обновит таблицу рейтинга
     }
     
     function login() {
