@@ -8021,6 +8021,14 @@ function closeProfileLearnedModal() {
     function showRegister() { document.getElementById('loginForm').classList.add('hide'); document.getElementById('registerForm').classList.remove('hide'); document.getElementById('mainPage').classList.add('hide'); document.getElementById('appContainer').classList.add('hide'); document.getElementById('authContainer').classList.remove('hide'); }
     function showMainPage() { document.getElementById('authContainer').classList.add('hide'); document.getElementById('mainPage').classList.remove('hide'); document.getElementById('appContainer').classList.add('hide'); let w = document.getElementById('userWelcome'); if(w) w.innerHTML = `${t('welcomeUser')}, ${escapeHtml(currentUser)}!`; updateAllStats(); updateRecommendations(); }
     
+    // Скрыть блоки статистики для обычных пользователей
+if(currentUser !== 'admin') {
+    let v = document.getElementById('visitorCount');
+    let r = document.getElementById('registeredUsersCount');
+    if(v) v.closest('.stat-box').style.display = 'none';
+    if(r) r.closest('.stat-box').style.display = 'none';
+}
+
     function goHome() { stopStudyTimer(); document.getElementById('mainPage').classList.remove('hide'); document.getElementById('appContainer').classList.add('hide'); updateRankTable(); updateLevelProgressBars(); }
     
     function updateRecommendations() {
