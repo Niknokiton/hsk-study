@@ -22194,5 +22194,289 @@ setInterval(() => {
 console.log('👑 Админ-панель готова! Логин: admin, Пароль: admin123');
 
 </script>
+<script>
+// ==================== СТАТИСТИКА ПОСЕТИТЕЛЕЙ ====================
+
+// --- РЕГИСТРАЦИЯ ВИЗИТА ПРИ ВХОДЕ ---
+function registerVisit() {
+    if (!currentUser || currentUser === 'admin') return;
+    
+    let today = new Date().toDateString();
+    let visits = JSON.parse(localStorage.getItem('hsk_visits') || '[]');
+    
+    // Убираем старые записи (старше 31 дня)
+    let monthAgo = new Date();
+    monthAgo.setDate(monthAgo.getDate() - 31);
+    visits = visits.filter(v => new Date(v.date) > monthAgo);
+    
+    // Проверяем, был ли уже визит сегодня
+    let alreadyToday = visits.some(v => v.username === currentUser && new Date(v.date).toDateString() === today);
+    
+    if (!alreadyToday) {
+        visits.push({
+            username: currentUser,
+            date: new Date().toISOString()
+        });
+        localStorage.setItem('hsk_visits', JSON.stringify(visits));
+    }
+}
+
+// --- ПОЛУЧЕНИЕ СТАТИСТИКИ ---
+function getVisitorStats() {
+    let visits = JSON.parse(localStorage.getItem('hsk_visits') || '[]');
+    let users = getUsers(); // из вашего кода
+    
+    let today = new Date().toDateString();
+    let weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    let monthAgo = new Date();
+    monthAgo.setDate(monthAgo.getDate() - 30);
+    
+    let uniqueToday = new Set();
+    let uniqueWeek = new Set();
+    let uniqueMonth = new Set();
+    
+    for (let v of visits) {
+        let visitDate = new Date(v.date).toDateString();
+        if (visitDate === today) uniqueToday.add(v.username);
+        if (new Date(v.date) >= weekAgo) uniqueWeek.add(v.username);
+        if (new Date(v.date) >= monthAgo) uniqueMonth.add(v.username);
+    }
+    
+    return {
+        today: uniqueToday.size,
+        week: uniqueWeek.size,
+        month: uniqueMonth.size,
+        totalRegistered: users.filter(u => u.username !== 'admin').length
+    };
+}
+
+// --- ПЕРЕХВАТ ВХОДА ДЛЯ РЕГИСТРАЦИИ ВИЗИТА ---
+let originalLogin = window.login;
+window.login = function() {
+    if (originalLogin) originalLogin();
+    setTimeout(() => {
+        registerVisit();
+        updateAllStats();
+    }, 500);
+};
+
+// --- АДМИН-ПАНЕЛЬ С ЖИВОЙ СТАТИСТИКОЙ ---
+function openAdminPanel() {
+    if (!currentUser || currentUser !== 'admin') {
+        alert(currentLanguage === 'en' ? 'Access denied!' : 'Доступ запрещён!');
+        return;
+    }
+    
+    let stats = getVisitorStats();
+    let users = getUsers().filter(u => u.username !== 'admin');
+    let isRu = currentLanguage !== 'en';
+    
+    let modal = document.createElement('div');
+    modal.id = 'adminStatsModal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);backdrop-filter:blur(20px);z-index:20000;display:flex;justify-content:center;align-items:center;';
+    
+    let usersHtml = '';
+    for (let u of users) {
+        let userData = getUserData(u.username);
+        usersHtml += `
+            <div style="background:rgba(255,255,255,0.05);border-radius:12px;padding:8px 12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
+                <span style="color:#ffd700;">👤 ${escapeHtml(u.username)}</span>
+                <span>🎋 ${u.bamboo || 0}</span>
+                <span>📚 ${userData.learnedWords?.length || 0}</span>
+                <button onclick="editUserStats('${u.username}')" style="background:#2196f3;border:none;color:white;padding:4px 12px;border-radius:20px;cursor:pointer;">✏️</button>
+            </div>
+        `;
+    }
+    
+    modal.innerHTML = `
+        <div style="background:linear-gradient(145deg,rgba(30,30,60,0.98),rgba(20,20,50,0.98));border-radius:40px;max-width:600px;width:90%;max-height:85vh;border:1px solid rgba(255,255,255,0.15);overflow:hidden;display:flex;flex-direction:column;">
+            <div style="padding:15px 20px;background:linear-gradient(135deg,rgba(255,107,157,0.15),rgba(192,132,252,0.15));display:flex;justify-content:space-between;align-items:center;">
+                <h2 style="margin:0;color:#ffd700;">👑 ${isRu ? 'Админ-панель' : 'Admin Panel'}</h2>
+                <button onclick="document.getElementById('adminStatsModal')?.remove()" style="background:#ff6b9d;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;color:white;">✖</button>
+            </div>
+            <div style="padding:20px;overflow-y:auto;">
+                <!-- СТАТИСТИКА ПОСЕТИТЕЛЕЙ -->
+                <div style="background:linear-gradient(135deg,rgba(76,175,80,0.1),rgba(76,175,80,0.05));border-radius:20px;padding:15px;margin-bottom:20px;border:1px solid rgba(76,175,80,0.3);">
+                    <h3 style="color:#4caf50;margin:0 0 10px 0;">📊 ${isRu ? 'Статистика посетителей' : 'Visitor Statistics'}</h3>
+                    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;text-align:center;">
+                        <div><div style="font-size:2rem;font-weight:bold;color:#ffd700;">${stats.today}</div><div style="font-size:0.7rem;">📅 ${isRu ? 'Сегодня' : 'Today'}</div></div>
+                        <div><div style="font-size:2rem;font-weight:bold;color:#ffd700;">${stats.week}</div><div style="font-size:0.7rem;">📆 ${isRu ? 'Неделя' : 'Week'}</div></div>
+                        <div><div style="font-size:2rem;font-weight:bold;color:#ffd700;">${stats.month}</div><div style="font-size:0.7rem;">📆 ${isRu ? 'Месяц' : 'Month'}</div></div>
+                        <div><div style="font-size:2rem;font-weight:bold;color:#ff9800;">${stats.totalRegistered}</div><div style="font-size:0.7rem;">👥 ${isRu ? 'Всего юзеров' : 'Total users'}</div></div>
+                    </div>
+                </div>
+                
+                <!-- УПРАВЛЕНИЕ ЮЗЕРАМИ -->
+                <div style="display:flex;gap:10px;margin-bottom:15px;">
+                    <button onclick="adminAddBambooAll(10)" style="background:#4caf50;border:none;color:white;padding:8px 12px;border-radius:25px;cursor:pointer;">🎋 +10 всем</button>
+                    <button onclick="adminResetAllProgress()" style="background:#ff9800;border:none;color:white;padding:8px 12px;border-radius:25px;cursor:pointer;">🔄 Сброс прогресса</button>
+                </div>
+                
+                <h3 style="color:#c084fc;margin:0 0 10px 0;">👥 ${isRu ? 'Пользователи' : 'Users'} (${users.length})</h3>
+                <div style="max-height:300px;overflow-y:auto;">${usersHtml || '<div style="text-align:center;padding:20px;">Нет пользователей</div>'}</div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+// --- РЕДАКТИРОВАНИЕ ЮЗЕРА ---
+function editUserStats(username) {
+    let userData = getUserData(username);
+    let user = getUsers().find(u => u.username === username);
+    let isRu = currentLanguage !== 'en';
+    
+    let modal = document.createElement('div');
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);backdrop-filter:blur(20px);z-index:20001;display:flex;justify-content:center;align-items:center;';
+    
+    modal.innerHTML = `
+        <div style="background:linear-gradient(145deg,rgba(30,30,60,0.98),rgba(20,20,50,0.98));border-radius:30px;max-width:350px;width:90%;padding:20px;border:1px solid rgba(255,255,255,0.15);">
+            <h3 style="color:#ffd700;margin-top:0;">✏️ ${isRu ? 'Редактировать' : 'Edit'}: ${escapeHtml(username)}</h3>
+            <div style="margin-bottom:10px;"><label style="color:#c084fc;">🎋 Bamboo</label><input type="number" id="editBamboo" value="${user?.bamboo || 0}" style="width:100%;padding:8px;border-radius:20px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;"></div>
+            <div style="margin-bottom:10px;"><label style="color:#c084fc;">📚 Learned</label><input type="number" id="editLearned" value="${userData.learnedWords?.length || 0}" style="width:100%;padding:8px;border-radius:20px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;"></div>
+            <div style="margin-bottom:10px;"><label style="color:#c084fc;">⏱️ Study time (sec)</label><input type="number" id="editTime" value="${userData.studyTime || 0}" style="width:100%;padding:8px;border-radius:20px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;"></div>
+            <div style="display:flex;gap:10px;margin-top:15px;">
+                <button onclick="saveUserStats('${username}')" style="flex:1;background:#4caf50;border:none;color:white;padding:8px;border-radius:25px;cursor:pointer;">✅ ${isRu ? 'Сохранить' : 'Save'}</button>
+                <button onclick="this.closest('div').parentElement.remove()" style="flex:1;background:#c084fc;border:none;color:white;padding:8px;border-radius:25px;cursor:pointer;">✖ ${isRu ? 'Отмена' : 'Cancel'}</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+function saveUserStats(username) {
+    let bamboo = parseInt(document.getElementById('editBamboo')?.value) || 0;
+    let learned = parseInt(document.getElementById('editLearned')?.value) || 0;
+    let studyTime = parseInt(document.getElementById('editTime')?.value) || 0;
+    
+    // Обновляем bamboo в списке пользователей
+    let users = getUsers();
+    let userIndex = users.findIndex(u => u.username === username);
+    if (userIndex !== -1) users[userIndex].bamboo = bamboo;
+    saveUsers(users);
+    
+    // Обновляем данные пользователя
+    let userData = getUserData(username);
+    let currentLearned = userData.learnedWords || [];
+    if (learned > currentLearned.length) {
+        for (let i = currentLearned.length; i < learned; i++) currentLearned.push(`admin_added_${i}`);
+    } else if (learned < currentLearned.length) {
+        currentLearned = currentLearned.slice(0, learned);
+    }
+    userData.learnedWords = currentLearned;
+    userData.studyTime = studyTime;
+    userData.bamboo = bamboo;
+    saveUserData(username, userData);
+    
+    document.querySelector('#adminStatsModal')?.remove();
+    openAdminPanel();
+    showTempMessage(`✅ ${username} updated!`, '#4caf50');
+}
+
+function adminAddBambooAll(amount) {
+    let users = getUsers();
+    for (let u of users) {
+        if (u.username === 'admin') continue;
+        u.bamboo = (u.bamboo || 0) + amount;
+        let ud = getUserData(u.username);
+        ud.bamboo = u.bamboo;
+        saveUserData(u.username, ud);
+    }
+    saveUsers(users);
+    showTempMessage(`🎋 +${amount} bamboo to all!`, '#4caf50');
+    document.getElementById('adminStatsModal')?.remove();
+    openAdminPanel();
+}
+
+function adminResetAllProgress() {
+    if (!confirm('Сбросить прогресс ВСЕХ пользователей? Это нельзя отменить!')) return;
+    let users = getUsers();
+    for (let u of users) {
+        if (u.username === 'admin') continue;
+        localStorage.removeItem(`hsk_user_${u.username}`);
+        saveUserData(u.username, {
+            learnedWords: [],
+            unlockedLessons: getDefaultUnlockedLessons(),
+            bamboo: 0,
+            errors: [],
+            studyTime: 0,
+            favoriteWords: [],
+            userStats: { dailyQuests: {}, achievements: {}, streak: 0, lastLoginDate: null, level: 1, xp: 0, wordErrors: {} }
+        });
+    }
+    showTempMessage('🔄 Весь прогресс сброшен!', '#ff9800');
+    document.getElementById('adminStatsModal')?.remove();
+    openAdminPanel();
+}
+
+// --- ОБНОВЛЕНИЕ СЧЁТЧИКОВ НА ГЛАВНОЙ ---
+function updateAllStats() {
+    let stats = getVisitorStats();
+    let visitorsEl = document.getElementById('visitorCount');
+    let registeredEl = document.getElementById('registeredUsersCount');
+    if (visitorsEl) visitorsEl.innerText = stats.today;
+    if (registeredEl) registeredEl.innerText = stats.totalRegistered;
+    
+    // Обновляем данные текущего пользователя
+    if (currentUser) {
+        let userData = getUserData(currentUser);
+        let usersList = getUsers();
+        let user = usersList.find(u => u.username === currentUser);
+        let pointsEl = document.getElementById('myPoints');
+        let timeEl = document.getElementById('myTime');
+        if (pointsEl) pointsEl.innerText = user?.bamboo || 0;
+        if (timeEl) timeEl.innerText = formatTime(userData.studyTime || 0);
+    }
+}
+
+// --- КНОПКА АДМИНА НА ГЛАВНОЙ ---
+function addAdminButtonToMain() {
+    if (!currentUser || currentUser !== 'admin') return;
+    let header = document.querySelector('.welcome-header .header-buttons');
+    if (!header) return;
+    if (document.getElementById('adminStatsBtn')) return;
+    
+    let btn = document.createElement('button');
+    btn.id = 'adminStatsBtn';
+    btn.innerHTML = '👑 Admin';
+    btn.style.cssText = 'background:linear-gradient(135deg,#ff6b9d,#c084fc);border:none;color:white;padding:10px 20px;border-radius:40px;cursor:pointer;font-weight:600;margin-left:10px;';
+    btn.onclick = openAdminPanel;
+    
+    let rankBtn = header.querySelector('.rank-btn');
+    if (rankBtn) header.insertBefore(btn, rankBtn);
+    else header.appendChild(btn);
+}
+
+// --- ПЕРЕХВАТЫ ДЛЯ АВТОМАТИЧЕСКОЙ РЕГИСТРАЦИИ ВИЗИТОВ ---
+let originalLoginFn = window.login;
+window.login = function() {
+    if (originalLoginFn) originalLoginFn();
+    setTimeout(() => {
+        registerVisit();
+        updateAllStats();
+        addAdminButtonToMain();
+    }, 300);
+};
+
+let originalShowMainPage = window.showMainPage;
+window.showMainPage = function() {
+    if (originalShowMainPage) originalShowMainPage();
+    setTimeout(() => {
+        updateAllStats();
+        addAdminButtonToMain();
+    }, 200);
+};
+
+// --- ИНИЦИАЛИЗАЦИЯ ---
+setTimeout(() => {
+    updateAllStats();
+    if (currentUser === 'admin') addAdminButtonToMain();
+    if (currentUser && currentUser !== 'admin') registerVisit();
+}, 500);
+
+console.log('✅ Статистика готова! Админ видит посетителей за день/неделю/месяц');
+</script>
+
 </body>
 </html>
