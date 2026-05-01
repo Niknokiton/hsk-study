@@ -7999,7 +7999,6 @@ function closeProfileLearnedModal() {
         let le = document.getElementById('loginError');
         if(le) { le.innerHTML = `<span style="color:#4caf50">✅ ${t('registrationSuccess')}</span>`; setTimeout(() => { if(le) le.innerHTML = ''; }, 3000); }
         updateAllStats();
-        
     }
     
     function login() {
@@ -8022,14 +8021,6 @@ function closeProfileLearnedModal() {
     function showRegister() { document.getElementById('loginForm').classList.add('hide'); document.getElementById('registerForm').classList.remove('hide'); document.getElementById('mainPage').classList.add('hide'); document.getElementById('appContainer').classList.add('hide'); document.getElementById('authContainer').classList.remove('hide'); }
     function showMainPage() { document.getElementById('authContainer').classList.add('hide'); document.getElementById('mainPage').classList.remove('hide'); document.getElementById('appContainer').classList.add('hide'); let w = document.getElementById('userWelcome'); if(w) w.innerHTML = `${t('welcomeUser')}, ${escapeHtml(currentUser)}!`; updateAllStats(); updateRecommendations(); }
     
-    // Скрыть блоки статистики для обычных пользователей
-if(currentUser !== 'admin') {
-    let v = document.getElementById('visitorCount');
-    let r = document.getElementById('registeredUsersCount');
-    if(v) v.closest('.stat-box').style.display = 'none';
-    if(r) r.closest('.stat-box').style.display = 'none';
-}
-
     function goHome() { stopStudyTimer(); document.getElementById('mainPage').classList.remove('hide'); document.getElementById('appContainer').classList.add('hide'); updateRankTable(); updateLevelProgressBars(); }
     
     function updateRecommendations() {
@@ -21868,793 +21859,339 @@ window.startReading = function() {
     };
 };
 </script>
-<script>
-// ==================== ИСПРАВЛЕННЫЕ ФУНКЦИИ ДЛЯ СЧЁТЧИКОВ ====================
 
-// Функция обновления счётчика посетителей
-function updateVisitorCounter() {
-    let today = new Date().toDateString();
-    let data = localStorage.getItem('hsk_visitor_data');
-    
-    if(!data) {
-        localStorage.setItem('hsk_visitor_data', JSON.stringify({ date: today, count: 1 }));
-    } else {
-        let d = JSON.parse(data);
-        if(d.date !== today) {
-            localStorage.setItem('hsk_visitor_data', JSON.stringify({ date: today, count: 1 }));
-        } else {
-            let key = 'hsk_counted_' + today;
-            if(!sessionStorage.getItem(key) && currentUser) {
-                d.count++;
-                localStorage.setItem('hsk_visitor_data', JSON.stringify(d));
-                sessionStorage.setItem(key, 'true');
-            }
-        }
-    }
-    
-    let fresh = JSON.parse(localStorage.getItem('hsk_visitor_data') || '{"count":0}');
-    let el = document.getElementById('visitorCount');
-    if(el) el.innerText = fresh.count;
-}
-
-// Функция обновления всей статистики
-function updateAllStats() {
-    updateVisitorCounter();
-    updateRankTable();
-    updateLevelProgressBars();
-    
-    // Дополнительное обновление счётчиков на главной
-    let users = getUsers();
-    let regEl = document.getElementById('registeredUsersCount');
-    if(regEl) regEl.innerText = users.length;
-    
-    if(currentUser) {
-        let userData = getUserData(currentUser);
-        let myBamboo = 0;
-        let userInList = users.find(u => u.username === currentUser);
-        if(userInList) myBamboo = userInList.bamboo || 0;
-        
-        let myPoints = document.getElementById('myPoints');
-        if(myPoints) myPoints.innerText = myBamboo;
-        
-        let myTime = document.getElementById('myTime');
-        if(myTime) myTime.innerText = formatTime(userData.studyTime || 0);
-        
-        let userLevel = document.getElementById('userLevel');
-        if(userLevel) userLevel.innerText = userData.userStats?.level || 1;
-        
-        let userStreak = document.getElementById('userStreak');
-        if(userStreak) userStreak.innerText = userData.userStats?.streak || 0;
-    }
-}
-
-// Обновление таблицы рейтинга
-function updateRankTable() {
-    let users = getUsers();
-    let regEl = document.getElementById('registeredUsersCount');
-    if(regEl) regEl.innerText = users.length;
-    
-    if(currentUser) {
-        let myTime = getUserData(currentUser).studyTime || 0;
-        let tm = document.getElementById('myTime');
-        if(tm) tm.innerText = formatTime(myTime);
-        let uu = users.find(u => u.username === currentUser);
-        let myBamboo = uu ? uu.bamboo : 0;
-        let mp = document.getElementById('myPoints');
-        if(mp) mp.innerText = myBamboo;
-    }
-    
-    let sortedBamboo = [...users].sort((a,b) => (b.bamboo || 0) - (a.bamboo || 0)).slice(0, 100);
-    let bb = document.getElementById('rankBambooBody');
-    if(bb) {
-        bb.innerHTML = '';
-        sortedBamboo.forEach((u, i) => {
-            let r = bb.insertRow();
-            r.insertCell(0).innerText = i + 1;
-            r.insertCell(1).innerHTML = `${escapeHtml(u.username)}${u.username === currentUser ? ' <span class="bamboo-badge" style="background:linear-gradient(135deg,#ffd700,#ff9800);">' + (currentLanguage === 'ru' ? 'Вы' : 'You') + '</span>' : ''}`;
-            r.insertCell(2).innerHTML = `<span class="bamboo-badge">🎋 ${u.bamboo || 0}</span>`;
-        });
-    }
-    
-    let usersWithTime = users.map(u => ({ ...u, studyTime: getUserData(u.username).studyTime || 0 }));
-    let sortedTime = [...usersWithTime].sort((a,b) => (b.studyTime || 0) - (a.studyTime || 0)).slice(0, 100);
-    let tb = document.getElementById('rankTimeBody');
-    if(tb) {
-        tb.innerHTML = '';
-        sortedTime.forEach((u, i) => {
-            let r = tb.insertRow();
-            r.insertCell(0).innerText = i + 1;
-            r.insertCell(1).innerHTML = `${escapeHtml(u.username)}${u.username === currentUser ? ' <span class="bamboo-badge" style="background:linear-gradient(135deg,#ffd700,#ff9800);">' + (currentLanguage === 'ru' ? 'Вы' : 'You') + '</span>' : ''}`;
-            r.insertCell(2).innerHTML = `<span class="bamboo-badge" style="background:linear-gradient(135deg,#2196f3,#00bcd4);">⏱️ ${formatTime(u.studyTime || 0)}</span>`;
-        });
-    }
-    
-    updateLevelProgressBars();
-}
-
-// ==================== ИСПРАВЛЕННЫЕ ФУНКЦИИ АВТОРИЗАЦИИ ====================
-
-function register() {
-    let u = document.getElementById('regUsername').value.trim(), e = document.getElementById('regEmail').value.trim(), p = document.getElementById('regPassword').value;
-    if(!u || !e || !p) { document.getElementById('registerError').innerText = t('fillAllFields'); return; }
-    if(p.length < 4) { document.getElementById('registerError').innerText = t('passwordMin'); return; }
-    let users = getUsers();
-    if(users.find(us => us.username === u)) { document.getElementById('registerError').innerText = t('userExists'); return; }
-    users.push({ username: u, email: e, password: p, bamboo: 0 });
-    saveUsers(users);
-    saveUserData(u, { learnedWords: [], unlockedLessons: getDefaultUnlockedLessons(), bamboo: 0, errors: [], studyTime: 0, favoriteWords: [], userStats: { dailyQuests: {}, achievements: {}, streak: 0, lastLoginDate: null, level: 1, xp: 0, wordErrors: {} } });
-    document.getElementById('regUsername').value = '';
-    document.getElementById('regEmail').value = '';
-    document.getElementById('regPassword').value = '';
-    showLogin();
-    let le = document.getElementById('loginError');
-    if(le) { le.innerHTML = `<span style="color:#4caf50">✅ ${t('registrationSuccess')}</span>`; setTimeout(() => { if(le) le.innerHTML = ''; }, 3000); }
-    updateAllStats();
-}
-
-function login() {
-    let u = document.getElementById('loginUsername').value.trim(), p = document.getElementById('loginPassword').value;
-    let users = getUsers();
-    let user = users.find(us => us.username === u && us.password === p);
-    if(!user) { document.getElementById('loginError').innerText = t('invalidCredentials'); return; }
-    currentUser = u;
-    localStorage.setItem('hsk_current_user', u);
-    document.getElementById('loginUsername').value = '';
-    document.getElementById('loginPassword').value = '';
-    document.getElementById('loginError').innerHTML = '';
-    updateAllStats();
-    updateUserStats();
-    showMainPage();
-}
-
-function logout() { 
-    stopStudyTimer(); 
-    currentUser = null; 
-    localStorage.removeItem('hsk_current_user'); 
-    showLogin(); 
-}
-
-function showLogin() { 
-    document.getElementById('loginForm').classList.remove('hide'); 
-    document.getElementById('registerForm').classList.add('hide'); 
-    document.getElementById('mainPage').classList.add('hide'); 
-    document.getElementById('appContainer').classList.add('hide'); 
-    document.getElementById('authContainer').classList.remove('hide'); 
-    updateVisitorCounter();
-}
-
-function showRegister() { 
-    document.getElementById('loginForm').classList.add('hide'); 
-    document.getElementById('registerForm').classList.remove('hide'); 
-    document.getElementById('mainPage').classList.add('hide'); 
-    document.getElementById('appContainer').classList.add('hide'); 
-    document.getElementById('authContainer').classList.remove('hide'); 
-}
-
-function showMainPage() { 
-    document.getElementById('authContainer').classList.add('hide'); 
-    document.getElementById('mainPage').classList.remove('hide'); 
-    document.getElementById('appContainer').classList.add('hide'); 
-    let w = document.getElementById('userWelcome'); 
-    if(w) w.innerHTML = `${t('welcomeUser')}, ${escapeHtml(currentUser)}!`; 
-    updateAllStats(); 
-    updateRecommendations(); 
-}
-
-// Добавить в конец скрипта для автоматического обновления
-setInterval(() => {
-    if(currentUser && document.getElementById('mainPage') && !document.getElementById('mainPage').classList.contains('hide')) {
-        updateVisitorCounter();
-        let visitorsEl = document.getElementById('visitorCount');
-        if(visitorsEl) {
-            let data = JSON.parse(localStorage.getItem('hsk_visitor_data') || '{"count":0}');
-            visitorsEl.innerText = data.count;
-        }
-        let users = getUsers();
-        let regEl = document.getElementById('registeredUsersCount');
-        if(regEl) regEl.innerText = users.length;
-    }
-}, 30000);
-</script>
 
 <script>
-  // ==================== СИСТЕМА АДМИНИСТРАТОРА ====================
+// ==================== АДМИН-ПАНЕЛЬ (РАБОЧАЯ) ====================
 
-// Конфигурация администратора
-const ADMIN_CONFIG = {
-    username: 'admin',
-    password: 'admin123'
-};
-
-// Проверка, является ли пользователь администратором
-function isAdmin() {
-    return currentUser === ADMIN_CONFIG.username;
-}
-
-// Получение статистики посетителей за период
-function getVisitorStats(period = 'day') {
-    let visitorsData = JSON.parse(localStorage.getItem('hsk_visitors_history') || '{}');
+// ---------- СТАТИСТИКА ПОСЕТИТЕЛЕЙ ----------
+function getVisitorStats() {
     let today = new Date().toDateString();
+    let weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    let monthAgo = new Date();
+    monthAgo.setMonth(monthAgo.getMonth() - 1);
     
-    if(period === 'day') {
-        return visitorsData[today] || 0;
-    } else if(period === 'week') {
-        let weekStart = new Date();
-        weekStart.setDate(weekStart.getDate() - 7);
-        let total = 0;
-        for(let key in visitorsData) {
-            let date = new Date(key);
-            if(date >= weekStart) total += visitorsData[key];
-        }
-        return total;
-    } else if(period === 'month') {
-        let monthStart = new Date();
-        monthStart.setDate(monthStart.getDate() - 30);
-        let total = 0;
-        for(let key in visitorsData) {
-            let date = new Date(key);
-            if(date >= monthStart) total += visitorsData[key];
-        }
-        return total;
+    let visits = JSON.parse(localStorage.getItem('hsk_visits_history') || '[]');
+    
+    let uniqueToday = new Set();
+    let uniqueWeek = new Set();
+    let uniqueMonth = new Set();
+    
+    for (let visit of visits) {
+        let visitDate = new Date(visit.date).toDateString();
+        if (visitDate === today) uniqueToday.add(visit.username);
+        if (new Date(visit.date) >= weekAgo) uniqueWeek.add(visit.username);
+        if (new Date(visit.date) >= monthAgo) uniqueMonth.add(visit.username);
     }
-    return 0;
+    
+    return {
+        today: uniqueToday.size,
+        week: uniqueWeek.size,
+        month: uniqueMonth.size,
+        total: getUsers().filter(u => u.username !== 'admin').length
+    };
 }
 
-// Запись посетителя в историю
-function recordVisitor() {
+// ---------- РЕГИСТРАЦИЯ ПОСЕЩЕНИЯ ----------
+function registerUserVisit() {
+    if (!currentUser || currentUser === 'admin') return;
+    let visits = JSON.parse(localStorage.getItem('hsk_visits_history') || '[]');
     let today = new Date().toDateString();
-    let visitorsData = JSON.parse(localStorage.getItem('hsk_visitors_history') || '{}');
-    let key = 'hsk_counted_' + today;
-    
-    if(!sessionStorage.getItem(key) && currentUser) {
-        visitorsData[today] = (visitorsData[today] || 0) + 1;
-        localStorage.setItem('hsk_visitors_history', JSON.stringify(visitorsData));
-        sessionStorage.setItem(key, 'true');
+    let alreadyVisited = visits.some(v => v.username === currentUser && new Date(v.date).toDateString() === today);
+    if (!alreadyVisited) {
+        visits.push({ username: currentUser, date: new Date().toISOString() });
+        localStorage.setItem('hsk_visits_history', JSON.stringify(visits.slice(-1000)));
     }
 }
 
-// Функция входа
-function login() {
-    let u = document.getElementById('loginUsername').value.trim();
-    let p = document.getElementById('loginPassword').value;
-    
-    if(u === ADMIN_CONFIG.username && p === ADMIN_CONFIG.password) {
-        currentUser = ADMIN_CONFIG.username;
-        localStorage.setItem('hsk_current_user', ADMIN_CONFIG.username);
-        document.getElementById('loginUsername').value = '';
-        document.getElementById('loginPassword').value = '';
-        document.getElementById('loginError').innerHTML = '';
-        
-        let users = getUsers();
-        let adminExists = users.find(us => us.username === ADMIN_CONFIG.username);
-        if(!adminExists) {
-            users.push({ username: ADMIN_CONFIG.username, email: 'admin@hskstudy.com', password: ADMIN_CONFIG.password, bamboo: 9999 });
-            saveUsers(users);
-            saveUserData(ADMIN_CONFIG.username, { learnedWords: [], unlockedLessons: getDefaultUnlockedLessons(), bamboo: 9999, errors: [], studyTime: 0, favoriteWords: [], userStats: { dailyQuests: {}, achievements: {}, streak: 0, lastLoginDate: null, level: 20, xp: 0, wordErrors: {} } });
-        }
-        
-        updateAllStats();
-        updateUserStats();
-        showMainPage();
-        
-        // Добавляем кнопку администратора на главную
-        setTimeout(() => {
-            addAdminButton();
-        }, 100);
-        return;
-    }
-    
-    let users = getUsers();
-    let user = users.find(us => us.username === u && us.password === p);
-    if(!user) {
-        document.getElementById('loginError').innerText = t('invalidCredentials');
-        return;
-    }
-    
-    currentUser = u;
-    localStorage.setItem('hsk_current_user', u);
-    document.getElementById('loginUsername').value = '';
-    document.getElementById('loginPassword').value = '';
-    document.getElementById('loginError').innerHTML = '';
-    updateAllStats();
-    updateUserStats();
-    showMainPage();
-}
-
-// Редактирование бамбуков пользователя
-function editUserBamboo(username, newBamboo) {
-    if(!isAdmin()) return;
-    let users = getUsers();
-    let user = users.find(u => u.username === username);
-    if(user) {
-        user.bamboo = Math.max(0, parseInt(newBamboo) || 0);
-        saveUsers(users);
-        let userData = getUserData(username);
-        userData.bamboo = user.bamboo;
-        saveUserData(username, userData);
-        showTempMessage(`✅ Бамбуки ${username} изменены на ${user.bamboo}`, '#4caf50');
-        openAdminModal();
-        updateRankTable();
-    }
-}
-
-// Редактирование времени обучения пользователя
-function editUserTime(username, newTime) {
-    if(!isAdmin()) return;
-    let userData = getUserData(username);
-    userData.studyTime = Math.max(0, parseInt(newTime) || 0);
-    saveUserData(username, userData);
-    showTempMessage(`✅ Время ${username} изменено на ${formatTime(userData.studyTime)}`, '#4caf50');
-    openAdminModal();
-    updateRankTable();
-}
-
-// Удаление пользователя
-function deleteUser(username) {
-    if(!isAdmin()) return;
-    if(username === ADMIN_CONFIG.username) {
-        showTempMessage('❌ Нельзя удалить администратора!', '#f44336');
-        return;
-    }
-    
-    if(confirm(`Удалить пользователя "${username}"? Все данные будут потеряны!`)) {
-        let users = getUsers();
-        let newUsers = users.filter(u => u.username !== username);
-        saveUsers(newUsers);
-        localStorage.removeItem(`hsk_user_${username}`);
-        localStorage.removeItem(`friends_${username}`);
-        
-        let allMessages = JSON.parse(localStorage.getItem('hsk_all_messages') || '[]');
-        allMessages = allMessages.filter(m => m.from !== username && m.to !== username);
-        localStorage.setItem('hsk_all_messages', JSON.stringify(allMessages));
-        
-        let forumPosts = JSON.parse(localStorage.getItem('hsk_forum_posts') || '[]');
-        forumPosts = forumPosts.filter(p => p.author !== username);
-        localStorage.setItem('hsk_forum_posts', JSON.stringify(forumPosts));
-        
-        showTempMessage(`✅ Пользователь "${username}" удалён!`, '#4caf50');
-        openAdminModal();
-        updateRankTable();
-        updateAllStats();
-    }
-}
-
-// Редактирование сообщений пользователей
-function editUserPost(postId, newContent) {
-    if(!isAdmin()) return;
-    let posts = JSON.parse(localStorage.getItem('hsk_forum_posts') || '[]');
-    let post = posts.find(p => p.id == postId);
-    if(post) {
-        post.content = newContent;
-        post.editedBy = ADMIN_CONFIG.username;
-        post.editDate = new Date().toLocaleString();
-        localStorage.setItem('hsk_forum_posts', JSON.stringify(posts));
-        showTempMessage(`✅ Пост отредактирован!`, '#4caf50');
-        if(document.getElementById('forumModal').classList.contains('active')) {
-            openForumModal();
-        }
-    }
-}
-
-// Удаление сообщения пользователя
-function deleteUserPost(postId) {
-    if(!isAdmin()) return;
-    if(confirm('Удалить этот пост?')) {
-        let posts = JSON.parse(localStorage.getItem('hsk_forum_posts') || '[]');
-        posts = posts.filter(p => p.id != postId);
-        localStorage.setItem('hsk_forum_posts', JSON.stringify(posts));
-        showTempMessage(`✅ Пост удалён!`, '#4caf50');
-        if(document.getElementById('forumModal').classList.contains('active')) {
-            openForumModal();
-        }
-    }
-}
-
-// Просмотр ответов на пост
-function viewPostReplies(postId) {
-    if(!isAdmin()) return;
-    let posts = JSON.parse(localStorage.getItem('hsk_forum_posts') || '[]');
-    let post = posts.find(p => p.id == postId);
-    if(!post) return;
-    
-    let replies = post.replies || [];
-    let modal = document.createElement('div');
-    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);backdrop-filter:blur(20px);z-index:10051;display:flex;justify-content:center;align-items:center;';
-    
-    modal.innerHTML = `
-        <div style="background:linear-gradient(135deg,rgba(30,30,60,0.98),rgba(20,20,50,0.98));border-radius:48px;max-width:600px;width:90%;max-height:70vh;padding:25px;border:1px solid rgba(255,255,255,0.2);overflow-y:auto;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-                <h3 style="color:#ffd700;margin:0;">💬 Ответы на "${escapeHtml(post.title)}"</h3>
-                <button class="closeRepliesModal" style="background:#ff6b9d;border:none;color:white;width:30px;height:30px;border-radius:50%;cursor:pointer;">✖</button>
-            </div>
-            ${replies.length === 0 ? '<div style="text-align:center;padding:20px;color:#888;">Нет ответов</div>' : ''}
-            ${replies.map((reply, idx) => `
-                <div style="background:rgba(255,255,255,0.05);border-radius:12px;padding:10px;margin-bottom:10px;">
-                    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;margin-bottom:5px;">
-                        <span><strong>${escapeHtml(reply.author)}</strong></span>
-                        <span style="font-size:0.7rem;color:#888;">${reply.date}</span>
-                    </div>
-                    <div id="replyContent_${postId}_${idx}">${escapeHtml(reply.text)}</div>
-                    <div style="display:flex;gap:8px;margin-top:8px;">
-                        <button onclick="editReply(${postId}, ${idx}, prompt('Новый текст ответа:', '${escapeHtml(reply.text).replace(/'/g, "\\'")}'))" style="background:#2196f3;border:none;padding:3px 10px;border-radius:15px;cursor:pointer;color:white;font-size:0.7rem;">✏️</button>
-                        <button onclick="deleteReply(${postId}, ${idx})" style="background:#f44336;border:none;padding:3px 10px;border-radius:15px;cursor:pointer;color:white;font-size:0.7rem;">🗑️</button>
-                    </div>
-                </div>
-            `).join('')}
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
-    modal.querySelector('.closeRepliesModal').onclick = () => modal.remove();
-}
-
-function editReply(postId, replyIndex, newText) {
-    if(!isAdmin() || !newText) return;
-    let posts = JSON.parse(localStorage.getItem('hsk_forum_posts') || '[]');
-    let post = posts.find(p => p.id == postId);
-    if(post && post.replies && post.replies[replyIndex]) {
-        post.replies[replyIndex].text = newText;
-        post.replies[replyIndex].editedBy = ADMIN_CONFIG.username;
-        localStorage.setItem('hsk_forum_posts', JSON.stringify(posts));
-        showTempMessage('✅ Ответ отредактирован!', '#4caf50');
-        viewPostReplies(postId);
-    }
-}
-
-function deleteReply(postId, replyIndex) {
-    if(!isAdmin()) return;
-    if(confirm('Удалить этот ответ?')) {
-        let posts = JSON.parse(localStorage.getItem('hsk_forum_posts') || '[]');
-        let post = posts.find(p => p.id == postId);
-        if(post && post.replies) {
-            post.replies.splice(replyIndex, 1);
-            localStorage.setItem('hsk_forum_posts', JSON.stringify(posts));
-            showTempMessage('✅ Ответ удалён!', '#4caf50');
-            viewPostReplies(postId);
-        }
-    }
-}
-
-// ДОБАВЛЕНИЕ КНОПКИ АДМИНИСТРАТОРА НА ГЛАВНУЮ СТРАНИЦУ
+// ---------- ДОБАВЛЕНИЕ КНОПКИ АДМИНА ----------
 function addAdminButton() {
-    if(!isAdmin()) return;
-    
-    // Проверяем, есть ли уже кнопка
-    if(document.getElementById('adminModalBtn')) return;
+    if (!currentUser || currentUser !== 'admin') {
+        let btn = document.getElementById('adminPanelBtn');
+        if (btn) btn.remove();
+        return;
+    }
     
     let headerButtons = document.querySelector('.welcome-header .header-buttons');
-    if(!headerButtons) {
-        headerButtons = document.querySelector('.header-buttons');
-    }
+    if (!headerButtons) headerButtons = document.querySelector('.header-buttons');
+    if (!headerButtons) return;
+    if (document.getElementById('adminPanelBtn')) return;
     
-    if(headerButtons) {
-        let adminBtn = document.createElement('button');
-        adminBtn.id = 'adminModalBtn';
-        adminBtn.innerHTML = '👑 Админ-панель';
-        adminBtn.style.cssText = `
-            background: linear-gradient(135deg, #ff6b9d, #c084fc, #a855f7);
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.3s;
-            margin: 0 5px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        `;
-        adminBtn.onmouseenter = () => {
-            adminBtn.style.transform = 'scale(1.05)';
-            adminBtn.style.boxShadow = '0 4px 15px rgba(255,107,157,0.5)';
-        };
-        adminBtn.onmouseleave = () => {
-            adminBtn.style.transform = 'scale(1)';
-            adminBtn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
-        };
-        adminBtn.onclick = () => {
-            openAdminModal();
-        };
-        
-        let rankBtn = headerButtons.querySelector('.rank-btn');
-        if(rankBtn) {
-            headerButtons.insertBefore(adminBtn, rankBtn);
-        } else {
-            headerButtons.appendChild(adminBtn);
-        }
-        
-        console.log('✅ Кнопка администратора добавлена на главную страницу');
-    }
+    let adminBtn = document.createElement('button');
+    adminBtn.id = 'adminPanelBtn';
+    adminBtn.innerHTML = '👑 Admin';
+    adminBtn.style.cssText = 'background:linear-gradient(135deg,#ff6b9d,#c084fc);border:none;color:white;padding:10px 20px;border-radius:40px;cursor:pointer;font-weight:600;margin-left:10px;transition:0.3s;';
+    adminBtn.onmouseenter = () => { adminBtn.style.transform = 'translateY(-2px)'; adminBtn.style.boxShadow = '0 5px 15px rgba(192,132,252,0.5)'; };
+    adminBtn.onmouseleave = () => { adminBtn.style.transform = 'translateY(0)'; adminBtn.style.boxShadow = 'none'; };
+    adminBtn.onclick = openAdminPanel;
+    
+    let logoutBtn = headerButtons.querySelector('.logout-btn');
+    if (logoutBtn) headerButtons.insertBefore(adminBtn, logoutBtn);
+    else headerButtons.appendChild(adminBtn);
 }
 
-// ОТКРЫТИЕ МОДАЛЬНОГО ОКНА АДМИНИСТРАТОРА
-function openAdminModal() {
-    if(!isAdmin()) return;
+// ---------- ЗАКРЫТИЕ ВСЕХ ОКОН ----------
+function closeAdminModals() {
+    let modal1 = document.getElementById('adminMainModal');
+    let modal2 = document.getElementById('adminEditModal');
+    if (modal1) modal1.remove();
+    if (modal2) modal2.remove();
+}
+
+// ---------- ОТКРЫТИЕ АДМИН-ПАНЕЛИ ----------
+function openAdminPanel() {
+    if (!currentUser || currentUser !== 'admin') { 
+        alert('Доступ запрещён!'); 
+        return; 
+    }
+    closeAdminModals();
     
-    // Удаляем старое окно, если есть
-    let oldModal = document.getElementById('adminModalWindow');
-    if(oldModal) oldModal.remove();
+    const isRu = currentLanguage !== 'en';
+    let usersList = getUsers();
+    let regularUsers = usersList.filter(u => u.username !== 'admin');
+    let visitorStats = getVisitorStats();
     
-    let users = getUsers();
-    let visitorsDay = getVisitorStats('day');
-    let visitorsWeek = getVisitorStats('week');
-    let visitorsMonth = getVisitorStats('month');
-    
-    let totalLearned = 0;
-    let totalStudyTime = 0;
-    let totalBamboo = 0;
-    
-    users.forEach(user => {
+    let usersHtml = '';
+    for (let user of regularUsers) {
         let userData = getUserData(user.username);
-        totalLearned += (userData.learnedWords || []).length;
-        totalStudyTime += (userData.studyTime || 0);
-        totalBamboo += (user.bamboo || 0);
-    });
+        usersHtml += `
+            <div style="background:rgba(255,255,255,0.05);border-radius:15px;padding:10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                <span style="color:#ffd700;">👤 ${escapeHtml(user.username)}</span>
+                <span>📚 ${userData.learnedWords?.length || 0}</span>
+                <span>🎋 ${user.bamboo || 0}</span>
+                <span>⏱️ ${formatTime(userData.studyTime || 0)}</span>
+                <div>
+                    <button onclick="adminEditUser('${user.username}')" style="background:#2196f3;border:none;color:white;padding:4px 12px;border-radius:20px;cursor:pointer;margin-right:5px;">✏️</button>
+                    <button onclick="adminDeleteUser('${user.username}')" style="background:#f44336;border:none;color:white;padding:4px 12px;border-radius:20px;cursor:pointer;">🗑️</button>
+                </div>
+            </div>
+        `;
+    }
+    
+    if (regularUsers.length === 0) {
+        usersHtml = '<div style="text-align:center;padding:20px;">' + (isRu ? 'Нет пользователей' : 'No users') + '</div>';
+    }
     
     let modal = document.createElement('div');
-    modal.id = 'adminModalWindow';
-    modal.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.95);
-        backdrop-filter: blur(20px);
-        z-index: 20000;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        animation: fadeInUp 0.3s ease;
-    `;
+    modal.id = 'adminMainModal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);backdrop-filter:blur(20px);z-index:20000;display:flex;justify-content:center;align-items:center;';
     
     modal.innerHTML = `
-        <div style="background:linear-gradient(135deg,rgba(30,30,60,0.98),rgba(20,20,50,0.98));border-radius:48px;max-width:800px;width:90%;max-height:85vh;padding:25px;border:2px solid #ff6b9d;overflow-y:auto;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-                <h2 style="margin:0;background:linear-gradient(135deg,#ffd700,#ff9800);-webkit-background-clip:text;background-clip:text;color:transparent;">👑 Панель администратора</h2>
-                <button id="closeAdminModalBtn" style="background:#ff6b9d;border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer;">✖</button>
+        <div style="background:linear-gradient(145deg,rgba(30,30,60,0.98),rgba(20,20,50,0.98));border-radius:40px;max-width:700px;width:90%;max-height:85vh;border:1px solid rgba(255,255,255,0.15);display:flex;flex-direction:column;overflow:hidden;">
+            <div style="padding:15px 20px;background:linear-gradient(135deg,rgba(255,107,157,0.15),rgba(192,132,252,0.15));display:flex;justify-content:space-between;align-items:center;">
+                <h2 style="margin:0;background:linear-gradient(135deg,#ffd700,#ff9800);-webkit-background-clip:text;background-clip:text;color:transparent;">👑 ${isRu ? 'Панель администратора' : 'Admin Panel'}</h2>
+                <button onclick="closeAdminModals()" style="background:#ff6b9d;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;color:white;">✖</button>
             </div>
-            
-            <!-- СТАТИСТИКА ПОСЕТИТЕЛЕЙ -->
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:25px;">
-                <div style="background:rgba(255,255,255,0.1);border-radius:20px;padding:15px;text-align:center;">
-                    <div style="font-size:0.8rem;color:#888;">👥 За день</div>
-                    <div style="font-size:2.5rem;color:#ffd700;font-weight:bold;">${visitorsDay}</div>
+            <div style="padding:20px;overflow-y:auto;">
+                <div style="background:linear-gradient(135deg,rgba(255,107,157,0.1),rgba(192,132,252,0.1));border-radius:20px;padding:15px;margin-bottom:15px;border:1px solid rgba(255,255,255,0.1);">
+                    <h3 style="color:#ffd700;margin:0 0 10px 0;">📊 ${isRu ? 'Статистика посещений' : 'Visit Statistics'}</h3>
+                    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;text-align:center;">
+                        <div><div style="font-size:2rem;font-weight:bold;color:#c084fc;">${visitorStats.today}</div><div style="font-size:0.7rem;">👥 ${isRu ? 'сегодня' : 'today'}</div></div>
+                        <div><div style="font-size:2rem;font-weight:bold;color:#ffd700;">${visitorStats.week}</div><div style="font-size:0.7rem;">📅 ${isRu ? 'неделя' : 'week'}</div></div>
+                        <div><div style="font-size:2rem;font-weight:bold;color:#4caf50;">${visitorStats.month}</div><div style="font-size:0.7rem;">📆 ${isRu ? 'месяц' : 'month'}</div></div>
+                        <div><div style="font-size:2rem;font-weight:bold;color:#ff9800;">${visitorStats.total}</div><div style="font-size:0.7rem;">📝 ${isRu ? 'всего' : 'total'}</div></div>
+                    </div>
                 </div>
-                <div style="background:rgba(255,255,255,0.1);border-radius:20px;padding:15px;text-align:center;">
-                    <div style="font-size:0.8rem;color:#888;">📊 За неделю</div>
-                    <div style="font-size:2.5rem;color:#ffd700;font-weight:bold;">${visitorsWeek}</div>
+                
+                <div style="display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap;">
+                    <button onclick="adminAddBambooToAll(10)" style="background:#4caf50;border:none;color:white;padding:8px 15px;border-radius:25px;cursor:pointer;">🎋 +10 ${isRu ? 'бамбуков всем' : 'bamboo to all'}</button>
+                    <button onclick="adminResetAllProgress()" style="background:#ff9800;border:none;color:white;padding:8px 15px;border-radius:25px;cursor:pointer;">🔄 ${isRu ? 'Сброс прогресса' : 'Reset progress'}</button>
                 </div>
-                <div style="background:rgba(255,255,255,0.1);border-radius:20px;padding:15px;text-align:center;">
-                    <div style="font-size:0.8rem;color:#888;">📅 За месяц</div>
-                    <div style="font-size:2.5rem;color:#ffd700;font-weight:bold;">${visitorsMonth}</div>
-                </div>
-            </div>
-            
-            <!-- ОБЩАЯ СТАТИСТИКА -->
-            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:15px;margin-bottom:25px;">
-                <div style="background:rgba(255,255,255,0.05);border-radius:16px;padding:15px;">
-                    <div style="font-size:0.8rem;color:#888;">📝 Зарегистрировано</div>
-                    <div style="font-size:2rem;color:#4caf50;font-weight:bold;">${users.length}</div>
-                </div>
-                <div style="background:rgba(255,255,255,0.05);border-radius:16px;padding:15px;">
-                    <div style="font-size:0.8rem;color:#888;">📚 Всего слов</div>
-                    <div style="font-size:2rem;color:#2196f3;font-weight:bold;">${totalLearned}</div>
-                </div>
-                <div style="background:rgba(255,255,255,0.05);border-radius:16px;padding:15px;">
-                    <div style="font-size:0.8rem;color:#888;">🎋 Всего бамбуков</div>
-                    <div style="font-size:2rem;color:#ffd700;font-weight:bold;">${totalBamboo}</div>
-                </div>
-                <div style="background:rgba(255,255,255,0.05);border-radius:16px;padding:15px;">
-                    <div style="font-size:0.8rem;color:#888;">⏱️ Общее время</div>
-                    <div style="font-size:2rem;color:#ff9800;font-weight:bold;">${formatTime(totalStudyTime)}</div>
-                </div>
-            </div>
-            
-            <!-- УПРАВЛЕНИЕ ПОЛЬЗОВАТЕЛЯМИ -->
-            <div style="margin-bottom:25px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
-                    <h3 style="color:#c084fc;margin:0;">👥 Управление пользователями</h3>
-                    <button id="adminRefreshUsersBtn" style="background:rgba(255,255,255,0.1);border:none;color:white;padding:5px 15px;border-radius:20px;cursor:pointer;">🔄 Обновить</button>
-                </div>
-                <div id="adminUsersListModal" style="max-height:300px;overflow-y:auto;">
-                    ${users.map(user => {
-                        let userData = getUserData(user.username);
-                        return `
-                            <div style="background:rgba(255,255,255,0.05);border-radius:16px;padding:12px;margin-bottom:10px;">
-                                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
-                                    <div>
-                                        <strong style="color:#ffd700;font-size:1rem;">${escapeHtml(user.username)}</strong>
-                                        ${user.username === ADMIN_CONFIG.username ? ' <span style="background:#ff6b9d;padding:2px 10px;border-radius:20px;font-size:0.7rem;">ADMIN</span>' : ''}
-                                        <div style="font-size:0.75rem;color:#888;margin-top:5px;">🎋 ${user.bamboo || 0} | ⏱️ ${formatTime(userData.studyTime || 0)} | 📚 ${(userData.learnedWords || []).length}</div>
-                                    </div>
-                                    ${user.username !== ADMIN_CONFIG.username ? `
-                                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                                            <button onclick="editUserBamboo('${user.username}', prompt('Новое количество бамбуков:', ${user.bamboo || 0}))" style="background:#ffd700;border:none;padding:5px 12px;border-radius:20px;cursor:pointer;color:#1e3c72;font-weight:bold;">🎋</button>
-                                            <button onclick="editUserTime('${user.username}', prompt('Новое время обучения (секунды):', ${userData.studyTime || 0}))" style="background:#2196f3;border:none;padding:5px 12px;border-radius:20px;cursor:pointer;color:white;">⏱️</button>
-                                            <button onclick="deleteUser('${user.username}')" style="background:#f44336;border:none;padding:5px 12px;border-radius:20px;cursor:pointer;color:white;">🗑️</button>
-                                        </div>
-                                    ` : ''}
-                                </div>
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            </div>
-            
-            <!-- КНОПКИ ДЕЙСТВИЙ -->
-            <div style="display:flex;gap:15px;flex-wrap:wrap;">
-                <button id="adminExportDataBtn" style="background:linear-gradient(135deg,#4caf50,#8bc34a);border:none;color:white;padding:12px 20px;border-radius:40px;cursor:pointer;flex:1;font-weight:bold;">📥 Экспорт всех данных</button>
-                <button id="adminClearVisitorsBtn" style="background:linear-gradient(135deg,#ff9800,#ff5722);border:none;color:white;padding:12px 20px;border-radius:40px;cursor:pointer;flex:1;font-weight:bold;">🔄 Сбросить статистику</button>
-                <button id="adminManageForumBtn" style="background:linear-gradient(135deg,#9c27b0,#e91e63);border:none;color:white;padding:12px 20px;border-radius:40px;cursor:pointer;flex:1;font-weight:bold;">💬 Управление форумом</button>
+                
+                <h3 style="color:#c084fc;margin:0 0 10px 0;">👥 ${isRu ? 'Пользователи' : 'Users'} (${regularUsers.length})</h3>
+                <div style="max-height:300px;overflow-y:auto;">${usersHtml}</div>
             </div>
         </div>
     `;
-    
     document.body.appendChild(modal);
-    
-    // Закрытие
-    document.getElementById('closeAdminModalBtn').onclick = () => modal.remove();
-    modal.onclick = (e) => { if(e.target === modal) modal.remove(); };
-    
-    // Обновление списка
-    document.getElementById('adminRefreshUsersBtn').onclick = () => {
-        modal.remove();
-        openAdminModal();
-    };
-    
-    // Экспорт данных
-    document.getElementById('adminExportDataBtn').onclick = () => {
-        let exportData = {
-            users: users,
-            visitorsHistory: JSON.parse(localStorage.getItem('hsk_visitors_history') || '{}'),
-            forumPosts: JSON.parse(localStorage.getItem('hsk_forum_posts') || '[]'),
-            chatMessages: JSON.parse(localStorage.getItem('hsk_all_messages') || '[]'),
-            exportDate: new Date().toLocaleString(),
-            totalStats: { totalUsers: users.length, totalLearnedWords: totalLearned, totalBamboo: totalBamboo, totalStudyTime: totalStudyTime }
-        };
-        
-        let dataStr = JSON.stringify(exportData, null, 2);
-        let dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-        let link = document.createElement('a');
-        link.setAttribute('href', dataUri);
-        link.setAttribute('download', `hsk_export_${new Date().toISOString().slice(0,19)}.json`);
-        link.click();
-        showTempMessage('✅ Данные экспортированы!', '#4caf50');
-    };
-    
-    // Сброс статистики
-    document.getElementById('adminClearVisitorsBtn').onclick = () => {
-        if(confirm('Сбросить всю историю посетителей?')) {
-            localStorage.setItem('hsk_visitors_history', JSON.stringify({}));
-            showTempMessage('✅ История посетителей сброшена!', '#ff9800');
-            modal.remove();
-            openAdminModal();
-        }
-    };
-    
-    // Управление форумом
-    document.getElementById('adminManageForumBtn').onclick = () => {
-        openAdminForumManager();
-    };
 }
 
-// Управление форумом для администратора
-function openAdminForumManager() {
-    if(!isAdmin()) return;
-    let posts = JSON.parse(localStorage.getItem('hsk_forum_posts') || '[]');
+// ---------- РЕДАКТИРОВАНИЕ ПОЛЬЗОВАТЕЛЯ ----------
+function adminEditUser(username) {
+    let mainModal = document.getElementById('adminMainModal');
+    if (mainModal) mainModal.remove();
+    
+    let userData = getUserData(username);
+    let usersList = getUsers();
+    let user = usersList.find(u => u.username === username);
+    const isRu = currentLanguage !== 'en';
+    
     let modal = document.createElement('div');
+    modal.id = 'adminEditModal';
     modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);backdrop-filter:blur(20px);z-index:20001;display:flex;justify-content:center;align-items:center;';
     
     modal.innerHTML = `
-        <div style="background:linear-gradient(135deg,rgba(30,30,60,0.98),rgba(20,20,50,0.98));border-radius:48px;max-width:800px;width:90%;max-height:85vh;padding:25px;border:1px solid rgba(255,255,255,0.2);overflow-y:auto;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-                <h2 style="color:#ffd700;margin:0;">💬 Управление форумом</h2>
-                <button class="closeAdminForumBtn" style="background:#ff6b9d;border:none;color:white;width:36px;height:36px;border-radius:50%;cursor:pointer;">✖</button>
-            </div>
-            <div style="max-height:60vh;overflow-y:auto;">
-                ${posts.length === 0 ? '<div style="text-align:center;padding:40px;color:#888;">Нет постов на форуме</div>' : ''}
-                ${posts.map(post => `
-                    <div style="background:rgba(255,255,255,0.05);border-radius:16px;padding:15px;margin-bottom:15px;">
-                        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;margin-bottom:10px;">
-                            <div><strong style="color:#ffd700;">📌 ${escapeHtml(post.title)}</strong></div>
-                            <div style="font-size:0.7rem;color:#888;">👤 ${escapeHtml(post.author)} | ${post.date}</div>
-                        </div>
-                        <div style="margin-bottom:10px;">${escapeHtml(post.content)}</div>
-                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                            <button onclick="editUserPost(${post.id}, prompt('Новое содержание:', '${escapeHtml(post.content).replace(/'/g, "\\'")}'))" style="background:#2196f3;border:none;padding:5px 12px;border-radius:20px;cursor:pointer;color:white;">✏️ Редактировать</button>
-                            <button onclick="deleteUserPost(${post.id})" style="background:#f44336;border:none;padding:5px 12px;border-radius:20px;cursor:pointer;color:white;">🗑️ Удалить</button>
-                            <button onclick="viewPostReplies(${post.id})" style="background:#4caf50;border:none;padding:5px 12px;border-radius:20px;cursor:pointer;color:white;">💬 Ответы (${(post.replies || []).length})</button>
-                        </div>
-                    </div>
-                `).join('')}
+        <div style="background:linear-gradient(145deg,rgba(30,30,60,0.98),rgba(20,20,50,0.98));border-radius:40px;max-width:400px;width:90%;padding:25px;border:1px solid rgba(255,255,255,0.15);">
+            <h3 style="color:#ffd700;margin-top:0;text-align:center;">✏️ ${isRu ? 'Редактировать' : 'Edit'}: ${escapeHtml(username)}</h3>
+            <div style="margin-bottom:12px;"><label style="color:#c084fc;">🎋 ${isRu ? 'Бамбуки' : 'Bamboo'}</label><input type="number" id="editBambooVal" value="${user?.bamboo || 0}" style="width:100%;padding:10px;border-radius:25px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;"></div>
+            <div style="margin-bottom:12px;"><label style="color:#c084fc;">📚 ${isRu ? 'Выученные слова' : 'Learned'}</label><input type="number" id="editLearnedVal" value="${userData.learnedWords?.length || 0}" style="width:100%;padding:10px;border-radius:25px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;"></div>
+            <div style="margin-bottom:12px;"><label style="color:#c084fc;">⏱️ ${isRu ? 'Время (сек)' : 'Time (sec)'}</label><input type="number" id="editTimeVal" value="${userData.studyTime || 0}" style="width:100%;padding:10px;border-radius:25px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;"></div>
+            <div style="display:flex;gap:10px;margin-top:20px;">
+                <button onclick="adminSaveUser('${username}')" style="flex:1;background:#4caf50;border:none;color:white;padding:10px;border-radius:25px;cursor:pointer;">✅ ${isRu ? 'Сохранить' : 'Save'}</button>
+                <button onclick="cancelEdit()" style="flex:1;background:#c084fc;border:none;color:white;padding:10px;border-radius:25px;cursor:pointer;">✖ ${isRu ? 'Отмена' : 'Cancel'}</button>
             </div>
         </div>
     `;
-    
     document.body.appendChild(modal);
-    modal.querySelector('.closeAdminForumBtn').onclick = () => modal.remove();
-    modal.onclick = (e) => { if(e.target === modal) modal.remove(); };
 }
 
-// Обновляем функцию updateVisitorCounter
-function updateVisitorCounter() {
-    let today = new Date().toDateString();
-    let data = JSON.parse(localStorage.getItem('hsk_visitor_data') || '{"date":"","count":0}');
-    
-    if(data.date !== today) {
-        localStorage.setItem('hsk_visitor_data', JSON.stringify({ date: today, count: 1 }));
-        recordVisitor();
-    } else {
-        let key = 'hsk_counted_' + today;
-        if(!sessionStorage.getItem(key) && currentUser) {
-            data.count++;
-            localStorage.setItem('hsk_visitor_data', JSON.stringify(data));
-            sessionStorage.setItem(key, 'true');
-            recordVisitor();
-        }
-    }
-    
-    let fresh = JSON.parse(localStorage.getItem('hsk_visitor_data') || '{"count":0}');
-    let el = document.getElementById('visitorCount');
-    if(el && !isAdmin()) el.innerText = '???';
-    else if(el && isAdmin()) el.innerText = fresh.count;
+function cancelEdit() {
+    let editModal = document.getElementById('adminEditModal');
+    if (editModal) editModal.remove();
+    openAdminPanel();
 }
 
-// Обновляем функцию updateAllStats
-function updateAllStats() {
-    updateVisitorCounter();
-    updateRankTable();
-    updateLevelProgressBars();
+function adminSaveUser(username) {
+    let bamboo = parseInt(document.getElementById('editBambooVal')?.value) || 0;
+    let learnedCount = parseInt(document.getElementById('editLearnedVal')?.value) || 0;
+    let studyTime = parseInt(document.getElementById('editTimeVal')?.value) || 0;
     
-    let users = getUsers();
-    let regEl = document.getElementById('registeredUsersCount');
+    let usersList = getUsers();
+    let userIndex = usersList.findIndex(u => u.username === username);
+    if (userIndex !== -1) usersList[userIndex].bamboo = bamboo;
+    saveUsers(usersList);
     
-    if(isAdmin()) {
-        if(regEl) regEl.innerText = users.length;
-    } else {
-        if(regEl) regEl.innerText = '???';
+    let userData = getUserData(username);
+    let currentLearned = userData.learnedWords || [];
+    if (learnedCount > currentLearned.length) {
+        for (let i = currentLearned.length; i < learnedCount; i++) currentLearned.push(`fake_${i}`);
+    } else if (learnedCount < currentLearned.length) {
+        currentLearned = currentLearned.slice(0, learnedCount);
     }
+    userData.learnedWords = currentLearned;
+    userData.studyTime = studyTime;
+    saveUserData(username, userData);
     
-    if(currentUser) {
-        let userData = getUserData(currentUser);
-        let myTime = document.getElementById('myTime');
-        if(myTime) myTime.innerText = formatTime(userData.studyTime || 0);
-        
-        let userLevel = document.getElementById('userLevel');
-        if(userLevel) userLevel.innerText = userData.userStats?.level || 1;
-        
-        let userStreak = document.getElementById('userStreak');
-        if(userStreak) userStreak.innerText = userData.userStats?.streak || 0;
-        
-        let myPoints = document.getElementById('myPoints');
-        if(myPoints) {
-            let uu = users.find(u => u.username === currentUser);
-            myPoints.innerText = uu ? (uu.bamboo || 0) : 0;
-        }
-    }
+    showTempMessage(`✅ ${username} ${currentLanguage === 'en' ? 'updated' : 'обновлён'}!`, '#4caf50');
+    
+    let editModal = document.getElementById('adminEditModal');
+    if (editModal) editModal.remove();
+    openAdminPanel();
 }
 
-// Показываем кнопку администратора после загрузки
-function checkAndAddAdminButton() {
-    if(isAdmin()) {
-        setTimeout(() => {
-            addAdminButton();
-        }, 500);
+function adminDeleteUser(username) {
+    if (!confirm(currentLanguage === 'en' ? `Delete user "${username}"?` : `Удалить пользователя "${username}"?`)) {
+        return;
     }
+    
+    let usersList = getUsers().filter(u => u.username !== username && u.username !== 'admin');
+    saveUsers(usersList);
+    localStorage.removeItem(`hsk_user_${username}`);
+    localStorage.removeItem(`hsk_progress_${username}`);
+    localStorage.removeItem(`friends_${username}`);
+    localStorage.removeItem(`last_visit_${username}`);
+    
+    showTempMessage(`🗑️ ${username} ${currentLanguage === 'en' ? 'deleted' : 'удалён'}!`, '#ff9800');
+    openAdminPanel();
 }
 
-// Запускаем проверку
-setTimeout(checkAndAddAdminButton, 1000);
-setInterval(() => {
-    if(isAdmin() && !document.getElementById('adminModalBtn')) {
+function adminAddBambooToAll(amount) {
+    let usersList = getUsers();
+    for (let user of usersList) {
+        if (user.username === 'admin') continue;
+        user.bamboo = (user.bamboo || 0) + amount;
+        let userData = getUserData(user.username);
+        userData.bamboo = user.bamboo;
+        saveUserData(user.username, userData);
+    }
+    saveUsers(usersList);
+    showTempMessage(`🎋 +${amount} ${currentLanguage === 'en' ? 'bamboo to all' : 'бамбуков всем'}!`, '#4caf50');
+    openAdminPanel();
+}
+
+function adminResetAllProgress() {
+    if (!confirm(currentLanguage === 'en' ? 'Reset ALL users progress? This cannot be undone!' : 'Сбросить прогресс ВСЕХ пользователей? Это нельзя отменить!')) return;
+    
+    let usersList = getUsers();
+    for (let user of usersList) {
+        if (user.username === 'admin') continue;
+        localStorage.removeItem(`hsk_user_${user.username}`);
+        saveUserData(user.username, { 
+            learnedWords: [], 
+            unlockedLessons: getDefaultUnlockedLessons(), 
+            bamboo: 0, 
+            errors: [], 
+            studyTime: 0, 
+            favoriteWords: [], 
+            userStats: { dailyQuests: {}, achievements: {}, streak: 0, lastLoginDate: null, level: 1, xp: 0, wordErrors: {} } 
+        });
+    }
+    showTempMessage(`🔄 ${currentLanguage === 'en' ? 'All progress reset!' : 'Весь прогресс сброшен!'}`, '#ff9800');
+    openAdminPanel();
+}
+
+function adminUnlockAllLessons() {
+    if (!currentUser || currentUser !== 'admin') return;
+    let userData = getUserData('admin');
+    let allUnlocked = {};
+    for (let lvl = 1; lvl <= 6; lvl++) {
+        let lessons = [];
+        for (let i = 0; i < (window.hskData?.[lvl]?.length || 0); i++) lessons.push(i);
+        allUnlocked[lvl] = lessons;
+    }
+    userData.unlockedLessons = allUnlocked;
+    saveUserData('admin', userData);
+    if (typeof unlockedLessons !== 'undefined') unlockedLessons = allUnlocked;
+}
+
+// ---------- ПЕРЕОПРЕДЕЛЕНИЕ ФУНКЦИЙ ДЛЯ АДМИНА ----------
+if (typeof window.isLessonUnlocked === 'function') {
+    let originalFn = window.isLessonUnlocked;
+    window.isLessonUnlocked = function(lvl, lesson) {
+        if (currentUser === 'admin') return true;
+        return originalFn(lvl, lesson);
+    };
+}
+
+// ---------- ПЕРЕХВАТ СОБЫТИЙ ----------
+let oldLogin = window.login;
+window.login = function() {
+    if (oldLogin) oldLogin();
+    setTimeout(() => { 
+        registerUserVisit(); 
+        addAdminButton(); 
+        if (currentUser === 'admin') adminUnlockAllLessons(); 
+    }, 500);
+};
+
+let oldShowMainPage = window.showMainPage;
+window.showMainPage = function() {
+    if (oldShowMainPage) oldShowMainPage();
+    setTimeout(() => { 
+        registerUserVisit(); 
+        addAdminButton(); 
+    }, 300);
+};
+
+let oldLogout = window.logout;
+window.logout = function() {
+    if (oldLogout) oldLogout();
+    setTimeout(() => { 
+        let btn = document.getElementById('adminPanelBtn'); 
+        if (btn) btn.remove(); 
+    }, 100);
+};
+
+// ---------- ЗАПУСК ----------
+setTimeout(() => {
+    if (currentUser === 'admin') {
+        adminUnlockAllLessons();
         addAdminButton();
+    } else if (currentUser) {
+        registerUserVisit();
     }
-}, 3000);
+}, 500);
 
-// Обновляем обработчик кнопки входа
-document.getElementById('loginBtn').onclick = login;
-</script>
-<script>
+setInterval(() => {
+    if (currentUser === 'admin') addAdminButton();
+    else { 
+        let btn = document.getElementById('adminPanelBtn'); 
+        if (btn) btn.remove(); 
+    }
+}, 2000);
+
+console.log('👑 Админ-панель готова! Логин: admin, Пароль: admin123');
 
 </script>
 </body>
