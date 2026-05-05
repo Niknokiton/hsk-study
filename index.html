@@ -22551,5 +22551,165 @@ setTimeout(() => {
 console.log('✅ Статистика готова! Админ видит посетителей за день/неделю/месяц');
 </script>
 
+<script>
+// ========== ИСПРАВЛЕНИЕ СЧЁТЧИКОВ ПОЛЬЗОВАТЕЛЕЙ ==========
+
+// Получаем список пользователей с авто-синхронизацией
+function getUsersFixed() {
+    let u = localStorage.getItem('hsk_users');
+    let users = u ? JSON.parse(u) : [];
+    
+    // Ищем всех пользователей в localStorage
+    let allUserKeys = Object.keys(localStorage).filter(k => k.startsWith('hsk_user_'));
+    
+    for (let key of allUserKeys) {
+        let username = key.replace('hsk_user_', '');
+        if (username === 'admin') continue;
+        
+        // Если пользователь есть в данных, но нет в списке - добавляем
+        if (!users.find(u => u.username === username)) {
+            let userData = JSON.parse(localStorage.getItem(key));
+            users.push({
+                username: username,
+                email: 'user@email.com',
+                password: 'unknown',
+                bamboo: userData?.bamboo || 0
+            });
+            console.log(`✅ Добавлен пользователь в список: ${username}`);
+        }
+    }
+    
+    // Сохраняем исправленный список
+    localStorage.setItem('hsk_users', JSON.stringify(users));
+    return users;
+}
+
+// Обновляем счётчик посетителей
+function updateVisitorCounterFixed() {
+    let today = new Date().toDateString();
+    let visitorData = localStorage.getItem('hsk_visitor_data');
+    
+    if (!visitorData) {
+        localStorage.setItem('hsk_visitor_data', JSON.stringify({ date: today, count: 1 }));
+    } else {
+        let data = JSON.parse(visitorData);
+        if (data.date !== today) {
+            data = { date: today, count: 1 };
+            localStorage.setItem('hsk_visitor_data', JSON.stringify(data));
+        } else {
+            let countedKey = `hsk_counted_${today}_${currentUser || 'guest'}`;
+            if (!sessionStorage.getItem(countedKey) && currentUser !== 'admin') {
+                data.count++;
+                localStorage.setItem('hsk_visitor_data', JSON.stringify(data));
+                sessionStorage.setItem(countedKey, 'true');
+            }
+        }
+    }
+    
+    let fresh = JSON.parse(localStorage.getItem('hsk_visitor_data') || '{"count":0}');
+    let visitorEl = document.getElementById('visitorCount');
+    if (visitorEl) visitorEl.innerText = fresh.count;
+}
+
+// Обновляем счётчик зарегистрированных
+function updateRegisteredUsersCountFixed() {
+    let users = getUsersFixed();
+    let regularUsers = users.filter(u => u.username !== 'admin').length;
+    let regEl = document.getElementById('registeredUsersCount');
+    if (regEl) regEl.innerText = regularUsers;
+}
+
+// Обновляем рейтинг с правильными данными
+function updateRankTableFixed() {
+    let users = getUsersFixed();
+    
+    // Обновляем счётчик на главной
+    let regEl = document.getElementById('registeredUsersCount');
+    if (regEl) regEl.innerText = users.filter(u => u.username !== 'admin').length;
+    
+    if (currentUser) {
+        let myTime = getUserData(currentUser).studyTime || 0;
+        let tm = document.getElementById('myTime');
+        if (tm) tm.innerText = formatTime(myTime);
+        
+        let uu = users.find(u => u.username === currentUser);
+        let myBamboo = uu ? uu.bamboo : 0;
+        let mp = document.getElementById('myPoints');
+        if (mp) mp.innerText = myBamboo;
+    }
+    
+    // Сортируем по бамбукам
+    let sortedBamboo = [...users].filter(u => u.username !== 'admin').sort((a,b) => (b.bamboo || 0) - (a.bamboo || 0)).slice(0, 100);
+    let bb = document.getElementById('rankBambooBody');
+    if (bb) {
+        bb.innerHTML = '';
+        sortedBamboo.forEach((u, i) => {
+            let r = bb.insertRow();
+            r.insertCell(0).innerText = i + 1;
+            r.insertCell(1).innerHTML = `${escapeHtml(u.username)}${u.username === currentUser ? ' <span class="bamboo-badge">🏆 Вы</span>' : ''}`;
+            r.insertCell(2).innerHTML = `<span class="bamboo-badge">🎋 ${u.bamboo || 0}</span>`;
+        });
+    }
+    
+    // Сортируем по времени
+    let usersWithTime = users.map(u => ({ ...u, studyTime: getUserData(u.username).studyTime || 0 }));
+    let sortedTime = [...usersWithTime].filter(u => u.username !== 'admin').sort((a,b) => (b.studyTime || 0) - (a.studyTime || 0)).slice(0, 100);
+    let tb = document.getElementById('rankTimeBody');
+    if (tb) {
+        tb.innerHTML = '';
+        sortedTime.forEach((u, i) => {
+            let r = tb.insertRow();
+            r.insertCell(0).innerText = i + 1;
+            r.insertCell(1).innerHTML = `${escapeHtml(u.username)}${u.username === currentUser ? ' <span class="bamboo-badge">🏆 Вы</span>' : ''}`;
+            r.insertCell(2).innerHTML = `<span class="bamboo-badge">⏱️ ${formatTime(u.studyTime || 0)}</span>`;
+        });
+    }
+}
+
+// Перехватываем функцию регистрации
+let originalRegisterFixed = window.register;
+window.register = function() {
+    if (originalRegisterFixed) originalRegisterFixed();
+    setTimeout(() => {
+        getUsersFixed(); // Синхронизируем список
+        updateRegisteredUsersCountFixed();
+        updateRankTableFixed();
+    }, 500);
+};
+
+// Перехватываем показ главной страницы
+let originalShowMainPageFixed = window.showMainPage;
+window.showMainPage = function() {
+    if (originalShowMainPageFixed) originalShowMainPageFixed();
+    setTimeout(() => {
+        updateVisitorCounterFixed();
+        updateRegisteredUsersCountFixed();
+        updateRankTableFixed();
+    }, 300);
+};
+
+// Перехватываем функцию открытия рейтинга
+let originalOpenRankModal = window.openRankModal;
+window.openRankModal = function() {
+    updateRankTableFixed();
+    if (originalOpenRankModal) originalOpenRankModal();
+};
+
+// Заменяем старые функции новыми
+window.getUsers = getUsersFixed;
+window.updateRegisteredUsersCount = updateRegisteredUsersCountFixed;
+window.updateRankTable = updateRankTableFixed;
+
+// Запускаем при загрузке
+setTimeout(() => {
+    if (currentUser) {
+        getUsersFixed();
+        updateVisitorCounterFixed();
+        updateRegisteredUsersCountFixed();
+        updateRankTableFixed();
+    }
+}, 500);
+</script>
+
 </body>
 </html>
