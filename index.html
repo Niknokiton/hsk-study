@@ -22552,174 +22552,118 @@ console.log('✅ Статистика готова! Админ видит пос
 </script>
 
 <script>
-// ========== ПРИНУДИТЕЛЬНОЕ ОБНОВЛЕНИЕ СЧЁТЧИКОВ ==========
+// ========== ИСПРАВЛЕНИЕ СЧЁТЧИКОВ ПОЛЬЗОВАТЕЛЕЙ ==========
 
-// Функция для немедленного обновления всех счётчиков на странице
-function forceUpdateAllCounters() {
-    console.log('🔄 Обновляем счётчики...');
+// Получаем список пользователей
+function getUsersFixed() {
+    let stored = localStorage.getItem('hsk_users');
+    let users = stored ? JSON.parse(stored) : [];
     
-    // 1. Обновляем счётчик посетителей
-    let today = new Date().toDateString();
-    let visitorData = localStorage.getItem('hsk_visitor_data');
-    let visitorCount = 1;
+    if (users.length === 0 || !users.find(u => u.username === 'admin')) {
+        users = [{ username: "admin", email: "admin@admin.com", password: "admin123", bamboo: 0 }];
+    }
     
-    if (visitorData) {
-        let data = JSON.parse(visitorData);
-        if (data.date === today) {
-            visitorCount = data.count;
-        } else {
-            visitorCount = 1;
-            localStorage.setItem('hsk_visitor_data', JSON.stringify({ date: today, count: 1 }));
+    // Собираем всех пользователей из отдельных ключей
+    let allUserKeys = Object.keys(localStorage).filter(k => k.startsWith('hsk_user_'));
+    
+    for (let key of allUserKeys) {
+        let username = key.replace('hsk_user_', '');
+        if (username === 'admin') continue;
+        
+        if (!users.find(u => u.username === username)) {
+            let userData = JSON.parse(localStorage.getItem(key));
+            users.push({
+                username: username,
+                email: userData.email || username + '@user.com',
+                password: '123456',
+                bamboo: userData?.bamboo || 0
+            });
+            console.log('➕ Добавлен пользователь:', username);
         }
-    } else {
-        localStorage.setItem('hsk_visitor_data', JSON.stringify({ date: today, count: 1 }));
+    }
+    
+    localStorage.setItem('hsk_users', JSON.stringify(users));
+    return users;
+}
+
+// Обновляем счётчики на странице
+function updateAllCounters() {
+    let users = getUsersFixed();
+    let regularCount = users.filter(u => u.username !== 'admin').length;
+    
+    let countEl = document.getElementById('registeredUsersCount');
+    if (countEl) {
+        countEl.innerText = regularCount;
     }
     
     let visitorEl = document.getElementById('visitorCount');
     if (visitorEl) {
-        visitorEl.innerText = visitorCount;
-        console.log('📊 Посетителей сегодня:', visitorCount);
-    } else {
-        console.log('❌ Элемент visitorCount не найден');
-    }
-    
-    // 2. Обновляем счётчик зарегистрированных пользователей
-    let usersRaw = localStorage.getItem('hsk_users');
-    let users = usersRaw ? JSON.parse(usersRaw) : [];
-    let registeredCount = users.filter(u => u.username !== 'admin').length;
-    
-    // Дополнительно проверяем отдельные данные пользователей
-    let allUserKeys = Object.keys(localStorage).filter(k => k.startsWith('hsk_user_') && k !== 'hsk_user_admin');
-    let extraUsers = [];
-    for (let key of allUserKeys) {
-        let username = key.replace('hsk_user_', '');
-        if (!users.find(u => u.username === username)) {
-            extraUsers.push(username);
+        let today = new Date().toDateString();
+        let data = localStorage.getItem('hsk_visitor_data');
+        if (data) {
+            let parsed = JSON.parse(data);
+            if (parsed.date === today) {
+                visitorEl.innerText = parsed.count;
+            } else {
+                visitorEl.innerText = 0;
+            }
         }
     }
     
-    // Добавляем пропущенных пользователей
-    if (extraUsers.length > 0) {
-        console.log('🆕 Найдены пропущенные пользователи:', extraUsers);
-        for (let uname of extraUsers) {
-            let userData = JSON.parse(localStorage.getItem(`hsk_user_${uname}`));
-            users.push({
-                username: uname,
-                email: 'user@email.com',
-                password: 'unknown',
-                bamboo: userData?.bamboo || 0
-            });
-        }
-        localStorage.setItem('hsk_users', JSON.stringify(users));
-        registeredCount = users.filter(u => u.username !== 'admin').length;
-        console.log('✅ Добавлены пропущенные пользователи');
-    }
-    
-    let registeredEl = document.getElementById('registeredUsersCount');
-    if (registeredEl) {
-        registeredEl.innerText = registeredCount;
-        console.log('📝 Зарегистрировано:', registeredCount);
-    } else {
-        console.log('❌ Элемент registeredUsersCount не найден');
-    }
-    
-    // 3. Обновляем бамбуки текущего пользователя
     if (currentUser) {
-        let user = users.find(u => u.username === currentUser);
+        let usersList = getUsersFixed();
+        let user = usersList.find(u => u.username === currentUser);
         let bambooEl = document.getElementById('myPoints');
-        if (bambooEl && user) {
-            bambooEl.innerText = user.bamboo || 0;
-        }
-        
-        let userData = getUserData(currentUser);
-        let timeEl = document.getElementById('myTime');
-        if (timeEl && userData) {
-            timeEl.innerText = formatTime(userData.studyTime || 0);
-        }
+        if (bambooEl && user) bambooEl.innerText = user.bamboo || 0;
     }
     
-    // 4. Обновляем прогресс-бары уровней
-    updateLevelProgressBars();
+    console.log('📊 Счётчики обновлены: зарегистрировано =', regularCount);
 }
 
-// Перехватываем функцию регистрации
-const originalRegisterForce = window.register;
+// Перехватываем регистрацию
+let originalRegister = window.register;
 window.register = function() {
-    console.log('📝 Регистрация пользователя...');
-    if (originalRegisterForce) originalRegisterForce();
-    
-    // Принудительно обновляем счётчики после регистрации
+    if (originalRegister) originalRegister();
     setTimeout(() => {
-        forceUpdateAllCounters();
-        
-        // Показываем сообщение об успешной регистрации с количеством пользователей
-        let usersRaw = localStorage.getItem('hsk_users');
-        let users = usersRaw ? JSON.parse(usersRaw) : [];
-        let count = users.filter(u => u.username !== 'admin').length;
-        showTempMessage(`✅ Регистрация успешна! Всего пользователей: ${count}`, '#4caf50');
-    }, 300);
-};
-
-// Перехватываем функцию входа
-const originalLoginForce = window.login;
-window.login = function() {
-    console.log('🔐 Вход пользователя...');
-    if (originalLoginForce) originalLoginForce();
-    
-    setTimeout(() => {
-        forceUpdateAllCounters();
-    }, 300);
+        getUsersFixed();
+        updateAllCounters();
+        if (typeof updateRankTable === 'function') updateRankTable();
+    }, 500);
 };
 
 // Перехватываем показ главной страницы
-const originalShowMainForce = window.showMainPage;
+let originalShowMain = window.showMainPage;
 window.showMainPage = function() {
-    console.log('🏠 Показ главной страницы...');
-    if (originalShowMainForce) originalShowMainForce();
-    
-    setTimeout(() => {
-        forceUpdateAllCounters();
-    }, 200);
+    if (originalShowMain) originalShowMain();
+    setTimeout(updateAllCounters, 300);
 };
 
-// Добавляем кнопку принудительного обновления (на всякий случай)
-function addRefreshStatsButton() {
-    let header = document.querySelector('.welcome-header .header-buttons');
-    if (!header && document.querySelector('.header-buttons')) {
-        header = document.querySelector('.header-buttons');
-    }
-    
-    if (header && !document.getElementById('refreshStatsBtn')) {
-        let refreshBtn = document.createElement('button');
-        refreshBtn.id = 'refreshStatsBtn';
-        refreshBtn.innerHTML = '🔄';
-        refreshBtn.title = 'Обновить статистику';
-        refreshBtn.style.cssText = 'background:linear-gradient(135deg,#4caf50,#8bc34a);border:none;color:white;width:42px;height:42px;border-radius:50%;font-size:1.2rem;cursor:pointer;margin-left:10px;';
-        refreshBtn.onclick = () => {
-            forceUpdateAllCounters();
-            showTempMessage('📊 Статистика обновлена!', '#4caf50');
-        };
-        header.appendChild(refreshBtn);
-        console.log('✅ Кнопка обновления статистики добавлена');
-    }
-}
+// Перехватываем вход
+let originalLogin = window.login;
+window.login = function() {
+    if (originalLogin) originalLogin();
+    setTimeout(updateAllCounters, 300);
+};
 
-// Запускаем всё при загрузке
+// Заменяем старые функции
+window.getUsers = getUsersFixed;
+
+// Запускаем при загрузке
 setTimeout(() => {
     if (currentUser) {
-        forceUpdateAllCounters();
+        getUsersFixed();
+        updateAllCounters();
     }
-    addRefreshStatsButton();
 }, 500);
 
-// Обновляем каждые 10 секунд (для синхронизации)
+// Обновляем каждые 5 секунд
 setInterval(() => {
     if (currentUser && document.getElementById('mainPage') && !document.getElementById('mainPage').classList.contains('hide')) {
-        forceUpdateAllCounters();
+        updateAllCounters();
     }
-}, 10000);
+}, 5000);
 
-console.log('✅ Система обновления счётчиков активирована!');
+console.log('✅ Система обновления счётчиков запущена!');
 </script>
 
 </body>
