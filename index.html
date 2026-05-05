@@ -8057,22 +8057,86 @@ function closeProfileLearnedModal() {
     function switchRankTab(tab) { currentRankTab = tab; let bt = document.getElementById('rankBambooBtn'), tt = document.getElementById('rankTimeBtn'), btbl = document.getElementById('rankBambooTable'), ttbl = document.getElementById('rankTimeTable'); if(tab === 'bamboo') { bt.classList.add('active'); tt.classList.remove('active'); btbl.classList.remove('hide'); ttbl.classList.add('hide'); } else { bt.classList.remove('active'); tt.classList.add('active'); btbl.classList.add('hide'); ttbl.classList.remove('hide'); } }
     
     function register() {
-        let u = document.getElementById('regUsername').value.trim(), e = document.getElementById('regEmail').value.trim(), p = document.getElementById('regPassword').value;
-        if(!u || !e || !p) { document.getElementById('registerError').innerText = t('fillAllFields'); return; }
-        if(p.length < 4) { document.getElementById('registerError').innerText = t('passwordMin'); return; }
-        let users = getUsers();
-        if(users.find(us => us.username === u)) { document.getElementById('registerError').innerText = t('userExists'); return; }
-        users.push({ username: u, email: e, password: p, bamboo: 0 });
-        saveUsers(users);
-        saveUserData(u, { learnedWords: [], unlockedLessons: getDefaultUnlockedLessons(), bamboo: 0, errors: [], studyTime: 0, favoriteWords: [], userStats: { dailyQuests: {}, achievements: {}, streak: 0, lastLoginDate: null, level: 1, xp: 0, wordErrors: {} } });
-        document.getElementById('regUsername').value = '';
-        document.getElementById('regEmail').value = '';
-        document.getElementById('regPassword').value = '';
-        showLogin();
-        let le = document.getElementById('loginError');
-        if(le) { le.innerHTML = `<span style="color:#4caf50">✅ ${t('registrationSuccess')}</span>`; setTimeout(() => { if(le) le.innerHTML = ''; }, 3000); }
-        updateAllStats();
+    let username = document.getElementById('regUsername').value.trim();
+    let email = document.getElementById('regEmail').value.trim();
+    let password = document.getElementById('regPassword').value;
+
+    if (!username || !email || !password) {
+        document.getElementById('registerError').innerText = t('fillAllFields');
+        return;
     }
+    if (password.length < 4) {
+        document.getElementById('registerError').innerText = t('passwordMin');
+        return;
+    }
+
+    let users = getUsers();
+    if (users.find(u => u.username === username)) {
+        document.getElementById('registerError').innerText = t('userExists');
+        return;
+    }
+
+    // Добавляем пользователя
+    users.push({ username: username, email: email, password: password, bamboo: 0 });
+    saveUsers(users);
+
+    // Создаём данные пользователя
+    let defaultData = {
+        learnedWords: [],
+        unlockedLessons: getDefaultUnlockedLessons(),
+        bamboo: 0,
+        errors: [],
+        studyTime: 0,
+        favoriteWords: [],
+        userStats: {
+            dailyQuests: {},
+            achievements: {},
+            streak: 0,
+            lastLoginDate: null,
+            level: 1,
+            xp: 0,
+            wordErrors: {}
+        }
+    };
+    saveUserData(username, defaultData);
+
+    // Очищаем форму
+    document.getElementById('regUsername').value = '';
+    document.getElementById('regEmail').value = '';
+    document.getElementById('regPassword').value = '';
+
+    showLogin();
+    let le = document.getElementById('loginError');
+    if (le) {
+        le.innerHTML = '<span style="color:#4caf50">✅ ' + (currentLanguage === 'en' ? 'Registration successful! Please login.' : 'Регистрация успешна! Войдите.') + '</span>';
+        setTimeout(() => { if (le) le.innerHTML = ''; }, 3000);
+    }
+
+    updateAllStats();
+}
+
+function login() {
+    let username = document.getElementById('loginUsername').value.trim();
+    let password = document.getElementById('loginPassword').value;
+
+    let users = getUsers();
+    let user = users.find(u => u.username === username && u.password === password);
+
+    if (!user) {
+        document.getElementById('loginError').innerText = t('invalidCredentials');
+        return;
+    }
+
+    currentUser = username;
+    localStorage.setItem('hsk_current_user', username);
+    document.getElementById('loginUsername').value = '';
+    document.getElementById('loginPassword').value = '';
+    document.getElementById('loginError').innerHTML = '';
+
+    updateAllStats();
+    updateUserStats();
+    showMainPage();
+}
     
     function login() {
         let u = document.getElementById('loginUsername').value.trim(), p = document.getElementById('loginPassword').value;
@@ -10027,20 +10091,11 @@ function getUnreadCountByFriend() {
     return unreadByFriend;
 }
 
-// ========== ФУНКЦИЯ ДРУЗЕЙ (ИСПРАВЛЕННАЯ) - ВСТАВЬТЕ ВМЕСТО СТАРОЙ ==========
-
+// КРАСИВОЕ МОДАЛЬНОЕ ОКНО ДРУЗЕЙ
 function openFriendsModal() {
-    // Загружаем данные
-    if(currentUser) {
-        let saved = localStorage.getItem(`friends_${currentUser}`);
-        friendsList = saved ? JSON.parse(saved) : [];
-        let allMessages = localStorage.getItem('hsk_all_messages');
-        privateMessages = allMessages ? JSON.parse(allMessages) : [];
-    }
+    loadFriendsData();
     
     let unreadCounts = getUnreadCountByFriend();
-    const isRu = currentLanguage !== 'en';
-    
     let modal = document.createElement('div');
     modal.className = 'friends-modal';
     modal.style.cssText = `
@@ -10055,62 +10110,195 @@ function openFriendsModal() {
         display: flex;
         justify-content: center;
         align-items: center;
+        animation: fadeIn 0.3s ease;
     `;
     
     modal.innerHTML = `
-        <div style="background: linear-gradient(145deg, rgba(25,25,55,0.98), rgba(15,15,40,0.98)); border-radius: 40px; max-width: 550px; width: 90%; max-height: 85vh; border: 1px solid rgba(255,255,255,0.15); overflow: hidden;">
-            <div style="padding: 20px 25px; background: linear-gradient(135deg, rgba(255,107,157,0.15), rgba(192,132,252,0.15)); border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
+        <div style="
+            background: linear-gradient(145deg, rgba(25,25,55,0.98), rgba(15,15,40,0.98));
+            border-radius: 40px;
+            max-width: 550px;
+            width: 90%;
+            max-height: 85vh;
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            overflow: hidden;
+            animation: scaleIn 0.3s ease;
+        ">
+            <div style="
+                padding: 20px 25px;
+                background: linear-gradient(135deg, rgba(255,107,157,0.15), rgba(192,132,252,0.15));
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            ">
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <span style="font-size: 1.8rem;">👥</span>
-                    <h2 style="margin: 0; background: linear-gradient(135deg, #ffd700, #ff9800); -webkit-background-clip: text; background-clip: text; color: transparent; font-size: 1.5rem;">${isRu ? 'Мои друзья' : 'My Friends'}</h2>
+                    <h2 style="
+                        margin: 0;
+                        background: linear-gradient(135deg, #ffd700, #ff9800);
+                        -webkit-background-clip: text;
+                        background-clip: text;
+                        color: transparent;
+                        font-size: 1.5rem;
+                    ">${currentLanguage === 'en' ? 'My Friends' : 'Мои друзья'}</h2>
                 </div>
-                <button id="closeFriendsModalBtn" style="background: rgba(255,255,255,0.1); border: none; width: 38px; height: 38px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; color: white;">✖</button>
+                <button id="closeFriendsModalBtn" style="
+                    background: rgba(255,255,255,0.1);
+                    border: none;
+                    width: 38px;
+                    height: 38px;
+                    border-radius: 50%;
+                    font-size: 1.2rem;
+                    cursor: pointer;
+                    color: white;
+                    transition: all 0.2s;
+                " onmouseover="this.style.background='#ff6b9d'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">✖</button>
             </div>
             
             <div style="padding: 20px 25px;">
-                <div style="background: rgba(255,255,255,0.05); border-radius: 28px; padding: 18px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.08);">
+                <!-- Добавление друга - ПОЛЕ ВВОДА -->
+                <div style="
+                    background: rgba(255,255,255,0.05);
+                    border-radius: 28px;
+                    padding: 18px;
+                    margin-bottom: 25px;
+                    border: 1px solid rgba(255,255,255,0.08);
+                ">
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
                         <span style="font-size: 1.2rem;">➕</span>
-                        <h3 style="margin: 0; color: #c084fc; font-size: 1rem;">${isRu ? 'Добавить друга' : 'Add a friend'}</h3>
+                        <h3 style="margin: 0; color: #c084fc; font-size: 1rem;">${currentLanguage === 'en' ? 'Add a friend' : 'Добавить друга'}</h3>
                     </div>
                     <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                        <input type="text" id="friendSearchInput" placeholder="${isRu ? 'Введите имя пользователя...' : 'Enter username...'}" style="flex: 1; padding: 14px 18px; border-radius: 40px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 0.95rem; outline: none;">
-                        <button id="addFriendSearchBtn" style="background: linear-gradient(135deg, #4caf50, #8bc34a); border: none; padding: 12px 28px; border-radius: 40px; cursor: pointer; color: white; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                        <input type="text" id="friendSearchInput" placeholder="${currentLanguage === 'en' ? 'Enter username...' : 'Введите имя пользователя...'}" style="
+                            flex: 1;
+                            padding: 14px 18px;
+                            border-radius: 40px;
+                            background: rgba(255,255,255,0.1);
+                            border: 1px solid rgba(255,255,255,0.2);
+                            color: white;
+                            font-size: 0.95rem;
+                            outline: none;
+                            transition: all 0.2s;
+                        " onfocus="this.style.borderColor='#c084fc'" onblur="this.style.borderColor='rgba(255,255,255,0.2)'">
+                        <button id="addFriendSearchBtn" style="
+                            background: linear-gradient(135deg, #4caf50, #8bc34a);
+                            border: none;
+                            padding: 12px 28px;
+                            border-radius: 40px;
+                            cursor: pointer;
+                            color: white;
+                            font-weight: 600;
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+                            transition: all 0.2s;
+                        " onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
                             <span>➕</span>
-                            <span>${isRu ? 'Добавить' : 'Add'}</span>
+                            <span>${currentLanguage === 'en' ? 'Add' : 'Добавить'}</span>
                         </button>
                     </div>
-                    <div style="font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 8px;">💡 ${isRu ? 'Введите точное имя пользователя' : 'Enter exact username'}</div>
+                    <div id="friendSearchHint" style="font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 8px; padding-left: 5px;">
+                        💡 ${currentLanguage === 'en' ? 'Enter exact username to add' : 'Введите точное имя пользователя для добавления'}
+                    </div>
                 </div>
                 
+                <!-- Список друзей -->
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
                     <span style="font-size: 1.1rem;">📋</span>
-                    <h3 style="margin: 0; color: #c084fc; font-size: 1rem;">${isRu ? 'Список друзей' : 'Friends list'} (${friendsList.length})</h3>
+                    <h3 style="margin: 0; color: #c084fc; font-size: 1rem;">${currentLanguage === 'en' ? 'Friends list' : 'Список друзей'} (${friendsList.length})</h3>
                 </div>
                 
-                <div id="friendsListContainer" style="max-height: 380px; overflow-y: auto; padding-right: 5px;">
+                <div id="friendsListContainer" style="
+                    max-height: 380px;
+                    overflow-y: auto;
+                    padding-right: 5px;
+                ">
                     ${friendsList.length === 0 ? `
-                        <div style="text-align: center; padding: 40px 20px; background: rgba(255,255,255,0.03); border-radius: 24px;">
+                        <div style="
+                            text-align: center;
+                            padding: 40px 20px;
+                            background: rgba(255,255,255,0.03);
+                            border-radius: 24px;
+                        ">
                             <span style="font-size: 3rem; opacity: 0.5;">👥</span>
-                            <p style="color: #888; margin-top: 10px;">${isRu ? 'Пока нет друзей' : 'No friends yet'}</p>
+                            <p style="color: #888; margin-top: 10px;">${currentLanguage === 'en' ? 'No friends yet' : 'Пока нет друзей'}</p>
+                            <p style="color: #666; font-size: 0.8rem;">${currentLanguage === 'en' ? 'Add friends using the search above!' : 'Добавьте друзей через поиск выше!'}</p>
                         </div>
-                    ` : friendsList.map(friend => {
+                    ` : ''}
+                    ${friendsList.map(friend => {
                         let unread = unreadCounts[friend] || 0;
                         return `
-                            <div style="background: linear-gradient(95deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)); border-radius: 20px; padding: 14px 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05);">
+                            <div style="
+                                background: linear-gradient(95deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+                                border-radius: 20px;
+                                padding: 14px 16px;
+                                margin-bottom: 10px;
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                transition: all 0.2s;
+                                border: 1px solid rgba(255,255,255,0.05);
+                            " onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='linear-gradient(95deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))'">
                                 <div style="display: flex; align-items: center; gap: 12px;">
-                                    <div style="width: 44px; height: 44px; background: linear-gradient(135deg, #ff6b9d, #c084fc); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">👤</div>
+                                    <div style="
+                                        width: 44px;
+                                        height: 44px;
+                                        background: linear-gradient(135deg, #ff6b9d, #c084fc);
+                                        border-radius: 50%;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        font-size: 1.3rem;
+                                    ">👤</div>
                                     <div>
-                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                                             <strong style="color: #ffd700; font-size: 1rem;">${escapeHtml(friend)}</strong>
-                                            ${unread > 0 ? `<span style="background: #ff6b9d; color: white; border-radius: 30px; padding: 2px 10px; font-size: 0.7rem;">${unread}</span>` : ''}
+                                            ${unread > 0 ? `<span style="
+                                                background: #ff6b9d;
+                                                color: white;
+                                                border-radius: 30px;
+                                                padding: 2px 10px;
+                                                font-size: 0.7rem;
+                                                font-weight: bold;
+                                                animation: pulse 1s infinite;
+                                            ">${unread}</span>` : ''}
                                         </div>
-                                        <div style="font-size: 0.7rem; color: rgba(255,255,255,0.4);">${isRu ? 'Друг' : 'Friend'}</div>
+                                        <div style="font-size: 0.7rem; color: rgba(255,255,255,0.4);">${currentLanguage === 'en' ? 'Friend' : 'Друг'}</div>
                                     </div>
                                 </div>
                                 <div style="display: flex; gap: 8px;">
-                                    <button onclick="openChatWithFriend('${friend}')" style="background: linear-gradient(135deg, #2196f3, #00bcd4); border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; color: white;">💬 ${isRu ? 'Чат' : 'Chat'}</button>
-                                    <button onclick="removeFriend('${friend}')" style="background: rgba(244,67,54,0.8); border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; color: white;">🗑️</button>
+                                    <button onclick="openChatWithFriend('${friend}')" style="
+                                        background: linear-gradient(135deg, #2196f3, #00bcd4);
+                                        border: none;
+                                        padding: 8px 16px;
+                                        border-radius: 30px;
+                                        cursor: pointer;
+                                        color: white;
+                                        font-weight: 500;
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 6px;
+                                        transition: all 0.2s;
+                                    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                        <span>💬</span>
+                                        <span>${currentLanguage === 'en' ? 'Chat' : 'Чат'}</span>
+                                    </button>
+                                    <button onclick="removeFriend('${friend}')" style="
+                                        background: rgba(244,67,54,0.8);
+                                        border: none;
+                                        padding: 8px 16px;
+                                        border-radius: 30px;
+                                        cursor: pointer;
+                                        color: white;
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 6px;
+                                        transition: all 0.2s;
+                                    " onmouseover="this.style.background='#f44336'" onmouseout="this.style.background='rgba(244,67,54,0.8)'">
+                                        <span>🗑️</span>
+                                    </button>
                                 </div>
                             </div>
                         `;
@@ -10122,22 +10310,29 @@ function openFriendsModal() {
     
     document.body.appendChild(modal);
     
+    // Закрытие
     document.getElementById('closeFriendsModalBtn').onclick = () => modal.remove();
     modal.onclick = (e) => { if(e.target === modal) modal.remove(); };
     
+    // Добавление друга через поле ввода
     document.getElementById('addFriendSearchBtn').onclick = () => {
-        let username = document.getElementById('friendSearchInput').value.trim();
+        let input = document.getElementById('friendSearchInput');
+        let username = input.value.trim();
         if(username) {
             addFriend(username);
+            input.value = '';
             modal.remove();
             setTimeout(() => openFriendsModal(), 300);
         } else {
-            showTempMessage(isRu ? '❌ Введите имя!' : '❌ Enter username!', '#ff6b9d');
+            showTempMessage(currentLanguage === 'en' ? '❌ Enter username!' : '❌ Введите имя пользователя!', '#ff6b9d');
         }
     };
     
+    // Enter в поле ввода
     document.getElementById('friendSearchInput').onkeypress = (e) => {
-        if(e.key === 'Enter') document.getElementById('addFriendSearchBtn').click();
+        if(e.key === 'Enter') {
+            document.getElementById('addFriendSearchBtn').click();
+        }
     };
 }
 
