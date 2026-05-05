@@ -9976,9 +9976,6 @@ function getMessagesWithUser(username) {
 }
 
 // Добавить в друзья (по имени)
-// ========== ПОЛНОСТЬЮ ИСПРАВЛЕННАЯ СИСТЕМА ДРУЗЕЙ ==========
-// Замените существующие функции addFriend и openFriendsModal на эти
-
 function addFriend(username) {
     username = username.trim();
     if(!username) {
@@ -9989,244 +9986,23 @@ function addFriend(username) {
         showTempMessage(currentLanguage === 'en' ? '❌ Cannot add yourself!' : '❌ Нельзя добавить себя!', '#ff6b9d');
         return false;
     }
-    
-    // ЗАГРУЖАЕМ СВЕЖИЕ ДАННЫЕ
-    loadFriendsData();
-    
     if(friendsList.includes(username)) {
         showTempMessage(currentLanguage === 'en' ? '⚠️ Already in friends!' : '⚠️ Уже в друзьях!', '#ff9800');
         return false;
     }
     
     let users = getUsers();
-    // ПРИВОДИМ К НИЖНЕМУ РЕГИСТРУ ДЛЯ ПОИСКА
-    let userExists = users.find(u => u.username.toLowerCase() === username.toLowerCase());
-    
+    let userExists = users.find(u => u.username === username);
     if(!userExists) {
         showTempMessage(currentLanguage === 'en' ? '❌ User not found!' : '❌ Пользователь не найден!', '#ff6b9d');
         return false;
     }
     
-    // ДОБАВЛЯЕМ ТОЧНОЕ ИМЯ (КАК В БАЗЕ ДАННЫХ)
-    const exactUsername = userExists.username;
-    friendsList.push(exactUsername);
+    friendsList.push(username);
     saveFriendsData();
-    
-    showTempMessage(`✅ ${exactUsername} ${currentLanguage === 'en' ? 'added to friends!' : 'добавлен в друзья!'}`, '#4caf50');
-    
-    // ОБНОВЛЯЕМ ОТКРЫТОЕ ОКНО
-    let friendsModal = document.querySelector('.friends-modal');
-    if(friendsModal) {
-        friendsModal.remove();
-        setTimeout(() => openFriendsModal(), 100);
-    }
-    
+    showTempMessage(`✅ ${username} ${currentLanguage === 'en' ? 'added to friends!' : 'добавлен в друзья!'}`, '#4caf50');
     return true;
 }
-
-// ОБНОВЛЁННАЯ ФУНКЦИЯ ОТКРЫТИЯ ОКНА ДРУЗЕЙ (ДОБАВЛЯЕТ ПОДСКАЗКУ)
-function openFriendsModal() {
-    loadFriendsData();
-    loadGroupsData(); // если есть группы
-    
-    let unreadCounts = getUnreadCountByFriend();
-    let allUsers = getUsers().filter(u => u.username !== currentUser && u.username !== 'admin');
-    
-    let modal = document.createElement('div');
-    modal.className = 'friends-modal';
-    modal.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.92);
-        backdrop-filter: blur(20px);
-        z-index: 10001;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        animation: fadeIn 0.3s ease;
-    `;
-    
-    modal.innerHTML = `
-        <div style="
-            background: linear-gradient(145deg, rgba(25,25,55,0.98), rgba(15,15,40,0.98));
-            border-radius: 40px;
-            max-width: 550px;
-            width: 90%;
-            max-height: 85vh;
-            border: 1px solid rgba(255,255,255,0.15);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            overflow: hidden;
-            animation: scaleIn 0.3s ease;
-        ">
-            <div style="
-                padding: 20px 25px;
-                background: linear-gradient(135deg, rgba(255,107,157,0.15), rgba(192,132,252,0.15));
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            ">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <span style="font-size: 1.8rem;">👥</span>
-                    <h2 style="
-                        margin: 0;
-                        background: linear-gradient(135deg, #ffd700, #ff9800);
-                        -webkit-background-clip: text;
-                        background-clip: text;
-                        color: transparent;
-                        font-size: 1.5rem;
-                    ">${currentLanguage === 'en' ? 'My Friends' : 'Мои друзья'}</h2>
-                </div>
-                <button id="closeFriendsModalBtn" style="
-                    background: rgba(255,255,255,0.1);
-                    border: none;
-                    width: 38px;
-                    height: 38px;
-                    border-radius: 50%;
-                    font-size: 1.2rem;
-                    cursor: pointer;
-                    color: white;
-                    transition: all 0.2s;
-                ">✖</button>
-            </div>
-            
-            <div style="padding: 20px 25px;">
-                <!-- Добавление друга -->
-                <div style="
-                    background: rgba(255,255,255,0.05);
-                    border-radius: 28px;
-                    padding: 18px;
-                    margin-bottom: 25px;
-                    border: 1px solid rgba(255,255,255,0.08);
-                ">
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-                        <span style="font-size: 1.2rem;">➕</span>
-                        <h3 style="margin: 0; color: #c084fc; font-size: 1rem;">${currentLanguage === 'en' ? 'Add a friend' : 'Добавить друга'}</h3>
-                    </div>
-                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                        <input type="text" id="friendSearchInput" placeholder="${currentLanguage === 'en' ? 'Enter username...' : 'Введите имя пользователя...'}" style="
-                            flex: 1;
-                            padding: 14px 18px;
-                            border-radius: 40px;
-                            background: rgba(255,255,255,0.1);
-                            border: 1px solid rgba(255,255,255,0.2);
-                            color: white;
-                            font-size: 0.95rem;
-                            outline: none;
-                            transition: all 0.2s;
-                        ">
-                        <button id="addFriendSearchBtn" style="
-                            background: linear-gradient(135deg, #4caf50, #8bc34a);
-                            border: none;
-                            padding: 12px 28px;
-                            border-radius: 40px;
-                            cursor: pointer;
-                            color: white;
-                            font-weight: 600;
-                            display: flex;
-                            align-items: center;
-                            gap: 8px;
-                            transition: all 0.2s;
-                        ">
-                            <span>➕</span>
-                            <span>${currentLanguage === 'en' ? 'Add' : 'Добавить'}</span>
-                        </button>
-                    </div>
-                    <div id="friendSearchHint" style="font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 8px; padding-left: 5px;">
-                        💡 ${currentLanguage === 'en' ? 'Enter exact username' : 'Введите точное имя пользователя'}
-                    </div>
-                </div>
-                
-                <!-- Список всех пользователей -->
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
-                    <span style="font-size: 1.1rem;">📋</span>
-                    <h3 style="margin: 0; color: #c084fc; font-size: 1rem;">${currentLanguage === 'en' ? 'All users' : 'Все пользователи'}</h3>
-                </div>
-                <div id="allUsersList" style="max-height: 200px; overflow-y: auto; margin-bottom: 20px; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 10px;">
-                    ${allUsers.length === 0 ? `<div style="text-align:center;padding:20px;color:#888;">${currentLanguage === 'en' ? 'No other users' : 'Нет других пользователей'}</div>` : ''}
-                    ${allUsers.map(u => `
-                        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,0.05);">
-                            <span>👤 ${escapeHtml(u.username)}</span>
-                            <button onclick="quickAddFriend('${u.username}')" style="background:linear-gradient(135deg,#4caf50,#8bc34a);border:none;padding:4px 12px;border-radius:20px;cursor:pointer;color:white;font-size:0.7rem;">➕</button>
-                        </div>
-                    `).join('')}
-                </div>
-                
-                <!-- Список друзей -->
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
-                    <span style="font-size: 1.1rem;">⭐</span>
-                    <h3 style="margin: 0; color: #c084fc; font-size: 1rem;">${currentLanguage === 'en' ? 'My friends' : 'Мои друзья'} (${friendsList.length})</h3>
-                </div>
-                <div id="friendsListContainer" style="max-height: 250px; overflow-y: auto;">
-                    ${friendsList.length === 0 ? `
-                        <div style="text-align:center;padding:30px;background:rgba(255,255,255,0.03);border-radius:20px;">
-                            <span style="font-size:2rem;opacity:0.5;">👥</span>
-                            <p style="color:#888;margin-top:8px;">${currentLanguage === 'en' ? 'No friends yet' : 'Пока нет друзей'}</p>
-                        </div>
-                    ` : ''}
-                    ${friendsList.map(friend => {
-                        let unread = unreadCounts[friend] || 0;
-                        return `
-                            <div style="background:linear-gradient(95deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02));border-radius:20px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">
-                                <div style="display:flex;align-items:center;gap:10px;">
-                                    <div style="width:36px;height:36px;background:linear-gradient(135deg,#ff6b9d,#c084fc);border-radius:50%;display:flex;align-items:center;justify-content:center;">👤</div>
-                                    <div>
-                                        <strong style="color:#ffd700;">${escapeHtml(friend)}</strong>
-                                        ${unread > 0 ? `<span style="background:#ff6b9d;color:white;border-radius:30px;padding:2px 8px;font-size:0.6rem;margin-left:8px;">${unread}</span>` : ''}
-                                    </div>
-                                </div>
-                                <div style="display:flex;gap:6px;">
-                                    <button onclick="openChatWithFriend('${friend}')" style="background:linear-gradient(135deg,#2196f3,#00bcd4);border:none;padding:6px 12px;border-radius:30px;cursor:pointer;color:white;font-size:0.7rem;">💬</button>
-                                    <button onclick="removeFriend('${friend}')" style="background:#f44336;border:none;padding:6px 12px;border-radius:30px;cursor:pointer;color:white;font-size:0.7rem;">🗑️</button>
-                                </div>
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
-    
-    document.getElementById('closeFriendsModalBtn').onclick = () => modal.remove();
-    modal.onclick = (e) => { if(e.target === modal) modal.remove(); };
-    
-    document.getElementById('addFriendSearchBtn').onclick = () => {
-        let input = document.getElementById('friendSearchInput');
-        let username = input.value.trim();
-        if(username) {
-            addFriend(username);
-            input.value = '';
-            modal.remove();
-            setTimeout(() => openFriendsModal(), 300);
-        } else {
-            showTempMessage(currentLanguage === 'en' ? '❌ Enter username!' : '❌ Введите имя пользователя!', '#ff6b9d');
-        }
-    };
-    
-    document.getElementById('friendSearchInput').onkeypress = (e) => {
-        if(e.key === 'Enter') document.getElementById('addFriendSearchBtn').click();
-    };
-}
-
-// БЫСТРОЕ ДОБАВЛЕНИЕ ДРУГА (для кнопок в списке пользователей)
-function quickAddFriend(username) {
-    addFriend(username);
-    let modal = document.querySelector('.friends-modal');
-    if(modal) {
-        modal.remove();
-        setTimeout(() => openFriendsModal(), 300);
-    }
-}
-
-// ДЕЛАЕМ ФУНКЦИИ ГЛОБАЛЬНЫМИ
-window.addFriend = addFriend;
-window.quickAddFriend = quickAddFriend;
-window.openFriendsModal = openFriendsModal;
 
 // Удалить из друзей
 function removeFriend(username) {
@@ -10251,11 +10027,20 @@ function getUnreadCountByFriend() {
     return unreadByFriend;
 }
 
-// КРАСИВОЕ МОДАЛЬНОЕ ОКНО ДРУЗЕЙ
+// ========== ФУНКЦИЯ ДРУЗЕЙ (ИСПРАВЛЕННАЯ) - ВСТАВЬТЕ ВМЕСТО СТАРОЙ ==========
+
 function openFriendsModal() {
-    loadFriendsData();
+    // Загружаем данные
+    if(currentUser) {
+        let saved = localStorage.getItem(`friends_${currentUser}`);
+        friendsList = saved ? JSON.parse(saved) : [];
+        let allMessages = localStorage.getItem('hsk_all_messages');
+        privateMessages = allMessages ? JSON.parse(allMessages) : [];
+    }
     
     let unreadCounts = getUnreadCountByFriend();
+    const isRu = currentLanguage !== 'en';
+    
     let modal = document.createElement('div');
     modal.className = 'friends-modal';
     modal.style.cssText = `
@@ -10270,195 +10055,62 @@ function openFriendsModal() {
         display: flex;
         justify-content: center;
         align-items: center;
-        animation: fadeIn 0.3s ease;
     `;
     
     modal.innerHTML = `
-        <div style="
-            background: linear-gradient(145deg, rgba(25,25,55,0.98), rgba(15,15,40,0.98));
-            border-radius: 40px;
-            max-width: 550px;
-            width: 90%;
-            max-height: 85vh;
-            border: 1px solid rgba(255,255,255,0.15);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            overflow: hidden;
-            animation: scaleIn 0.3s ease;
-        ">
-            <div style="
-                padding: 20px 25px;
-                background: linear-gradient(135deg, rgba(255,107,157,0.15), rgba(192,132,252,0.15));
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            ">
+        <div style="background: linear-gradient(145deg, rgba(25,25,55,0.98), rgba(15,15,40,0.98)); border-radius: 40px; max-width: 550px; width: 90%; max-height: 85vh; border: 1px solid rgba(255,255,255,0.15); overflow: hidden;">
+            <div style="padding: 20px 25px; background: linear-gradient(135deg, rgba(255,107,157,0.15), rgba(192,132,252,0.15)); border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <span style="font-size: 1.8rem;">👥</span>
-                    <h2 style="
-                        margin: 0;
-                        background: linear-gradient(135deg, #ffd700, #ff9800);
-                        -webkit-background-clip: text;
-                        background-clip: text;
-                        color: transparent;
-                        font-size: 1.5rem;
-                    ">${currentLanguage === 'en' ? 'My Friends' : 'Мои друзья'}</h2>
+                    <h2 style="margin: 0; background: linear-gradient(135deg, #ffd700, #ff9800); -webkit-background-clip: text; background-clip: text; color: transparent; font-size: 1.5rem;">${isRu ? 'Мои друзья' : 'My Friends'}</h2>
                 </div>
-                <button id="closeFriendsModalBtn" style="
-                    background: rgba(255,255,255,0.1);
-                    border: none;
-                    width: 38px;
-                    height: 38px;
-                    border-radius: 50%;
-                    font-size: 1.2rem;
-                    cursor: pointer;
-                    color: white;
-                    transition: all 0.2s;
-                " onmouseover="this.style.background='#ff6b9d'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">✖</button>
+                <button id="closeFriendsModalBtn" style="background: rgba(255,255,255,0.1); border: none; width: 38px; height: 38px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; color: white;">✖</button>
             </div>
             
             <div style="padding: 20px 25px;">
-                <!-- Добавление друга - ПОЛЕ ВВОДА -->
-                <div style="
-                    background: rgba(255,255,255,0.05);
-                    border-radius: 28px;
-                    padding: 18px;
-                    margin-bottom: 25px;
-                    border: 1px solid rgba(255,255,255,0.08);
-                ">
+                <div style="background: rgba(255,255,255,0.05); border-radius: 28px; padding: 18px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.08);">
                     <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
                         <span style="font-size: 1.2rem;">➕</span>
-                        <h3 style="margin: 0; color: #c084fc; font-size: 1rem;">${currentLanguage === 'en' ? 'Add a friend' : 'Добавить друга'}</h3>
+                        <h3 style="margin: 0; color: #c084fc; font-size: 1rem;">${isRu ? 'Добавить друга' : 'Add a friend'}</h3>
                     </div>
                     <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                        <input type="text" id="friendSearchInput" placeholder="${currentLanguage === 'en' ? 'Enter username...' : 'Введите имя пользователя...'}" style="
-                            flex: 1;
-                            padding: 14px 18px;
-                            border-radius: 40px;
-                            background: rgba(255,255,255,0.1);
-                            border: 1px solid rgba(255,255,255,0.2);
-                            color: white;
-                            font-size: 0.95rem;
-                            outline: none;
-                            transition: all 0.2s;
-                        " onfocus="this.style.borderColor='#c084fc'" onblur="this.style.borderColor='rgba(255,255,255,0.2)'">
-                        <button id="addFriendSearchBtn" style="
-                            background: linear-gradient(135deg, #4caf50, #8bc34a);
-                            border: none;
-                            padding: 12px 28px;
-                            border-radius: 40px;
-                            cursor: pointer;
-                            color: white;
-                            font-weight: 600;
-                            display: flex;
-                            align-items: center;
-                            gap: 8px;
-                            transition: all 0.2s;
-                        " onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+                        <input type="text" id="friendSearchInput" placeholder="${isRu ? 'Введите имя пользователя...' : 'Enter username...'}" style="flex: 1; padding: 14px 18px; border-radius: 40px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 0.95rem; outline: none;">
+                        <button id="addFriendSearchBtn" style="background: linear-gradient(135deg, #4caf50, #8bc34a); border: none; padding: 12px 28px; border-radius: 40px; cursor: pointer; color: white; font-weight: 600; display: flex; align-items: center; gap: 8px;">
                             <span>➕</span>
-                            <span>${currentLanguage === 'en' ? 'Add' : 'Добавить'}</span>
+                            <span>${isRu ? 'Добавить' : 'Add'}</span>
                         </button>
                     </div>
-                    <div id="friendSearchHint" style="font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 8px; padding-left: 5px;">
-                        💡 ${currentLanguage === 'en' ? 'Enter exact username to add' : 'Введите точное имя пользователя для добавления'}
-                    </div>
+                    <div style="font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 8px;">💡 ${isRu ? 'Введите точное имя пользователя' : 'Enter exact username'}</div>
                 </div>
                 
-                <!-- Список друзей -->
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
                     <span style="font-size: 1.1rem;">📋</span>
-                    <h3 style="margin: 0; color: #c084fc; font-size: 1rem;">${currentLanguage === 'en' ? 'Friends list' : 'Список друзей'} (${friendsList.length})</h3>
+                    <h3 style="margin: 0; color: #c084fc; font-size: 1rem;">${isRu ? 'Список друзей' : 'Friends list'} (${friendsList.length})</h3>
                 </div>
                 
-                <div id="friendsListContainer" style="
-                    max-height: 380px;
-                    overflow-y: auto;
-                    padding-right: 5px;
-                ">
+                <div id="friendsListContainer" style="max-height: 380px; overflow-y: auto; padding-right: 5px;">
                     ${friendsList.length === 0 ? `
-                        <div style="
-                            text-align: center;
-                            padding: 40px 20px;
-                            background: rgba(255,255,255,0.03);
-                            border-radius: 24px;
-                        ">
+                        <div style="text-align: center; padding: 40px 20px; background: rgba(255,255,255,0.03); border-radius: 24px;">
                             <span style="font-size: 3rem; opacity: 0.5;">👥</span>
-                            <p style="color: #888; margin-top: 10px;">${currentLanguage === 'en' ? 'No friends yet' : 'Пока нет друзей'}</p>
-                            <p style="color: #666; font-size: 0.8rem;">${currentLanguage === 'en' ? 'Add friends using the search above!' : 'Добавьте друзей через поиск выше!'}</p>
+                            <p style="color: #888; margin-top: 10px;">${isRu ? 'Пока нет друзей' : 'No friends yet'}</p>
                         </div>
-                    ` : ''}
-                    ${friendsList.map(friend => {
+                    ` : friendsList.map(friend => {
                         let unread = unreadCounts[friend] || 0;
                         return `
-                            <div style="
-                                background: linear-gradient(95deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-                                border-radius: 20px;
-                                padding: 14px 16px;
-                                margin-bottom: 10px;
-                                display: flex;
-                                justify-content: space-between;
-                                align-items: center;
-                                transition: all 0.2s;
-                                border: 1px solid rgba(255,255,255,0.05);
-                            " onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='linear-gradient(95deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))'">
+                            <div style="background: linear-gradient(95deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)); border-radius: 20px; padding: 14px 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05);">
                                 <div style="display: flex; align-items: center; gap: 12px;">
-                                    <div style="
-                                        width: 44px;
-                                        height: 44px;
-                                        background: linear-gradient(135deg, #ff6b9d, #c084fc);
-                                        border-radius: 50%;
-                                        display: flex;
-                                        align-items: center;
-                                        justify-content: center;
-                                        font-size: 1.3rem;
-                                    ">👤</div>
+                                    <div style="width: 44px; height: 44px; background: linear-gradient(135deg, #ff6b9d, #c084fc); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">👤</div>
                                     <div>
-                                        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                        <div style="display: flex; align-items: center; gap: 8px;">
                                             <strong style="color: #ffd700; font-size: 1rem;">${escapeHtml(friend)}</strong>
-                                            ${unread > 0 ? `<span style="
-                                                background: #ff6b9d;
-                                                color: white;
-                                                border-radius: 30px;
-                                                padding: 2px 10px;
-                                                font-size: 0.7rem;
-                                                font-weight: bold;
-                                                animation: pulse 1s infinite;
-                                            ">${unread}</span>` : ''}
+                                            ${unread > 0 ? `<span style="background: #ff6b9d; color: white; border-radius: 30px; padding: 2px 10px; font-size: 0.7rem;">${unread}</span>` : ''}
                                         </div>
-                                        <div style="font-size: 0.7rem; color: rgba(255,255,255,0.4);">${currentLanguage === 'en' ? 'Friend' : 'Друг'}</div>
+                                        <div style="font-size: 0.7rem; color: rgba(255,255,255,0.4);">${isRu ? 'Друг' : 'Friend'}</div>
                                     </div>
                                 </div>
                                 <div style="display: flex; gap: 8px;">
-                                    <button onclick="openChatWithFriend('${friend}')" style="
-                                        background: linear-gradient(135deg, #2196f3, #00bcd4);
-                                        border: none;
-                                        padding: 8px 16px;
-                                        border-radius: 30px;
-                                        cursor: pointer;
-                                        color: white;
-                                        font-weight: 500;
-                                        display: flex;
-                                        align-items: center;
-                                        gap: 6px;
-                                        transition: all 0.2s;
-                                    " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                                        <span>💬</span>
-                                        <span>${currentLanguage === 'en' ? 'Chat' : 'Чат'}</span>
-                                    </button>
-                                    <button onclick="removeFriend('${friend}')" style="
-                                        background: rgba(244,67,54,0.8);
-                                        border: none;
-                                        padding: 8px 16px;
-                                        border-radius: 30px;
-                                        cursor: pointer;
-                                        color: white;
-                                        display: flex;
-                                        align-items: center;
-                                        gap: 6px;
-                                        transition: all 0.2s;
-                                    " onmouseover="this.style.background='#f44336'" onmouseout="this.style.background='rgba(244,67,54,0.8)'">
-                                        <span>🗑️</span>
-                                    </button>
+                                    <button onclick="openChatWithFriend('${friend}')" style="background: linear-gradient(135deg, #2196f3, #00bcd4); border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; color: white;">💬 ${isRu ? 'Чат' : 'Chat'}</button>
+                                    <button onclick="removeFriend('${friend}')" style="background: rgba(244,67,54,0.8); border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; color: white;">🗑️</button>
                                 </div>
                             </div>
                         `;
@@ -10470,29 +10122,22 @@ function openFriendsModal() {
     
     document.body.appendChild(modal);
     
-    // Закрытие
     document.getElementById('closeFriendsModalBtn').onclick = () => modal.remove();
     modal.onclick = (e) => { if(e.target === modal) modal.remove(); };
     
-    // Добавление друга через поле ввода
     document.getElementById('addFriendSearchBtn').onclick = () => {
-        let input = document.getElementById('friendSearchInput');
-        let username = input.value.trim();
+        let username = document.getElementById('friendSearchInput').value.trim();
         if(username) {
             addFriend(username);
-            input.value = '';
             modal.remove();
             setTimeout(() => openFriendsModal(), 300);
         } else {
-            showTempMessage(currentLanguage === 'en' ? '❌ Enter username!' : '❌ Введите имя пользователя!', '#ff6b9d');
+            showTempMessage(isRu ? '❌ Введите имя!' : '❌ Enter username!', '#ff6b9d');
         }
     };
     
-    // Enter в поле ввода
     document.getElementById('friendSearchInput').onkeypress = (e) => {
-        if(e.key === 'Enter') {
-            document.getElementById('addFriendSearchBtn').click();
-        }
+        if(e.key === 'Enter') document.getElementById('addFriendSearchBtn').click();
     };
 }
 
@@ -22775,120 +22420,7 @@ setTimeout(() => {
 console.log('✅ Статистика готова! Админ видит посетителей за день/неделю/месяц');
 </script>
 
-<script>
-// ========== ИСПРАВЛЕНИЕ СЧЁТЧИКОВ ПОЛЬЗОВАТЕЛЕЙ ==========
 
-// Получаем список пользователей
-function getUsersFixed() {
-    let stored = localStorage.getItem('hsk_users');
-    let users = stored ? JSON.parse(stored) : [];
-    
-    if (users.length === 0 || !users.find(u => u.username === 'admin')) {
-        users = [{ username: "admin", email: "admin@admin.com", password: "admin123", bamboo: 0 }];
-    }
-    
-    // Собираем всех пользователей из отдельных ключей
-    let allUserKeys = Object.keys(localStorage).filter(k => k.startsWith('hsk_user_'));
-    
-    for (let key of allUserKeys) {
-        let username = key.replace('hsk_user_', '');
-        if (username === 'admin') continue;
-        
-        if (!users.find(u => u.username === username)) {
-            let userData = JSON.parse(localStorage.getItem(key));
-            users.push({
-                username: username,
-                email: userData.email || username + '@user.com',
-                password: '123456',
-                bamboo: userData?.bamboo || 0
-            });
-            console.log('➕ Добавлен пользователь:', username);
-        }
-    }
-    
-    localStorage.setItem('hsk_users', JSON.stringify(users));
-    return users;
-}
-
-// Обновляем счётчики на странице
-function updateAllCounters() {
-    let users = getUsersFixed();
-    let regularCount = users.filter(u => u.username !== 'admin').length;
-    
-    let countEl = document.getElementById('registeredUsersCount');
-    if (countEl) {
-        countEl.innerText = regularCount;
-    }
-    
-    let visitorEl = document.getElementById('visitorCount');
-    if (visitorEl) {
-        let today = new Date().toDateString();
-        let data = localStorage.getItem('hsk_visitor_data');
-        if (data) {
-            let parsed = JSON.parse(data);
-            if (parsed.date === today) {
-                visitorEl.innerText = parsed.count;
-            } else {
-                visitorEl.innerText = 0;
-            }
-        }
-    }
-    
-    if (currentUser) {
-        let usersList = getUsersFixed();
-        let user = usersList.find(u => u.username === currentUser);
-        let bambooEl = document.getElementById('myPoints');
-        if (bambooEl && user) bambooEl.innerText = user.bamboo || 0;
-    }
-    
-    console.log('📊 Счётчики обновлены: зарегистрировано =', regularCount);
-}
-
-// Перехватываем регистрацию
-let originalRegister = window.register;
-window.register = function() {
-    if (originalRegister) originalRegister();
-    setTimeout(() => {
-        getUsersFixed();
-        updateAllCounters();
-        if (typeof updateRankTable === 'function') updateRankTable();
-    }, 500);
-};
-
-// Перехватываем показ главной страницы
-let originalShowMain = window.showMainPage;
-window.showMainPage = function() {
-    if (originalShowMain) originalShowMain();
-    setTimeout(updateAllCounters, 300);
-};
-
-// Перехватываем вход
-let originalLogin = window.login;
-window.login = function() {
-    if (originalLogin) originalLogin();
-    setTimeout(updateAllCounters, 300);
-};
-
-// Заменяем старые функции
-window.getUsers = getUsersFixed;
-
-// Запускаем при загрузке
-setTimeout(() => {
-    if (currentUser) {
-        getUsersFixed();
-        updateAllCounters();
-    }
-}, 500);
-
-// Обновляем каждые 5 секунд
-setInterval(() => {
-    if (currentUser && document.getElementById('mainPage') && !document.getElementById('mainPage').classList.contains('hide')) {
-        updateAllCounters();
-    }
-}, 5000);
-
-console.log('✅ Система обновления счётчиков запущена!');
-</script>
 
 </body>
 </html>
