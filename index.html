@@ -6908,28 +6908,101 @@ for(let i = 0; i < 33; i++) {
         updateLevelProgressBars();
     }
     
-    function updateVisitorCounter() {
-        let today = new Date().toDateString();
-        let data = localStorage.getItem('hsk_visitor_data');
-        if(!data) {
-            localStorage.setItem('hsk_visitor_data', JSON.stringify({ date: today, count: 1 }));
+    // Добавьте эту функцию для правильного обновления счётчика посетителей
+function updateVisitorCounter() {
+    let today = new Date().toDateString();
+    
+    // Получаем или создаём данные о посетителях
+    let visitorData = localStorage.getItem('hsk_visitor_data');
+    if (!visitorData) {
+        visitorData = JSON.stringify({ date: today, count: 1 });
+        localStorage.setItem('hsk_visitor_data', visitorData);
+    } else {
+        let data = JSON.parse(visitorData);
+        
+        // Если новый день, сбрасываем счётчик
+        if (data.date !== today) {
+            data = { date: today, count: 1 };
+            localStorage.setItem('hsk_visitor_data', JSON.stringify(data));
         } else {
-            let d = JSON.parse(data);
-            if(d.date !== today) {
-                localStorage.setItem('hsk_visitor_data', JSON.stringify({ date: today, count: 1 }));
-            } else {
-                let key = 'hsk_counted_' + today;
-                if(!sessionStorage.getItem(key)) {
-                    d.count++;
-                    localStorage.setItem('hsk_visitor_data', JSON.stringify(d));
-                    sessionStorage.setItem(key, 'true');
-                }
+            // Увеличиваем счётчик только если этот пользователь ещё не учтён сегодня
+            let countedKey = `hsk_counted_${today}_${currentUser || 'guest'}`;
+            if (!sessionStorage.getItem(countedKey) && currentUser !== 'admin') {
+                data.count++;
+                localStorage.setItem('hsk_visitor_data', JSON.stringify(data));
+                sessionStorage.setItem(countedKey, 'true');
             }
         }
-        let fresh = JSON.parse(localStorage.getItem('hsk_visitor_data') || '{"count":0}');
-        let el = document.getElementById('visitorCount');
-        if(el) el.innerText = fresh.count;
     }
+    
+    // Обновляем отображение
+    let fresh = JSON.parse(localStorage.getItem('hsk_visitor_data') || '{"count":0}');
+    let visitorEl = document.getElementById('visitorCount');
+    if (visitorEl) visitorEl.innerText = fresh.count;
+}
+
+// Обновляем счётчик зарегистрированных пользователей
+function updateRegisteredUsersCount() {
+    let users = getUsers();
+    // Исключаем admin из подсчёта, если нужно
+    let regularUsers = users.filter(u => u.username !== 'admin').length;
+    let regEl = document.getElementById('registeredUsersCount');
+    if (regEl) regEl.innerText = regularUsers;
+}
+
+// Обновляем все счётчики на главной странице
+function updateMainPageStats() {
+    if (!currentUser) return;
+    
+    // Счётчик посетителей
+    updateVisitorCounter();
+    
+    // Счётчик зарегистрированных
+    updateRegisteredUsersCount();
+    
+    // Бамбуки текущего пользователя
+    let users = getUsers();
+    let currentUserData = users.find(u => u.username === currentUser);
+    let bambooEl = document.getElementById('myPoints');
+    if (bambooEl && currentUserData) bambooEl.innerText = currentUserData.bamboo || 0;
+    
+    // Время обучения
+    let userData = getUserData(currentUser);
+    let timeEl = document.getElementById('myTime');
+    if (timeEl && userData) timeEl.innerText = formatTime(userData.studyTime || 0);
+}
+
+// Перехватываем регистрацию для обновления счётчика
+let originalRegister = window.register;
+window.register = function() {
+    if (originalRegister) originalRegister();
+    setTimeout(() => {
+        updateRegisteredUsersCount();
+        updateRankTable();
+    }, 500);
+};
+
+// Перехватываем показ главной страницы
+let originalShowMainPage = window.showMainPage;
+window.showMainPage = function() {
+    if (originalShowMainPage) originalShowMainPage();
+    setTimeout(() => {
+        updateMainPageStats();
+    }, 300);
+};
+
+// Запускаем обновление при загрузке
+setTimeout(() => {
+    if (currentUser) updateMainPageStats();
+}, 500);
+
+// Обновляем каждые 30 секунд
+setInterval(() => {
+    if (currentUser && document.getElementById('mainPage') && !document.getElementById('mainPage').classList.contains('hide')) {
+        updateMainPageStats();
+        updateRankTable();
+    }
+}, 30000);
     
     function updateLevelProgressBars() {
         if(!currentUser) return;
@@ -22191,7 +22264,7 @@ setInterval(() => {
     }
 }, 2000);
 
-console.log('👑 Админ-панель готова! Логин: admin, Пароль: admin123');
+console.log('👑 Админ-панель готова! Логин: admin, Пароль: admin123nokiton');
 
 </script>
 <script>
