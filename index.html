@@ -6908,101 +6908,28 @@ for(let i = 0; i < 33; i++) {
         updateLevelProgressBars();
     }
     
-    // Добавьте эту функцию для правильного обновления счётчика посетителей
-function updateVisitorCounter() {
-    let today = new Date().toDateString();
-    
-    // Получаем или создаём данные о посетителях
-    let visitorData = localStorage.getItem('hsk_visitor_data');
-    if (!visitorData) {
-        visitorData = JSON.stringify({ date: today, count: 1 });
-        localStorage.setItem('hsk_visitor_data', visitorData);
-    } else {
-        let data = JSON.parse(visitorData);
-        
-        // Если новый день, сбрасываем счётчик
-        if (data.date !== today) {
-            data = { date: today, count: 1 };
-            localStorage.setItem('hsk_visitor_data', JSON.stringify(data));
+    function updateVisitorCounter() {
+        let today = new Date().toDateString();
+        let data = localStorage.getItem('hsk_visitor_data');
+        if(!data) {
+            localStorage.setItem('hsk_visitor_data', JSON.stringify({ date: today, count: 1 }));
         } else {
-            // Увеличиваем счётчик только если этот пользователь ещё не учтён сегодня
-            let countedKey = `hsk_counted_${today}_${currentUser || 'guest'}`;
-            if (!sessionStorage.getItem(countedKey) && currentUser !== 'admin') {
-                data.count++;
-                localStorage.setItem('hsk_visitor_data', JSON.stringify(data));
-                sessionStorage.setItem(countedKey, 'true');
+            let d = JSON.parse(data);
+            if(d.date !== today) {
+                localStorage.setItem('hsk_visitor_data', JSON.stringify({ date: today, count: 1 }));
+            } else {
+                let key = 'hsk_counted_' + today;
+                if(!sessionStorage.getItem(key)) {
+                    d.count++;
+                    localStorage.setItem('hsk_visitor_data', JSON.stringify(d));
+                    sessionStorage.setItem(key, 'true');
+                }
             }
         }
+        let fresh = JSON.parse(localStorage.getItem('hsk_visitor_data') || '{"count":0}');
+        let el = document.getElementById('visitorCount');
+        if(el) el.innerText = fresh.count;
     }
-    
-    // Обновляем отображение
-    let fresh = JSON.parse(localStorage.getItem('hsk_visitor_data') || '{"count":0}');
-    let visitorEl = document.getElementById('visitorCount');
-    if (visitorEl) visitorEl.innerText = fresh.count;
-}
-
-// Обновляем счётчик зарегистрированных пользователей
-function updateRegisteredUsersCount() {
-    let users = getUsers();
-    // Исключаем admin из подсчёта, если нужно
-    let regularUsers = users.filter(u => u.username !== 'admin').length;
-    let regEl = document.getElementById('registeredUsersCount');
-    if (regEl) regEl.innerText = regularUsers;
-}
-
-// Обновляем все счётчики на главной странице
-function updateMainPageStats() {
-    if (!currentUser) return;
-    
-    // Счётчик посетителей
-    updateVisitorCounter();
-    
-    // Счётчик зарегистрированных
-    updateRegisteredUsersCount();
-    
-    // Бамбуки текущего пользователя
-    let users = getUsers();
-    let currentUserData = users.find(u => u.username === currentUser);
-    let bambooEl = document.getElementById('myPoints');
-    if (bambooEl && currentUserData) bambooEl.innerText = currentUserData.bamboo || 0;
-    
-    // Время обучения
-    let userData = getUserData(currentUser);
-    let timeEl = document.getElementById('myTime');
-    if (timeEl && userData) timeEl.innerText = formatTime(userData.studyTime || 0);
-}
-
-// Перехватываем регистрацию для обновления счётчика
-let originalRegister = window.register;
-window.register = function() {
-    if (originalRegister) originalRegister();
-    setTimeout(() => {
-        updateRegisteredUsersCount();
-        updateRankTable();
-    }, 500);
-};
-
-// Перехватываем показ главной страницы
-let originalShowMainPage = window.showMainPage;
-window.showMainPage = function() {
-    if (originalShowMainPage) originalShowMainPage();
-    setTimeout(() => {
-        updateMainPageStats();
-    }, 300);
-};
-
-// Запускаем обновление при загрузке
-setTimeout(() => {
-    if (currentUser) updateMainPageStats();
-}, 500);
-
-// Обновляем каждые 30 секунд
-setInterval(() => {
-    if (currentUser && document.getElementById('mainPage') && !document.getElementById('mainPage').classList.contains('hide')) {
-        updateMainPageStats();
-        updateRankTable();
-    }
-}, 30000);
     
     function updateLevelProgressBars() {
         if(!currentUser) return;
@@ -8056,7 +7983,30 @@ function closeProfileLearnedModal() {
     function closeRankModal() { document.getElementById('rankModal').classList.remove('active'); }
     function switchRankTab(tab) { currentRankTab = tab; let bt = document.getElementById('rankBambooBtn'), tt = document.getElementById('rankTimeBtn'), btbl = document.getElementById('rankBambooTable'), ttbl = document.getElementById('rankTimeTable'); if(tab === 'bamboo') { bt.classList.add('active'); tt.classList.remove('active'); btbl.classList.remove('hide'); ttbl.classList.add('hide'); } else { bt.classList.remove('active'); tt.classList.add('active'); btbl.classList.add('hide'); ttbl.classList.remove('hide'); } }
     
-    function register() {
+    function login() {
+    let username = document.getElementById('loginUsername').value.trim();
+    let password = document.getElementById('loginPassword').value;
+
+    let users = getUsers();
+    let user = users.find(u => u.username === username && u.password === password);
+
+    if (!user) {
+        document.getElementById('loginError').innerText = t('invalidCredentials');
+        return;
+    }
+
+    currentUser = username;
+    localStorage.setItem('hsk_current_user', username);
+    document.getElementById('loginUsername').value = '';
+    document.getElementById('loginPassword').value = '';
+    document.getElementById('loginError').innerHTML = '';
+
+    updateAllStats();
+    updateUserStats();
+    showMainPage();
+}
+
+function register() {
     let username = document.getElementById('regUsername').value.trim();
     let email = document.getElementById('regEmail').value.trim();
     let password = document.getElementById('regPassword').value;
@@ -8077,7 +8027,7 @@ function closeProfileLearnedModal() {
     }
 
     // Добавляем пользователя
-    users.push({ username: username, email: email, password: password, bamboo: 0 });
+    users.push({ username, email, password, bamboo: 0 });
     saveUsers(users);
 
     // Создаём данные пользователя
@@ -8111,47 +8061,8 @@ function closeProfileLearnedModal() {
         le.innerHTML = '<span style="color:#4caf50">✅ ' + (currentLanguage === 'en' ? 'Registration successful! Please login.' : 'Регистрация успешна! Войдите.') + '</span>';
         setTimeout(() => { if (le) le.innerHTML = ''; }, 3000);
     }
-
     updateAllStats();
 }
-
-function login() {
-    let username = document.getElementById('loginUsername').value.trim();
-    let password = document.getElementById('loginPassword').value;
-
-    let users = getUsers();
-    let user = users.find(u => u.username === username && u.password === password);
-
-    if (!user) {
-        document.getElementById('loginError').innerText = t('invalidCredentials');
-        return;
-    }
-
-    currentUser = username;
-    localStorage.setItem('hsk_current_user', username);
-    document.getElementById('loginUsername').value = '';
-    document.getElementById('loginPassword').value = '';
-    document.getElementById('loginError').innerHTML = '';
-
-    updateAllStats();
-    updateUserStats();
-    showMainPage();
-}
-    
-    function login() {
-        let u = document.getElementById('loginUsername').value.trim(), p = document.getElementById('loginPassword').value;
-        let users = getUsers();
-        let user = users.find(us => us.username === u && us.password === p);
-        if(!user) { document.getElementById('loginError').innerText = t('invalidCredentials'); return; }
-        currentUser = u;
-        localStorage.setItem('hsk_current_user', u);
-        document.getElementById('loginUsername').value = '';
-        document.getElementById('loginPassword').value = '';
-        document.getElementById('loginError').innerHTML = '';
-        updateAllStats();
-        updateUserStats();
-        showMainPage();
-    }
     
     function logout() { stopStudyTimer(); currentUser = null; localStorage.removeItem('hsk_current_user'); showLogin(); }
     function showLogin() { document.getElementById('loginForm').classList.remove('hide'); document.getElementById('registerForm').classList.add('hide'); document.getElementById('mainPage').classList.add('hide'); document.getElementById('appContainer').classList.add('hide'); document.getElementById('authContainer').classList.remove('hide'); }
@@ -9326,12 +9237,15 @@ function createBeautifulButton() {
         };
     }
     
-    // === ПЕРЕХВАТ ПОКАЗА ГЛАВНОЙ СТРАНИЦЫ ===
-    let oldShowMainPage = window.showMainPage;
-    window.showMainPage = function() {
-        if (oldShowMainPage) oldShowMainPage();
-        setTimeout(() => placeButtonAboveText(), 300);
-    };
+    // Оставляем только ОДИН такой блок, остальные удаляем
+let originalShowMainPage = window.showMainPage;
+window.showMainPage = function() {
+    if (originalShowMainPage) originalShowMainPage();
+    setTimeout(() => {
+        updateAllStats();
+        addAdminButtonToMain();
+    }, 200);
+};
     
     // === СЛЕДИМ ЗА ИЗМЕНЕНИЕМ ЯЗЫКА ===
     let lastLang = getCurrentLang();
@@ -10977,12 +10891,6 @@ function showWelcomeBackMessage() {
     localStorage.setItem(`last_visit_${currentUser}`, today);
 }
 
-// Перехватываем функцию showMainPage, чтобы добавить приветствие
-let originalShowMainPage = window.showMainPage;
-window.showMainPage = function() {
-    if(originalShowMainPage) originalShowMainPage();
-    setTimeout(showWelcomeBackMessage, 500);
-};
 
 // Также показываем приветствие при загрузке страницы, если пользователь уже вошел
 setTimeout(() => {
@@ -22292,14 +22200,6 @@ window.login = function() {
     }, 500);
 };
 
-let oldShowMainPage = window.showMainPage;
-window.showMainPage = function() {
-    if (oldShowMainPage) oldShowMainPage();
-    setTimeout(() => { 
-        registerUserVisit(); 
-        addAdminButton(); 
-    }, 300);
-};
 
 let oldLogout = window.logout;
 window.logout = function() {
@@ -22328,7 +22228,7 @@ setInterval(() => {
     }
 }, 2000);
 
-console.log('👑 Админ-панель готова! Логин: admin, Пароль: admin123nokiton');
+console.log('👑 Админ-панель готова! Логин: admin, Пароль: admin123');
 
 </script>
 <script>
@@ -22596,14 +22496,6 @@ window.login = function() {
     }, 300);
 };
 
-let originalShowMainPage = window.showMainPage;
-window.showMainPage = function() {
-    if (originalShowMainPage) originalShowMainPage();
-    setTimeout(() => {
-        updateAllStats();
-        addAdminButtonToMain();
-    }, 200);
-};
 
 // --- ИНИЦИАЛИЗАЦИЯ ---
 setTimeout(() => {
@@ -22614,8 +22506,6 @@ setTimeout(() => {
 
 console.log('✅ Статистика готова! Админ видит посетителей за день/неделю/месяц');
 </script>
-
-
 
 </body>
 </html>
