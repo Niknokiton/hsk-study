@@ -6742,9 +6742,9 @@ for(let i = 0; i < 33; i++) {
     
     function saveUserData(un, d){ localStorage.setItem(`hsk_user_${un}`, JSON.stringify(d)); }
     
-    function updateUserStats() {
+    async function updateUserStats() {
         if(!currentUser) return;
-        let data = getUserData(currentUser);
+        let data = await getUserData(currentUser);
         if(!data.userStats) data.userStats = { dailyQuests: {}, achievements: {}, streak: 0, lastLoginDate: null, level: 1, xp: 0, wordErrors: {} };
         
         let today = new Date().toDateString();
@@ -6778,7 +6778,7 @@ for(let i = 0; i < 33; i++) {
             };
         }
         
-        saveUserData(currentUser, data);
+        await saveUserData(currentUser, data);
         
         let levelEl = document.getElementById('userLevel');
         let streakEl = document.getElementById('userStreak');
@@ -6862,8 +6862,8 @@ for(let i = 0; i < 33; i++) {
         return 0;
     }
     
-    function updateRankTable() {
-        let users = getUsers();
+    async function updateRankTable() {
+        let users = await getUsers();
         let regEl = document.getElementById('registeredUsersCount');
         if(regEl) regEl.innerText = users.length;
         if(currentUser) {
@@ -6902,13 +6902,13 @@ for(let i = 0; i < 33; i++) {
         }
     }
     
-    function updateAllStats() {
-        updateVisitorCounter();
-        updateRankTable();
+    async function updateAllStats() {
+        await  updateVisitorCounter();
+        await updateRankTable();
         updateLevelProgressBars();
     }
     
-    function updateVisitorCounter() {
+    async function updateVisitorCounter() {
         let today = new Date().toDateString();
         let data = localStorage.getItem('hsk_visitor_data');
         if(!data) {
@@ -7983,11 +7983,11 @@ function closeProfileLearnedModal() {
     function closeRankModal() { document.getElementById('rankModal').classList.remove('active'); }
     function switchRankTab(tab) { currentRankTab = tab; let bt = document.getElementById('rankBambooBtn'), tt = document.getElementById('rankTimeBtn'), btbl = document.getElementById('rankBambooTable'), ttbl = document.getElementById('rankTimeTable'); if(tab === 'bamboo') { bt.classList.add('active'); tt.classList.remove('active'); btbl.classList.remove('hide'); ttbl.classList.add('hide'); } else { bt.classList.remove('active'); tt.classList.add('active'); btbl.classList.add('hide'); ttbl.classList.remove('hide'); } }
     
-    function login() {
+    async function login() {
     let username = document.getElementById('loginUsername').value.trim();
     let password = document.getElementById('loginPassword').value;
 
-    let users = getUsers();
+    let users = await getUsers();
     let user = users.find(u => u.username === username && u.password === password);
 
     if (!user) {
@@ -8001,14 +8001,14 @@ function closeProfileLearnedModal() {
     document.getElementById('loginPassword').value = '';
     document.getElementById('loginError').innerHTML = '';
 
-    updateAllStats();
-    updateUserStats();
+    await updateAllStats();
+    await updateUserStats();
     showMainPage();
-    updateAllStats();
+    await updateAllStats();
 updateRankTable();
 }
 
-function register() {
+async function register() {
     let username = document.getElementById('regUsername').value.trim();
     let email = document.getElementById('regEmail').value.trim();
     let password = document.getElementById('regPassword').value;
@@ -8022,7 +8022,7 @@ function register() {
         return;
     }
 
-    let users = getUsers();
+    let users = await getUsers();
     if (users.find(u => u.username === username)) {
         document.getElementById('registerError').innerText = t('userExists');
         return;
@@ -8030,7 +8030,7 @@ function register() {
 
     // Добавляем пользователя
     users.push({ username, email, password, bamboo: 0 });
-    saveUsers(users);
+    await saveUsers(users);
 
     // Создаём данные пользователя
     let defaultData = {
@@ -8050,7 +8050,7 @@ function register() {
             wordErrors: {}
         }
     };
-    saveUserData(username, defaultData);
+    await saveUserData(username, defaultData);
 
     // Очищаем форму
     document.getElementById('regUsername').value = '';
@@ -8063,7 +8063,7 @@ function register() {
         le.innerHTML = '<span style="color:#4caf50">✅ ' + (currentLanguage === 'en' ? 'Registration successful! Please login.' : 'Регистрация успешна! Войдите.') + '</span>';
         setTimeout(() => { if (le) le.innerHTML = ''; }, 3000);
     }
-    updateAllStats();
+    await updateAllStats();
     updateRankTable();
 }
     
@@ -22504,5 +22504,27 @@ window.login = function() {
 console.log('✅ Статистика готова! Админ видит посетителей за день/неделю/месяц');
 </script>
 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+<script>
+// Ваша конфигурация Firebase (скопированная с сайта)
+const firebaseConfig = {
+  apiKey: "AIzaSyCBkinl4NaplHa_6Sn4LlR20npuKI5ATmo",
+  authDomain: "hsk-study-app.firebaseapp.com",
+  projectId: "hsk-study-app",
+  storageBucket: "hsk-study-app.firebasestorage.app",
+  messagingSenderId:  "899976802884",
+  appId: "1:899976802884:web:08e22496069018e1e70211",
+  measurementId: "G-GF1Y1GC5MZ"
+};
+
+// Инициализация Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+console.log('✅ Firebase подключен!');
+</script>
 </body>
 </html>
