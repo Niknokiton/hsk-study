@@ -8004,6 +8004,8 @@ function closeProfileLearnedModal() {
     updateAllStats();
     updateUserStats();
     showMainPage();
+    updateAllStats();
+updateRankTable();
 }
 
 function register() {
@@ -8062,6 +8064,7 @@ function register() {
         setTimeout(() => { if (le) le.innerHTML = ''; }, 3000);
     }
     updateAllStats();
+    updateRankTable();
 }
     
     function logout() { stopStudyTimer(); currentUser = null; localStorage.removeItem('hsk_current_user'); showLogin(); }
