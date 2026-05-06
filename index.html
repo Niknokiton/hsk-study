@@ -22467,9 +22467,10 @@ function updateAllStats() {
     }
 }
 
-// --- КНОПКА АДМИНА НА ГЛАВНОЙ ---
 function addAdminButtonToMain() {
+    // Строгая проверка: только admin!
     if (!currentUser || currentUser !== 'admin') return;
+    
     let header = document.querySelector('.welcome-header .header-buttons');
     if (!header) return;
     if (document.getElementById('adminStatsBtn')) return;
@@ -22496,13 +22497,6 @@ window.login = function() {
     }, 300);
 };
 
-
-// --- ИНИЦИАЛИЗАЦИЯ ---
-setTimeout(() => {
-    updateAllStats();
-    if (currentUser === 'admin') addAdminButtonToMain();
-    if (currentUser && currentUser !== 'admin') registerVisit();
-}, 500);
 
 console.log('✅ Статистика готова! Админ видит посетителей за день/неделю/месяц');
 </script>
