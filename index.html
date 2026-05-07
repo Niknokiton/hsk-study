@@ -21916,31 +21916,8 @@ window.startReading = function() {
 
 // ---------- СТАТИСТИКА ПОСЕТИТЕЛЕЙ ----------
 function getVisitorStats() {
-    let today = new Date().toDateString();
-    let weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
-    let monthAgo = new Date();
-    monthAgo.setMonth(monthAgo.getMonth() - 1);
-    
-    let visits = JSON.parse(localStorage.getItem('hsk_visits_history') || '[]');
-    
-    let uniqueToday = new Set();
-    let uniqueWeek = new Set();
-    let uniqueMonth = new Set();
-    
-    for (let visit of visits) {
-        let visitDate = new Date(visit.date).toDateString();
-        if (visitDate === today) uniqueToday.add(visit.username);
-        if (new Date(visit.date) >= weekAgo) uniqueWeek.add(visit.username);
-        if (new Date(visit.date) >= monthAgo) uniqueMonth.add(visit.username);
-    }
-    
-    return {
-        today: uniqueToday.size,
-        week: uniqueWeek.size,
-        month: uniqueMonth.size,
-        total: getUsers().filter(u => u.username !== 'admin').length
-    };
+    const usersArray = Array.isArray(users) ? users : [];
+    return usersArray.filter(user => user && user.visits);
 }
 
 // ---------- РЕГИСТРАЦИЯ ПОСЕЩЕНИЯ ----------
@@ -22265,32 +22242,8 @@ function registerVisit() {
 
 // --- ПОЛУЧЕНИЕ СТАТИСТИКИ ---
 function getVisitorStats() {
-    let visits = JSON.parse(localStorage.getItem('hsk_visits') || '[]');
-    let users = getUsers(); // из вашего кода
-    
-    let today = new Date().toDateString();
-    let weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
-    let monthAgo = new Date();
-    monthAgo.setDate(monthAgo.getDate() - 30);
-    
-    let uniqueToday = new Set();
-    let uniqueWeek = new Set();
-    let uniqueMonth = new Set();
-    
-    for (let v of visits) {
-        let visitDate = new Date(v.date).toDateString();
-        if (visitDate === today) uniqueToday.add(v.username);
-        if (new Date(v.date) >= weekAgo) uniqueWeek.add(v.username);
-        if (new Date(v.date) >= monthAgo) uniqueMonth.add(v.username);
-    }
-    
-    return {
-        today: uniqueToday.size,
-        week: uniqueWeek.size,
-        month: uniqueMonth.size,
-        totalRegistered: users.filter(u => u.username !== 'admin').length
-    };
+    const usersArray = Array.isArray(users) ? users : [];
+    return usersArray.filter(user => user && user.visits);
 }
 
 // --- ПЕРЕХВАТ ВХОДА ДЛЯ РЕГИСТРАЦИИ ВИЗИТА ---
