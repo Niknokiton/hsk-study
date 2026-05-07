@@ -551,6 +551,29 @@ body.light-theme .profile-modal .profile-menu-btn {
 </div>
 <div id="gameModal" class="game-modal"><div class="game-modal-content"><h3 id="gameModalTitle">🎮 Игра</h3><div id="gameModalContent"></div><button class="close-game-btn" onclick="closeGameModal()">✖ Закрыть игру</button></div></div>
 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+<script>
+// Ваша конфигурация Firebase (скопированная с сайта)
+const firebaseConfig = {
+  apiKey: "AIzaSyCBkinl4NaplHa_6Sn4LlR20npuKI5ATmo",
+  authDomain: "hsk-study-app.firebaseapp.com",
+  projectId: "hsk-study-app",
+  storageBucket: "hsk-study-app.firebasestorage.app",
+  messagingSenderId:  "899976802884",
+  appId: "1:899976802884:web:08e22496069018e1e70211",
+  measurementId: "G-GF1Y1GC5MZ"
+};
+
+// Инициализация Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+console.log('✅ Firebase подключен!');
+</script>
+
 <script>
     // ==================== ПЕРЕВОД ====================
     let currentLanguage = 'ru';
@@ -6721,26 +6744,44 @@ for(let i = 0; i < 33; i++) {
     const hskData = { 1: hsk1Lessons, 2: hsk2Lessons, 3: hsk3Lessons, 4: hsk4Lessons, 5: hsk5Lessons, 6: hsk6Lessons };
     
     // ==================== ФУНКЦИИ ДЛЯ РАБОТЫ С ДАННЫМИ ====================
-    function getUsers(){ let u = localStorage.getItem('hsk_users'); return u ? JSON.parse(u) : []; }
-    function saveUsers(u){ localStorage.setItem('hsk_users', JSON.stringify(u)); }
+    async function getUsers() {
+    const snapshot = await db.collection('users').get();
+    return snapshot.docs.map(doc => ({ username: doc.id, ...doc.data() }));
+}
+    async function saveUsers(users) {
+    for (let user of users) {
+        await db.collection('users').doc(user.username).set(user);
+    }
+}
     function getDefaultUnlockedLessons(){ return {1:[0],2:[0],3:[0],4:[0],5:[0],6:[0]}; }
     
-    function getUserData(un){
-        let d = localStorage.getItem(`hsk_user_${un}`);
-        if(d){
-            let p = JSON.parse(d);
-            if(!p.unlockedLessons) p.unlockedLessons = getDefaultUnlockedLessons();
-            if(!p.errors) p.errors = [];
-            if(p.studyTime === undefined) p.studyTime = 0;
-            if(!p.favoriteWords) p.favoriteWords = [];
-            if(!p.userStats) p.userStats = { dailyQuests: {}, achievements: {}, streak: 0, lastLoginDate: null, level: 1, xp: 0, wordErrors: {} };
-            for(let l = 1; l <= 6; l++) if(!p.unlockedLessons[l] || !p.unlockedLessons[l].includes(0)) p.unlockedLessons[l] = [0];
-            return p;
+    async function getUserData(username) {
+    const doc = await db.collection('userData').doc(username).get();
+    if (doc.exists) return doc.data();
+    const defaultData = {
+        learnedWords: [],
+        unlockedLessons: getDefaultUnlockedLessons(),
+        bamboo: 0,
+        errors: [],
+        studyTime: 0,
+        favoriteWords: [],
+        userStats: {
+            dailyQuests: {},
+            achievements: {},
+            streak: 0,
+            lastLoginDate: null,
+            level: 1,
+            xp: 0,
+            wordErrors: {}
         }
-        return { learnedWords: [], unlockedLessons: getDefaultUnlockedLessons(), bamboo: 0, errors: [], studyTime: 0, favoriteWords: [], userStats: { dailyQuests: {}, achievements: {}, streak: 0, lastLoginDate: null, level: 1, xp: 0, wordErrors: {} } };
-    }
+    };
+    await db.collection('userData').doc(username).set(defaultData);
+    return defaultData;
+}
     
-    function saveUserData(un, d){ localStorage.setItem(`hsk_user_${un}`, JSON.stringify(d)); }
+    async function saveUserData(username, data) {
+    await db.collection('userData').doc(username).set(data);
+}
     
     async function updateUserStats() {
         if(!currentUser) return;
@@ -9898,62 +9939,46 @@ let friendsList = [];
 let privateMessages = [];
 
 // Загрузка данных
-function loadFriendsData() {
-    if(currentUser) {
-        let saved = localStorage.getItem(`friends_${currentUser}`);
-        friendsList = saved ? JSON.parse(saved) : [];
-        
-        let allMessages = localStorage.getItem('hsk_all_messages');
-        privateMessages = allMessages ? JSON.parse(allMessages) : [];
-    }
+async function loadFriendsData() {
+    if (!currentUser) return;
+    const doc = await db.collection('friends').doc(currentUser).get();
+    friendsList = doc.exists ? doc.data().friends || [] : [];
 }
 
 // Сохранение данных
-function saveFriendsData() {
-    if(currentUser) {
-        localStorage.setItem(`friends_${currentUser}`, JSON.stringify(friendsList));
-        localStorage.setItem('hsk_all_messages', JSON.stringify(privateMessages));
-    }
+async function saveFriendsData() {
+    if (!currentUser) return;
+    await db.collection('friends').doc(currentUser).set({ friends: friendsList });
 }
 
 // Отправить личное сообщение
-function sendPrivateMessage(toUser, message) {
-    if(!message.trim()) return false;
-    
-    let allMessages = JSON.parse(localStorage.getItem('hsk_all_messages') || '[]');
-    allMessages.push({
+async function sendPrivateMessage(toUser, message) {
+    if (!message.trim()) return false;
+    await db.collection('messages').add({
         from: currentUser,
         to: toUser,
         text: message,
         date: new Date().toLocaleString(),
         read: false
     });
-    localStorage.setItem('hsk_all_messages', JSON.stringify(allMessages));
-    privateMessages = allMessages;
-    
-    let container = document.getElementById('privateMessagesContainer');
-    if(container) {
-        let friendName = toUser;
-        let messages = getMessagesWithUser(friendName);
-        container.innerHTML = messages.map(msg => `
-            <div style="align-self:${msg.from === currentUser ? 'flex-end' : 'flex-start'};max-width:80%;background:${msg.from === currentUser ? 'linear-gradient(135deg,rgba(76,175,80,0.3),rgba(76,175,80,0.1))' : 'rgba(255,255,255,0.05)'};border-radius:18px;padding:10px;">
-                <div style="font-size:0.7rem;color:#c084fc;">${msg.from === currentUser ? (currentLanguage === 'en' ? 'You' : 'Вы') : msg.from} • ${msg.date}</div>
-                <div>${escapeHtml(msg.text)}</div>
-            </div>
-        `).join('');
-        container.scrollTop = container.scrollHeight;
-    }
-    
     return true;
 }
 
 // Получить сообщения с пользователем
-function getMessagesWithUser(username) {
-    let allMessages = JSON.parse(localStorage.getItem('hsk_all_messages') || '[]');
-    return allMessages.filter(m => 
-        (m.from === currentUser && m.to === username) || 
-        (m.from === username && m.to === currentUser)
-    ).sort((a,b) => new Date(a.date) - new Date(b.date));
+async function getMessagesWithUser(friendName) {
+    const q1 = await db.collection('messages')
+        .where('from', '==', currentUser)
+        .where('to', '==', friendName)
+        .orderBy('date')
+        .get();
+    const q2 = await db.collection('messages')
+        .where('from', '==', friendName)
+        .where('to', '==', currentUser)
+        .orderBy('date')
+        .get();
+    let all = [...q1.docs, ...q2.docs].map(doc => doc.data());
+    all.sort((a,b) => new Date(a.date) - new Date(b.date));
+    return all;
 }
 
 // Добавить в друзья (по имени)
@@ -22504,27 +22529,6 @@ window.login = function() {
 console.log('✅ Статистика готова! Админ видит посетителей за день/неделю/месяц');
 </script>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
-<script>
-// Ваша конфигурация Firebase (скопированная с сайта)
-const firebaseConfig = {
-  apiKey: "AIzaSyCBkinl4NaplHa_6Sn4LlR20npuKI5ATmo",
-  authDomain: "hsk-study-app.firebaseapp.com",
-  projectId: "hsk-study-app",
-  storageBucket: "hsk-study-app.firebasestorage.app",
-  messagingSenderId:  "899976802884",
-  appId: "1:899976802884:web:08e22496069018e1e70211",
-  measurementId: "G-GF1Y1GC5MZ"
-};
-
-// Инициализация Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-console.log('✅ Firebase подключен!');
-</script>
 </body>
 </html>
