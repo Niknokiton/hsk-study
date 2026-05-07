@@ -551,29 +551,6 @@ body.light-theme .profile-modal .profile-menu-btn {
 </div>
 <div id="gameModal" class="game-modal"><div class="game-modal-content"><h3 id="gameModalTitle">🎮 Игра</h3><div id="gameModalContent"></div><button class="close-game-btn" onclick="closeGameModal()">✖ Закрыть игру</button></div></div>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-
-<script>
-// Ваша конфигурация Firebase (скопированная с сайта)
-const firebaseConfig = {
-  apiKey: "AIzaSyCBkinl4NaplHa_6Sn4LlR20npuKI5ATmo",
-  authDomain: "hsk-study-app.firebaseapp.com",
-  projectId: "hsk-study-app",
-  storageBucket: "hsk-study-app.firebasestorage.app",
-  messagingSenderId:  "899976802884",
-  appId: "1:899976802884:web:08e22496069018e1e70211",
-  measurementId: "G-GF1Y1GC5MZ"
-};
-
-// Инициализация Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-
-console.log('✅ Firebase подключен!');
-</script>
-
 <script>
     // ==================== ПЕРЕВОД ====================
     let currentLanguage = 'ru';
@@ -6756,7 +6733,7 @@ for(let i = 0; i < 33; i++) {
     function getDefaultUnlockedLessons(){ return {1:[0],2:[0],3:[0],4:[0],5:[0],6:[0]}; }
     
     async function getUserData(username) {
-    const doc = await db.collection('userId').doc(username).get();
+    const doc = await db.collection('userData').doc(username).get();
     if (doc.exists) return doc.data();
     const defaultData = {
         learnedWords: [],
@@ -22529,6 +22506,27 @@ window.login = function() {
 console.log('✅ Статистика готова! Админ видит посетителей за день/неделю/месяц');
 </script>
 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
+<script>
+// Ваша конфигурация Firebase (скопированная с сайта)
+const firebaseConfig = {
+  apiKey: "AIzaSyCBkinl4NaplHa_6Sn4LlR20npuKI5ATmo",
+  authDomain: "hsk-study-app.firebaseapp.com",
+  projectId: "hsk-study-app",
+  storageBucket: "hsk-study-app.firebasestorage.app",
+  messagingSenderId:  "899976802884",
+  appId: "1:899976802884:web:08e22496069018e1e70211",
+  measurementId: "G-GF1Y1GC5MZ"
+};
+
+// Инициализация Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+console.log('✅ Firebase подключен!');
+</script>
 </body>
 </html>
