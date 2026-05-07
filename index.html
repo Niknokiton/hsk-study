@@ -6756,7 +6756,7 @@ for(let i = 0; i < 33; i++) {
     function getDefaultUnlockedLessons(){ return {1:[0],2:[0],3:[0],4:[0],5:[0],6:[0]}; }
     
     async function getUserData(username) {
-    const doc = await db.collection('userData').doc(username).get();
+    const doc = await db.collection('userId').doc(username).get();
     if (doc.exists) return doc.data();
     const defaultData = {
         learnedWords: [],
