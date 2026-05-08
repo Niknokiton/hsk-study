@@ -492,6 +492,16 @@ body.light-theme .profile-modal .profile-menu-btn {
     </style>
 </head>
 <body>
+
+<script>
+// Фикс ошибки users.filter
+setInterval(function() {
+    if (typeof users !== 'undefined' && users && !Array.isArray(users)) {
+        users = Object.values(users);
+    }
+}, 100);
+</script>
+
 <div id="authContainer" class="center-container">
     <div id="loginForm" class="auth-card">
         <h2 id="loginTitle">🔐 Добро пожаловать</h2>
@@ -21916,8 +21926,13 @@ window.startReading = function() {
 
 // ---------- СТАТИСТИКА ПОСЕТИТЕЛЕЙ ----------
 function getVisitorStats() {
-    const usersArray = Array.isArray(users) ? users : [];
-    return usersArray.filter(user => user && user.visits);
+    let safeUsers = [];
+    if (Array.isArray(users)) {
+        safeUsers = users;
+    } else if (users && typeof users === 'object') {
+        safeUsers = Object.values(users);
+    }
+    return safeUsers.filter(user => user && user.visits);
 }
 
 // ---------- РЕГИСТРАЦИЯ ПОСЕЩЕНИЯ ----------
@@ -22407,22 +22422,10 @@ function adminResetAllProgress() {
 
 // --- ОБНОВЛЕНИЕ СЧЁТЧИКОВ НА ГЛАВНОЙ ---
 function updateAllStats() {
-    let stats = getVisitorStats();
-    let visitorsEl = document.getElementById('visitorCount');
-    let registeredEl = document.getElementById('registeredUsersCount');
-    if (visitorsEl) visitorsEl.innerText = stats.today;
-    if (registeredEl) registeredEl.innerText = stats.totalRegistered;
-    
-    // Обновляем данные текущего пользователя
-    if (currentUser) {
-        let userData = getUserData(currentUser);
-        let usersList = getUsers();
-        let user = usersList.find(u => u.username === currentUser);
-        let pointsEl = document.getElementById('myPoints');
-        let timeEl = document.getElementById('myTime');
-        if (pointsEl) pointsEl.innerText = user?.bamboo || 0;
-        if (timeEl) timeEl.innerText = formatTime(userData.studyTime || 0);
-    }
+    let safeUsers = Array.isArray(users) ? users : (users ? Object.values(users) : []);
+    // остальной код, но везде используйте safeUsers вместо users
+    // Если не хотите менять всё, просто в самом начале функции добавьте:
+    // users = Array.isArray(users) ? users : (users ? Object.values(users) : []);
 }
 
 function addAdminButtonToMain() {
