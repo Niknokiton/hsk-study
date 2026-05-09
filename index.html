@@ -22421,11 +22421,16 @@ function adminResetAllProgress() {
 }
 
 // --- ОБНОВЛЕНИЕ СЧЁТЧИКОВ НА ГЛАВНОЙ ---
-function updateAllStats() {
-    let safeUsers = Array.isArray(users) ? users : (users ? Object.values(users) : []);
-    // остальной код, но везде используйте safeUsers вместо users
-    // Если не хотите менять всё, просто в самом начале функции добавьте:
-    // users = Array.isArray(users) ? users : (users ? Object.values(users) : []);
+async function updateAllStats() {
+    let users = await getUsers();
+    
+    let totalUsers = users.length;
+    let activeToday = users.filter(u => u.lastActive === getTodayDate()).length;
+    
+    // Здесь оставьте остальной ваш код, если он был внутри функции
+    // Например, обновление HTML:
+    // document.getElementById('totalUsers').innerText = totalUsers;
+    // document.getElementById('activeToday').innerText = activeToday;
 }
 
 function addAdminButtonToMain() {
