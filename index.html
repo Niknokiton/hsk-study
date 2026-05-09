@@ -554,6 +554,15 @@ setInterval(function() {
     </div>
 </div>
 
+<div class="stat-box">
+    <div class="stat-box-value" id="totalUsers">0</div>
+    <div class="stat-box-label">👥 всего</div>
+</div>
+<div class="stat-box">
+    <div class="stat-box-value" id="activeToday">0</div>
+    <div class="stat-box-label">🔵 сегодня</div>
+</div>
+
 <div id="appContainer" class="hide">
     <button class="back-btn" id="homeBtn">На главную</button>
     <div class="app-container"><div class="app-header"><h2 id="appTitle">📚 HSK 1 | Уроки</h2><div class="stats-bar"><div class="stat"><div class="stat-number" id="totalLearned">0</div><div class="stat-label" id="totalLearnedLabel">всего выучено</div></div><div class="stat"><div class="stat-number" id="currentLessonLearned">0</div><div class="stat-label" id="currentLessonLabel">в уроке</div></div><div class="stat"><div class="stat-number" id="progressPercent">0%</div><div class="stat-label" id="progressLabel">прогресс</div></div></div></div><div class="tab-selector"><button class="tab-btn active" data-tab="lessons" id="lessonsTabBtn">📚 Уроки</button><button class="tab-btn" data-tab="games" id="gamesTabBtn">🎮 Игры</button></div><div class="content" id="content"></div></div>
@@ -22427,17 +22436,18 @@ function adminResetAllProgress() {
     openAdminPanel();
 }
 
-// --- ОБНОВЛЕНИЕ СЧЁТЧИКОВ НА ГЛАВНОЙ ---
-async function updateAllStats() {
-    let users = await getUsers();
+// В админ-панели используйте эту функцию вместо updateAllStats()
+async function loadAdminStats() {
+    let allUsers = await getUsers();
+    let totalUsers = allUsers.length;
     
-    let totalUsers = users.length;
-    let activeToday = users.filter(u => u.lastActive === getTodayDate()).length;
+    // Статистика посещений за сегодня
+    let visits = JSON.parse(localStorage.getItem('hsk_visits') || '[]');
+    let todayVisits = visits.filter(v => new Date(v.date).toDateString() === new Date().toDateString()).length;
     
-    // Здесь оставьте остальной ваш код, если он был внутри функции
-    // Например, обновление HTML:
-    // document.getElementById('totalUsers').innerText = totalUsers;
-    // document.getElementById('activeToday').innerText = activeToday;
+    // Обновляем админ-панель
+    document.getElementById('adminTotalUsers').innerText = totalUsers;
+    document.getElementById('adminTodayVisits').innerText = todayVisits;
 }
 
 function addAdminButtonToMain() {
