@@ -6931,10 +6931,17 @@ for(let i = 0; i < 33; i++) {
     }
     
     async function updateAllStats() {
-        await  updateVisitorCounter();
-        await updateRankTable();
-        updateLevelProgressBars();
-    }
+    let users = await getUsers();
+    
+    let totalUsers = users.length;
+    // Временно отключаем подсчёт активных сегодня
+    let activeToday = 0;
+    
+    console.log("Статистика:", totalUsers, "пользователей");
+    
+    // Если у вас есть HTML элементы для отображения статистики - обновите их
+    // document.getElementById('totalUsers').innerText = totalUsers;
+}
     
     async function updateVisitorCounter() {
         let today = new Date().toDateString();
@@ -8011,7 +8018,7 @@ function closeProfileLearnedModal() {
     function closeRankModal() { document.getElementById('rankModal').classList.remove('active'); }
     function switchRankTab(tab) { currentRankTab = tab; let bt = document.getElementById('rankBambooBtn'), tt = document.getElementById('rankTimeBtn'), btbl = document.getElementById('rankBambooTable'), ttbl = document.getElementById('rankTimeTable'); if(tab === 'bamboo') { bt.classList.add('active'); tt.classList.remove('active'); btbl.classList.remove('hide'); ttbl.classList.add('hide'); } else { bt.classList.remove('active'); tt.classList.add('active'); btbl.classList.add('hide'); ttbl.classList.remove('hide'); } }
     
-    async function login() {
+    window.login = async function() {
     let username = document.getElementById('loginUsername').value.trim();
     let password = document.getElementById('loginPassword').value;
 
