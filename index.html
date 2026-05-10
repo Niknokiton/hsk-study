@@ -489,11 +489,273 @@ body.light-theme .profile-modal .profile-menu-btn {
     color: white !important;
 }
       
+      /* Скроллинг для таблицы рейтинга */
+.rank-table-container {
+    overflow-y: auto !important;
+    max-height: 50vh;
+    scrollbar-width: thin;
+}
+
+.rank-table-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.rank-table-container::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+
+.rank-table-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #c084fc, #a855f7);
+    border-radius: 10px;
+}
+
+body.light-theme .rank-table-container::-webkit-scrollbar-track {
+    background: rgba(160,120,80,0.2);
+}
+
+body.light-theme .rank-table-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #D4A35A, #C49A4A);
+}
+
+/* Убедимся, что модальное окно правильно закрывается */
+.rank-modal.active {
+    display: flex !important;
+}
+
+.close-rank-btn {
+    cursor: pointer;
+    margin-top: 20px;
+    align-self: center;
+}
+/* ========== ЕДИНЫЙ КРАСИВЫЙ СКРОЛЛИНГ ДЛЯ ВСЕГО САЙТА ========== */
+
+/* Для всех модальных окон и списков */
+.rank-table-container,
+.rank-modal-content,
+.profile-list,
+.forum-posts,
+.chat-messages,
+.daily-quests,
+.achievement-grid,
+.game-modal-content,
+#gameModalContent,
+.match-game-container {
+    scrollbar-width: thin;
+    scrollbar-color: #c084fc rgba(255,255,255,0.08);
+}
+
+/* Для WebKit браузеров (Chrome, Edge, Safari) */
+.rank-table-container::-webkit-scrollbar,
+.rank-modal-content::-webkit-scrollbar,
+.profile-list::-webkit-scrollbar,
+.forum-posts::-webkit-scrollbar,
+.chat-messages::-webkit-scrollbar,
+.daily-quests::-webkit-scrollbar,
+.achievement-grid::-webkit-scrollbar,
+.game-modal-content::-webkit-scrollbar,
+#gameModalContent::-webkit-scrollbar,
+.match-game-container::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.rank-table-container::-webkit-scrollbar-track,
+.rank-modal-content::-webkit-scrollbar-track,
+.profile-list::-webkit-scrollbar-track,
+.forum-posts::-webkit-scrollbar-track,
+.chat-messages::-webkit-scrollbar-track,
+.daily-quests::-webkit-scrollbar-track,
+.achievement-grid::-webkit-scrollbar-track,
+.game-modal-content::-webkit-scrollbar-track,
+#gameModalContent::-webkit-scrollbar-track,
+.match-game-container::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+}
+
+.rank-table-container::-webkit-scrollbar-thumb,
+.rank-modal-content::-webkit-scrollbar-thumb,
+.profile-list::-webkit-scrollbar-thumb,
+.forum-posts::-webkit-scrollbar-thumb,
+.chat-messages::-webkit-scrollbar-thumb,
+.daily-quests::-webkit-scrollbar-thumb,
+.achievement-grid::-webkit-scrollbar-thumb,
+.game-modal-content::-webkit-scrollbar-thumb,
+#gameModalContent::-webkit-scrollbar-thumb,
+.match-game-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #c084fc, #a855f7);
+    border-radius: 10px;
+}
+
+.rank-table-container::-webkit-scrollbar-thumb:hover,
+.rank-modal-content::-webkit-scrollbar-thumb:hover,
+.profile-list::-webkit-scrollbar-thumb:hover,
+.forum-posts::-webkit-scrollbar-thumb:hover,
+.chat-messages::-webkit-scrollbar-thumb:hover,
+.daily-quests::-webkit-scrollbar-thumb:hover,
+.achievement-grid::-webkit-scrollbar-thumb:hover,
+.game-modal-content::-webkit-scrollbar-thumb:hover,
+#gameModalContent::-webkit-scrollbar-thumb:hover,
+.match-game-container::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #ff6b9d, #c084fc);
+}
+
+/* Светлая тема */
+body.light-theme .rank-table-container::-webkit-scrollbar-track,
+body.light-theme .rank-modal-content::-webkit-scrollbar-track,
+body.light-theme .profile-list::-webkit-scrollbar-track,
+body.light-theme .forum-posts::-webkit-scrollbar-track,
+body.light-theme .chat-messages::-webkit-scrollbar-track,
+body.light-theme .daily-quests::-webkit-scrollbar-track,
+body.light-theme .achievement-grid::-webkit-scrollbar-track,
+body.light-theme .game-modal-content::-webkit-scrollbar-track,
+body.light-theme #gameModalContent::-webkit-scrollbar-track,
+body.light-theme .match-game-container::-webkit-scrollbar-track {
+    background: rgba(160,120,80,0.1);
+}
+
+body.light-theme .rank-table-container::-webkit-scrollbar-thumb,
+body.light-theme .rank-modal-content::-webkit-scrollbar-thumb,
+body.light-theme .profile-list::-webkit-scrollbar-thumb,
+body.light-theme .forum-posts::-webkit-scrollbar-thumb,
+body.light-theme .chat-messages::-webkit-scrollbar-thumb,
+body.light-theme .daily-quests::-webkit-scrollbar-thumb,
+body.light-theme .achievement-grid::-webkit-scrollbar-thumb,
+body.light-theme .game-modal-content::-webkit-scrollbar-thumb,
+body.light-theme #gameModalContent::-webkit-scrollbar-thumb,
+body.light-theme .match-game-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #D4A35A, #C49A4A);
+}
+
+body.light-theme .rank-table-container::-webkit-scrollbar-thumb:hover,
+body.light-theme .rank-modal-content::-webkit-scrollbar-thumb:hover,
+body.light-theme .profile-list::-webkit-scrollbar-thumb:hover,
+body.light-theme .forum-posts::-webkit-scrollbar-thumb:hover,
+body.light-theme .chat-messages::-webkit-scrollbar-thumb:hover,
+body.light-theme .daily-quests::-webkit-scrollbar-thumb:hover,
+body.light-theme .achievement-grid::-webkit-scrollbar-thumb:hover,
+body.light-theme .game-modal-content::-webkit-scrollbar-thumb:hover,
+body.light-theme #gameModalContent::-webkit-scrollbar-thumb:hover,
+body.light-theme .match-game-container::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #E8B87B, #D4A35A);
+}
+
+/* ========== ПРИНУДИТЕЛЬНЫЕ КРАСИВЫЕ СКРОЛЛЫ ========== */
+
+/* Для всей страницы */
+html {
+    scrollbar-width: thin !important;
+    scrollbar-color: #c084fc #1a1a3a !important;
+}
+
+html::-webkit-scrollbar {
+    width: 8px !important;
+    height: 8px !important;
+}
+
+html::-webkit-scrollbar-track {
+    background: #1a1a3a !important;
+    border-radius: 10px !important;
+}
+
+html::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #c084fc, #a855f7) !important;
+    border-radius: 10px !important;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #ff6b9d, #c084fc) !important;
+}
+
+/* Для body */
+body {
+    scrollbar-width: thin !important;
+    scrollbar-color: #c084fc #0d0d2b !important;
+}
+
+body::-webkit-scrollbar {
+    width: 8px !important;
+}
+
+body::-webkit-scrollbar-track {
+    background: #0d0d2b !important;
+    border-radius: 10px !important;
+}
+
+body::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #c084fc, #a855f7) !important;
+    border-radius: 10px !important;
+}
+
+/* Для всех элементов с прокруткой */
+* {
+    scrollbar-width: thin !important;
+}
+
+*::-webkit-scrollbar {
+    width: 6px !important;
+    height: 6px !important;
+}
+
+*::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05) !important;
+    border-radius: 10px !important;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #c084fc, #a855f7) !important;
+    border-radius: 10px !important;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #ff6b9d, #c084fc) !important;
+}
+
+/* Светлая тема */
+body.light-theme {
+    scrollbar-color: #D4A35A #e8dfd3 !important;
+}
+
+body.light-theme::-webkit-scrollbar-track {
+    background: #e8dfd3 !important;
+}
+
+body.light-theme::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #D4A35A, #C49A4A) !important;
+}
+
+body.light-theme *::-webkit-scrollbar-track {
+    background: rgba(160,120,80,0.1) !important;
+}
+
+body.light-theme *::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #D4A35A, #C49A4A) !important;
+}
+
     </style>
 </head>
 <body>
 
 <script>
+
+// Защита от ошибки users is not defined
+let users = [];
+if (typeof users === 'undefined') {
+    window.users = [];
+}
+
+// Инициализация Firebase данных
+(async function() {
+    try {
+        const snapshot = await db.collection('users').get();
+        window.users = snapshot.docs.map(doc => ({ username: doc.id, ...doc.data() }));
+    } catch(e) {
+        console.log('Users load error:', e);
+        window.users = [];
+    }
+})();
+
 // Фикс ошибки users.filter
 setInterval(function() {
     if (typeof users !== 'undefined' && users && !Array.isArray(users)) {
@@ -522,7 +784,34 @@ setInterval(function() {
     </div>
 </div>
 
-<div id="rankModal" class="rank-modal"><div class="rank-modal-content"><h3 id="rankModalTitle">🏆 Рейтинг пользователей</h3><div style="display:flex;gap:10px;justify-content:center;margin-bottom:20px;"><button id="rankBambooBtn" class="rank-tab-btn active" onclick="switchRankTab('bamboo')">🎋 По бамбукам</button><button id="rankTimeBtn" class="rank-tab-btn" onclick="switchRankTab('time')">⏱️ По времени</button></div><div class="rank-table-container"><div id="rankBambooTable"><table class="rank-table"><thead><tr><th>#</th><th id="rankUserHeader">Пользователь</th><th id="rankBambooHeader">🎋 Бамбуки</th></tr></thead><tbody id="rankBambooBody"></tbody></table></div><div id="rankTimeTable" class="hide"><table class="rank-table"><thead><tr><th>#</th><th id="rankUserHeader2">Пользователь</th><th id="rankTimeHeader">⏱️ Время обучения</th></tr></thead><tbody id="rankTimeBody"></tbody></table></div></div><button class="close-rank-btn" onclick="closeRankModal()">✖ Закрыть</button></div></div>
+<div id="rankModal" class="rank-modal">
+    <div class="rank-modal-content" style="max-height: 85vh; display: flex; flex-direction: column;">
+        <h3 id="rankModalTitle">🏆 Рейтинг пользователей</h3>
+        <div style="display:flex;gap:10px;justify-content:center;margin-bottom:20px;">
+            <button id="rankBambooBtn" class="rank-tab-btn active" onclick="switchRankTab('bamboo')">🎋 По бамбукам</button>
+            <button id="rankTimeBtn" class="rank-tab-btn" onclick="switchRankTab('time')">⏱️ По времени</button>
+        </div>
+        <div class="rank-table-container" style="flex: 1; overflow-y: auto; min-height: 0;">
+            <div id="rankBambooTable">
+                <table class="rank-table">
+                    <thead>
+                        <tr><th>#</th><th id="rankUserHeader">Пользователь</th><th id="rankBambooHeader">🎋 Бамбуки</th></tr>
+                    </thead>
+                    <tbody id="rankBambooBody"></tbody>
+                </table>
+            </div>
+            <div id="rankTimeTable" class="hide">
+                <table class="rank-table">
+                    <thead>
+                        <tr><th>#</th><th id="rankUserHeader2">Пользователь</th><th id="rankTimeHeader">⏱️ Время обучения</th></tr>
+                    </thead>
+                    <tbody id="rankTimeBody"></tbody>
+                </table>
+            </div>
+        </div>
+        <button class="close-rank-btn" onclick="closeRankModal()" style="margin-top: 20px; align-self: center;">✖ Закрыть</button>
+    </div>
+</div>
 <div id="profileLearnedModal" class="profile-learned-modal"><div class="profile-modal-content"><h3 id="profileLearnedTitle">📚 Выученные слова</h3><div id="profileLearnedList" class="profile-list"></div><button class="close-profile-btn" onclick="closeProfileLearnedModal()">✖ Закрыть</button></div></div>
 <div id="profileErrorsModal" class="profile-errors-modal"><div class="profile-modal-content"><h3 id="profileErrorsTitle">❌ Ошибки в тестах</h3><div id="profileErrorsList" class="profile-list"></div><button class="close-profile-btn" onclick="closeProfileErrorsModal()">✖ Закрыть</button></div></div>
 <div id="profileFavoritesModal" class="profile-favorites-modal"><div class="profile-modal-content"><h3 id="profileFavoritesTitle">⭐ Избранные слова</h3><div id="profileFavoritesList" class="profile-list"></div><button class="close-profile-btn" onclick="closeProfileFavoritesModal()">✖ Закрыть</button></div></div>
@@ -569,6 +858,32 @@ setInterval(function() {
     <div class="modal" id="testModal"><div class="modal-content"><h2 id="testModalTitle">📝 Тест урока</h2><div id="testContent"></div></div></div>
 </div>
 <div id="gameModal" class="game-modal"><div class="game-modal-content"><h3 id="gameModalTitle">🎮 Игра</h3><div id="gameModalContent"></div><button class="close-game-btn" onclick="closeGameModal()">✖ Закрыть игру</button></div></div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+<script>
+// Ваша конфигурация Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyCBkinl4NaplHa_6Sn4LlR20npuKI5ATmo",
+    authDomain: "hsk-study-app.firebaseapp.com",
+    projectId: "hsk-study-app",
+    storageBucket: "hsk-study-app.firebasestorage.app",
+    messagingSenderId: "899976802884",
+    appId: "1:899976802884:web:08e22496069018e1e70211",
+    measurementId: "G-GF1Y1GC5MZ"
+};
+
+// Инициализация Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Делаем db глобальной
+window.db = db;
+
+console.log('✅ Firebase подключен! db доступна глобально');
+</script>
 
 <script>
     // ==================== ПЕРЕВОД ====================
@@ -6740,15 +7055,49 @@ for(let i = 0; i < 33; i++) {
     const hskData = { 1: hsk1Lessons, 2: hsk2Lessons, 3: hsk3Lessons, 4: hsk4Lessons, 5: hsk5Lessons, 6: hsk6Lessons };
     
     // ==================== ФУНКЦИИ ДЛЯ РАБОТЫ С ДАННЫМИ ====================
-    async function getUsers() {
-    const snapshot = await db.collection('users').get();
-    return snapshot.docs.map(doc => ({ username: doc.id, ...doc.data() }));
-}
-    async function saveUsers(users) {
-    for (let user of users) {
-        await db.collection('users').doc(user.username).set(user);
+   async function getUsers() {
+    try {
+        const snapshot = await db.collection('users').get();
+        let usersArray = snapshot.docs.map(doc => ({ 
+            username: doc.id, 
+            ...doc.data() 
+        }));
+        
+        // Убираем дубликаты по username
+        let uniqueUsers = [];
+        let seen = new Set();
+        for (let user of usersArray) {
+            if (!seen.has(user.username)) {
+                seen.add(user.username);
+                uniqueUsers.push(user);
+            }
+        }
+        
+        return uniqueUsers;
+    } catch(e) {
+        console.error('Ошибка getUsers:', e);
+        return [];
     }
 }
+   async function saveUsers(usersList) {
+    if (!Array.isArray(usersList)) {
+        usersList = Object.values(usersList);
+    }
+    
+    for (let user of usersList) {
+        if (user && user.username) {
+            await db.collection('users').doc(user.username).set({
+                username: user.username,
+                password: user.password,
+                email: user.email,
+                bamboo: user.bamboo || 0
+            });
+        }
+    }
+    
+    localStorage.setItem('hsk_users_cache', JSON.stringify(usersList));
+}
+
     function getDefaultUnlockedLessons(){ return {1:[0],2:[0],3:[0],4:[0],5:[0],6:[0]}; }
     
     async function getUserData(username) {
@@ -6872,72 +7221,117 @@ for(let i = 0; i < 33; i++) {
     function getMeaning(w) { return (currentLanguage === 'en' && w.meaningEn) ? w.meaningEn : w.meaning; }
     function getExampleTranslation(ex) { return (currentLanguage === 'en' && ex.en) ? ex.en : ex.ru; }
     
-    function formatTime(s) {
-        if(!s) return currentLanguage === 'ru' ? '0 ч 0 мин' : '0h 0m';
-        let h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
-        if(h > 0) return currentLanguage === 'ru' ? `${h} ч ${m} мин` : `${h}h ${m}m`;
-        if(m > 0) return currentLanguage === 'ru' ? `${m} мин ${s % 60} сек` : `${m}m ${s % 60}s`;
-        return currentLanguage === 'ru' ? `${s % 60} сек` : `${s % 60}s`;
+    // Убедитесь, что функция formatTime работает корректно
+function formatTime(seconds) {
+    if (!seconds || seconds <= 0) return currentLanguage === 'ru' ? '0 ч 0 мин' : '0h 0m';
+    let hours = Math.floor(seconds / 3600);
+    let minutes = Math.floor((seconds % 3600) / 60);
+    if (hours > 0) {
+        return currentLanguage === 'ru' ? `${hours} ч ${minutes} мин` : `${hours}h ${minutes}m`;
+    }
+    if (minutes > 0) {
+        return currentLanguage === 'ru' ? `${minutes} мин` : `${minutes}m`;
+    }
+    return currentLanguage === 'ru' ? `${seconds} сек` : `${seconds}s`;
+}
+    
+    async function addBamboo(username, amount) {
+    // Админ НЕ получает бамбуки и не участвует в рейтинге
+    if (username === 'admin') {
+        let mp = document.getElementById('myPoints');
+        if (mp) {
+            let current = parseInt(mp.innerText) || 0;
+            mp.innerText = current + amount;
+        }
+        showTempMessage(`🎋 +${amount} бамбуков (Admin - виртуально)`, '#ff9800');
+        return current + amount;
     }
     
-    function addBamboo(u, a) {
-        let users = getUsers();
-        let idx = users.findIndex(us => us.username === u);
-        if(idx !== -1) {
-            users[idx].bamboo = (users[idx].bamboo || 0) + a;
-            saveUsers(users);
-            let ud = getUserData(u);
-            ud.bamboo = users[idx].bamboo;
-            saveUserData(u, ud);
-            updateRankTable();
-            if(currentUser === u) {
-                let el = document.getElementById('myPoints');
-                if(el) el.innerText = users[idx].bamboo;
-            }
-            return users[idx].bamboo;
+    const userRef = db.collection('users').doc(username);
+    const doc = await userRef.get();
+    
+    if (doc.exists) {
+        let currentBamboo = doc.data().bamboo || 0;
+        let newBamboo = currentBamboo + amount;
+        await userRef.update({ bamboo: newBamboo });
+        
+        let userData = await getUserData(username);
+        userData.bamboo = newBamboo;
+        await saveUserData(username, userData);
+        
+        if (currentUser === username) {
+            let mp = document.getElementById('myPoints');
+            if (mp) mp.innerText = newBamboo;
+            showTempMessage(`🎋 +${amount} бамбуков! Всего: ${newBamboo}`, '#4caf50');
         }
-        return 0;
+        
+        await updateRankTable();
+        return newBamboo;
     }
+    
+    console.error(`❌ Пользователь ${username} не найден`);
+    return 0;
+}
     
     async function updateRankTable() {
-        let users = await getUsers();
-        let regEl = document.getElementById('registeredUsersCount');
-        if(regEl) regEl.innerText = users.length;
-        if(currentUser) {
-            let myTime = getUserData(currentUser).studyTime || 0;
-            let tm = document.getElementById('myTime');
-            if(tm) tm.innerText = formatTime(myTime);
-            let uu = users.find(u => u.username === currentUser);
-            let myBamboo = uu ? uu.bamboo : 0;
-            let mp = document.getElementById('myPoints');
-            if(mp) mp.innerText = myBamboo;
-        }
+    let users = await getUsers();
+    
+    let regEl = document.getElementById('registeredUsersCount');
+    if(regEl) regEl.innerText = users.length;
+    
+    if(currentUser) {
+        let myTime = (await getUserData(currentUser)).studyTime || 0;
+        let tm = document.getElementById('myTime');
+        if(tm) tm.innerText = formatTime(myTime);  // ЭТО ВАЖНО!
         
-        let sortedBamboo = [...users].sort((a,b) => (b.bamboo || 0) - (a.bamboo || 0)).slice(0, 100);
-        let bb = document.getElementById('rankBambooBody');
-        if(bb) {
-            bb.innerHTML = '';
-            sortedBamboo.forEach((u, i) => {
-                let r = bb.insertRow();
-                r.insertCell(0).innerText = i + 1;
-                r.insertCell(1).innerHTML = `${escapeHtml(u.username)}${u.username === currentUser ? ' <span class="bamboo-badge" style="background:linear-gradient(135deg,#ffd700,#ff9800);">' + (currentLanguage === 'ru' ? 'Вы' : 'You') + '</span>' : ''}`;
-                r.insertCell(2).innerHTML = `<span class="bamboo-badge">🎋 ${u.bamboo || 0}</span>`;
-            });
-        }
-        
-        let usersWithTime = users.map(u => ({ ...u, studyTime: getUserData(u.username).studyTime || 0 }));
-        let sortedTime = [...usersWithTime].sort((a,b) => (b.studyTime || 0) - (a.studyTime || 0)).slice(0, 100);
-        let tb = document.getElementById('rankTimeBody');
-        if(tb) {
-            tb.innerHTML = '';
-            sortedTime.forEach((u, i) => {
-                let r = tb.insertRow();
-                r.insertCell(0).innerText = i + 1;
-                r.insertCell(1).innerHTML = `${escapeHtml(u.username)}${u.username === currentUser ? ' <span class="bamboo-badge" style="background:linear-gradient(135deg,#ffd700,#ff9800);">' + (currentLanguage === 'ru' ? 'Вы' : 'You') + '</span>' : ''}`;
-                r.insertCell(2).innerHTML = `<span class="bamboo-badge" style="background:linear-gradient(135deg,#2196f3,#00bcd4);">⏱️ ${formatTime(u.studyTime || 0)}</span>`;
-            });
+        let userInfo = users.find(u => u.username === currentUser);
+        let myBamboo = userInfo ? (userInfo.bamboo || 0) : 0;
+        let mp = document.getElementById('myPoints');
+        if(mp) mp.innerText = myBamboo;
+    }
+    
+    // Убираем ДУБЛИКАТЫ (если admin есть дважды в массиве)
+    let uniqueUsers = [];
+    let seen = new Set();
+    for (let u of users) {
+        if (!seen.has(u.username)) {
+            seen.add(u.username);
+            uniqueUsers.push(u);
         }
     }
+    
+    // Рейтинг по бамбукам (admin участвует, но только один раз)
+    let sortedBamboo = [...uniqueUsers].sort((a,b) => (b.bamboo || 0) - (a.bamboo || 0)).slice(0, 100);
+    let bb = document.getElementById('rankBambooBody');
+    if(bb) {
+        bb.innerHTML = '';
+        sortedBamboo.forEach((u, i) => {
+            let r = bb.insertRow();
+            r.insertCell(0).innerText = i + 1;
+            r.insertCell(1).innerHTML = `${escapeHtml(u.username)}${u.username === currentUser ? ' <span class="bamboo-badge" style="background:linear-gradient(135deg,#ffd700,#ff9800);">' + (currentLanguage === 'ru' ? 'Вы' : 'You') + '</span>' : ''}`;
+            r.insertCell(2).innerHTML = `<span class="bamboo-badge">🎋 ${u.bamboo || 0}</span>`;
+        });
+    }
+    
+    // Рейтинг по времени
+    let usersWithTime = [];
+    for (let u of uniqueUsers) {
+        let userData = await getUserData(u.username);
+        usersWithTime.push({ ...u, studyTime: userData.studyTime || 0 });
+    }
+    
+    let sortedTime = [...usersWithTime].sort((a,b) => (b.studyTime || 0) - (a.studyTime || 0)).slice(0, 100);
+    let tb = document.getElementById('rankTimeBody');
+    if(tb) {
+        tb.innerHTML = '';
+        sortedTime.forEach((u, i) => {
+            let r = tb.insertRow();
+            r.insertCell(0).innerText = i + 1;
+            r.insertCell(1).innerHTML = `${escapeHtml(u.username)}${u.username === currentUser ? ' <span class="bamboo-badge" style="background:linear-gradient(135deg,#ffd700,#ff9800);">' + (currentLanguage === 'ru' ? 'Вы' : 'You') + '</span>' : ''}`;
+            r.insertCell(2).innerHTML = `<span class="bamboo-badge" style="background:linear-gradient(135deg,#2196f3,#00bcd4);">⏱️ ${formatTime(u.studyTime || 0)}</span>`;
+        });
+    }
+}
     
     async function updateAllStats() {
     let users = await getUsers();
@@ -7028,17 +7422,17 @@ for(let i = 0; i < 33; i++) {
     }
     
     function startApp(level) {
-        currentLevel = level;
-        currentLesson = null;
-        flashcardMode = false;
-        activeGame = null;
-        loadUserAppData();
-        renderLessonsList();
-        if(currentTab === "games") renderGames();
-        document.getElementById('mainPage').classList.add('hide');
-        document.getElementById('appContainer').classList.remove('hide');
-        startStudyTimer();
-    }
+    currentLevel = level;
+    currentLesson = null;
+    flashcardMode = false;
+    activeGame = null;
+    loadUserAppData();
+    renderLessonsList();
+    if(currentTab === "games") renderGames();
+    document.getElementById('mainPage').classList.add('hide');
+    document.getElementById('appContainer').classList.remove('hide');
+    startStudyTimer();  // Запускаем таймер
+}
     
     function loadUserAppData() {
         let d = getUserData(currentUser);
@@ -7215,102 +7609,93 @@ function markWordLearned(lvl, lesson, idx) {
     function startPostFlashcardTest() { startTest(); }
     
     function startTest() {
-        let lesson = hskData[currentLevel][currentLesson];
-        if(!lesson) return;
-        let all = [...lesson.words];
-        for(let i = all.length - 1; i > 0; i--) { let j = Math.floor(Math.random() * (i + 1)); [all[i], all[j]] = [all[j], all[i]]; }
-        currentTestQuestions = all.slice(0, Math.min(10, all.length));
-        currentTestIndex = 0;
-        testScore = 0;
-        renderTestQuestion();
-        document.getElementById('testModal').classList.add('active');
+    let lesson = hskData[currentLevel][currentLesson];
+    if(!lesson) return;
+    
+    let all = [...lesson.words];
+    for(let i = all.length - 1; i > 0; i--) { 
+        let j = Math.floor(Math.random() * (i + 1)); 
+        [all[i], all[j]] = [all[j], all[i]]; 
     }
+    currentTestQuestions = all.slice(0, Math.min(10, all.length));
+    currentTestIndex = 0;
+    testScore = 0;
+    renderTestQuestion();
+    document.getElementById('testModal').classList.add('active');
+}
     
     function renderTestQuestion() {
-    if(currentTestIndex >= currentTestQuestions.length) {
-        let passed = testScore >= 9;
-        let earned = testScore;
-        if(earned > 0) addBamboo(currentUser, earned);
-        
-        if(passed && currentLesson !== null) {
-            let nextLesson = currentLesson + 1;
-            let lessonsCount = hskData[currentLevel].length;
-            
-            if(nextLesson < lessonsCount) {
-                if(!unlockedLessons[currentLevel].includes(nextLesson)) {
-                    unlockedLessons[currentLevel].push(nextLesson);
-                    saveUserAppData();
-                    let lessonName = currentLanguage === 'en' ? `Lesson ${nextLesson + 1}` : `Урок ${nextLesson + 1}`;
-                    showTempMessage(`🎉 ${currentLanguage === 'en' ? 'Unlocked:' : 'Разблокирован:'} ${lessonName}`, '#4caf50');
-                    if(currentLesson !== null && currentTab === "lessons") {
-                        renderLessonsList();
-                    }
-                }
-            } else {
-                let levelName = `HSK ${currentLevel}`;
-                showTempMessage(`🎉 ${currentLanguage === 'en' ? 'Congratulations! You completed ' + levelName + '!' : 'Поздравляю! Вы прошли ' + levelName + '!'}`, '#ffd700');
-            }
-        }
-        
-        if(passed) showFireworks(); else showPanda();
-        
-        let tc = document.getElementById('testContent');
-        if(tc) {
-            tc.innerHTML = `<div class="test-result">${t('testResult')} ${testScore}/${currentTestQuestions.length}<br>🎋 +${earned} ${t('bambooEarned')}!<br>${testScore >= 9 ? t('nextUnlocked') : t('needMore')}</div><button class="close-modal" onclick="closeTest()">✖ ${t('close')}</button>${testScore < 9 ? `<button class="close-modal" style="background:#ff6b9d;margin-top:10px" onclick="closeTest();startTest();">${t('tryAgain')}</button>` : ''}`;
-        }
-        if(passed) updateDailyQuest('passTest', 1);
+    if (currentTestIndex >= currentTestQuestions.length) {
+        finishTest();
         return;
     }
     
     let q = currentTestQuestions[currentTestIndex];
     let allMeanings = hskData[currentLevel][currentLesson].words.map(w => getMeaning(w));
     let opts = [getMeaning(q)];
-    while(opts.length < 4) { let r = allMeanings[Math.floor(Math.random() * allMeanings.length)]; if(!opts.includes(r)) opts.push(r); }
+    while(opts.length < 4) { 
+        let r = allMeanings[Math.floor(Math.random() * allMeanings.length)]; 
+        if(!opts.includes(r)) opts.push(r); 
+    }
     opts.sort(() => Math.random() - 0.5);
     
     let optsHtml = '';
-    for(let opt of opts) {
-        // ВАЖНО: ПРАВИЛЬНОЕ ЭКРАНИРОВАНИЕ ДЛЯ ПЕРЕДАЧИ В ONCLICK
-        let safeOpt = opt.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-        let safeCh = q.chinese.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-        let safePy = q.pinyin.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-        let safeMeaning = getMeaning(q).replace(/'/g, "\\'").replace(/"/g, '&quot;');
-        let safeExCh = q.example.ch.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-        let safeExPy = q.example.pinyin.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-        let safeExRu = getExampleTranslation(q.example).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    for(let i = 0; i < opts.length; i++) {
+        let opt = opts[i];
+        let optEscaped = opt.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        let qChinese = q.chinese.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        let qPinyin = q.pinyin.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        let qMeaning = getMeaning(q).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        let exCh = q.example.ch.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        let exPy = q.example.pinyin.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        let exRu = getExampleTranslation(q.example).replace(/'/g, "\\'").replace(/"/g, '&quot;');
         
-        optsHtml += `<div class="test-option" onclick="checkTestAnswer('${safeOpt}', this, '${safeCh}', '${safePy}', '${safeMeaning}', '${safeExCh}', '${safeExPy}', '${safeExRu}')">${escapeHtml(opt)}</div>`;
+        optsHtml += `<div class="test-option" data-value="${optEscaped}" onclick="checkTestAnswer2(this, '${optEscaped}', '${qChinese}', '${qPinyin}', '${qMeaning}', '${exCh}', '${exPy}', '${exRu}')">${escapeHtml(opt)}</div>`;
     }
     
     let tc = document.getElementById('testContent');
     if(tc) {
-        tc.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:15px;"><button class="close-modal" style="background:#ff6b9d;padding:8px 20px;" onclick="closeTest()">✖ ${t('exit')}</button><div style="color:#c084fc;">${t('question')} ${currentTestIndex + 1}/${currentTestQuestions.length}</div><div style="width:80px;"></div></div><div class="test-question" onclick="speak('${escapeHtml(q.chinese)}','zh-CN')">${escapeHtml(q.chinese)}</div><div style="color:#c084fc;margin:10px 0;">${escapeHtml(q.pinyin)}</div><div class="test-options">${optsHtml}</div><div style="margin-top:10px;">${t('bambooPerAnswer')}</div>`;
+        tc.innerHTML = `<div style="display:flex;justify-content:space-between;margin-bottom:15px;">
+            <button class="close-modal" style="background:#ff6b9d;padding:8px 20px;" onclick="closeTest()">✖ ${t('exit')}</button>
+            <div style="color:#c084fc;">${t('question')} ${currentTestIndex + 1}/${currentTestQuestions.length}</div>
+            <div style="width:80px;"></div>
+        </div>
+        <div class="test-question" onclick="speak('${escapeHtml(q.chinese)}','zh-CN')">${escapeHtml(q.chinese)}</div>
+        <div style="color:#c084fc;margin:10px 0;">${escapeHtml(q.pinyin)}</div>
+        <div class="test-options" id="testOptions">${optsHtml}</div>
+        <div style="margin-top:10px;">${t('bambooPerAnswer')}</div>`;
     }
 }
     
-    function checkTestAnswer(selected, el, ch, pinyin, correct, exCh, exPy, exRu) {
-    let currentQ = currentTestQuestions[currentTestIndex];
-    if (!currentQ) {
-        console.error("Ошибка: вопрос не найден");
-        return;
+    function checkTestAnswer2(element, selected, ch, pinyin, correct, exCh, exPy, exRu) {
+    // ========== ПРОСТАЯ ФИКСАЦИЯ ==========
+    let userData = getUserData(currentUser);
+    if (!userData.userStats) userData.userStats = { wordErrors: {} };
+    if (!userData.userStats.wordErrors) userData.userStats.wordErrors = {};
+    // =====================================
+    
+    let allOptions = document.querySelectorAll('.test-option');
+    for(let opt of allOptions) {
+        opt.style.pointerEvents = 'none';
     }
     
+    let currentQ = currentTestQuestions[currentTestIndex];
     let correctAns = getMeaning(currentQ);
-    let all = document.querySelectorAll('.test-option');
     
-    all.forEach(opt => { 
-        opt.style.pointerEvents = 'none'; 
-        if(opt.innerText === correctAns) opt.classList.add('correct'); 
-        if(opt === el && opt.innerText !== correctAns) opt.classList.add('wrong'); 
-    });
+    for(let opt of allOptions) {
+        if(opt.innerText === correctAns) {
+            opt.classList.add('correct');
+        }
+        if(opt === element && opt.innerText !== correctAns) {
+            opt.classList.add('wrong');
+        }
+    }
     
     if(selected !== correctAns) {
-        let errors = getUserData(currentUser).errors || [];
         let wordKey = `${currentLevel}_${currentLesson}_${currentTestIndex}`;
-        let userData = getUserData(currentUser);
-        if(!userData.userStats.wordErrors) userData.userStats.wordErrors = {};
         userData.userStats.wordErrors[wordKey] = (userData.userStats.wordErrors[wordKey] || 0) + 1;
         
+        let errors = userData.errors || [];
         errors.push({ 
             chinese: ch, 
             pinyin: pinyin, 
@@ -7331,14 +7716,65 @@ function markWordLearned(lvl, lesson, idx) {
         testScore++;
     }
     
-    currentTestIndex++;
+    setTimeout(() => {
+        currentTestIndex++;
+        if (currentTestIndex < currentTestQuestions.length) {
+            renderTestQuestion();
+        } else {
+            finishTest();
+        }
+    }, 1000);
+}
+
+// Функция завершения теста
+function finishTest() {
+    let total = currentTestQuestions.length;
+    let passed = testScore >= Math.ceil(total * 0.7);
     
-    setTimeout(() => { 
-        renderTestQuestion(); 
-    }, 800);
+    let bambooEarned = testScore;
+    if (bambooEarned > 0 && currentUser !== 'admin') {
+        addBamboo(currentUser, bambooEarned);
+        showTempMessage(`🎋 +${bambooEarned} бамбуков за тест!`, '#4caf50');
+    }
+    
+    if (passed && currentLesson !== null) {
+        let nextLesson = currentLesson + 1;
+        let lessonsCount = hskData[currentLevel].length;
+        
+        if (nextLesson < lessonsCount) {
+            if (!unlockedLessons[currentLevel].includes(nextLesson)) {
+                unlockedLessons[currentLevel].push(nextLesson);
+                saveUserAppData();
+                showTempMessage(`🎉 Разблокирован урок ${nextLesson + 1}!`, '#ffd700');
+            }
+        } else {
+            showTempMessage(`🎉 Поздравляю! Вы прошли HSK ${currentLevel}!`, '#ffd700');
+            showFireworks();
+        }
+    }
+    
+    let tc = document.getElementById('testContent');
+    if (tc) {
+        tc.innerHTML = `
+            <div class="test-result">
+                <h3>📊 Результат теста</h3>
+                <div style="font-size: 2rem; margin: 20px 0;">${testScore}/${total}</div>
+                <div style="font-size: 1rem;">${Math.round(testScore/total*100)}% правильных ответов</div>
+                <div style="margin: 15px 0;">🎋 Получено бамбуков: +${bambooEarned}</div>
+                <div style="margin: 15px 0;">${passed ? '✅ Урок пройден! Следующий урок открыт.' : '❌ Нужно набрать больше 70% для открытия следующего урока.'}</div>
+                <button class="close-modal" onclick="closeTest()">✖ Закрыть</button>
+                ${!passed ? `<button class="close-modal" style="background:#ff9800;margin-top:10px" onclick="closeTest();startTest();">🔄 Пройти заново</button>` : ''}
+            </div>
+        `;
+    }
+    
+    updateStats();
+    updateLevelProgressBars();
 }
     
-    function closeTest() { document.getElementById('testModal').classList.remove('active'); }
+    function closeTest() { 
+    document.getElementById('testModal').classList.remove('active'); 
+}
     
     function renderGames() {
         flashcardMode = false;
@@ -8020,8 +8456,67 @@ function closeProfileLearnedModal() {
     function openPronunciationModal(word) { showTempMessage('🎤 Функция произношения в разработке', '#ff9800'); }
     function closePronunciationModal() { document.getElementById('pronunciationModal').classList.remove('active'); }
     
-    function startStudyTimer() { if(studyTimer) clearInterval(studyTimer); sessionStartTime = Date.now(); studyTimer = setInterval(() => { if(sessionStartTime && currentUser && document.getElementById('appContainer') && !document.getElementById('appContainer').classList.contains('hide')) { let cur = getUserData(currentUser).studyTime || 0; let add = Math.floor((Date.now() - sessionStartTime) / 1000); let total = cur + add; let el = document.getElementById('myTime'); if(el && document.getElementById('mainPage').classList.contains('hide')) el.innerText = formatTime(total); } }, 1000); }
-    function stopStudyTimer() { if(studyTimer) { clearInterval(studyTimer); studyTimer = null; } if(sessionStartTime && currentUser) { let add = Math.floor((Date.now() - sessionStartTime) / 1000); if(add > 0) { let d = getUserData(currentUser); d.studyTime = (d.studyTime || 0) + add; saveUserData(currentUser, d); } sessionStartTime = null; } }
+    // ЗАМЕНИТЕ существующую функцию startStudyTimer на эту:
+function startStudyTimer() {
+    // Таймер запускается ТОЛЬКО в уроках
+    if(lessonTimer) clearInterval(lessonTimer);
+    
+    let appContainer = document.getElementById('appContainer');
+    let isInLesson = appContainer && !appContainer.classList.contains('hide');
+    
+    if(!isInLesson) return;
+    
+    lessonStartTime = Date.now();
+    
+    lessonTimer = setInterval(() => {
+        let appContainer2 = document.getElementById('appContainer');
+        if(!appContainer2 || appContainer2.classList.contains('hide')) return;
+        
+        let elapsed = Math.floor((Date.now() - lessonStartTime) / 1000);
+        let el = document.getElementById('myTime');
+        if(el) {
+            let hours = Math.floor(elapsed / 3600);
+            let minutes = Math.floor((elapsed % 3600) / 60);
+            if(currentLanguage === 'ru') {
+                if(hours > 0) el.innerText = `${hours} ч ${minutes} мин`;
+                else if(minutes > 0) el.innerText = `${minutes} мин`;
+                else el.innerText = `${elapsed} сек`;
+            } else {
+                if(hours > 0) el.innerText = `${hours}h ${minutes}m`;
+                else if(minutes > 0) el.innerText = `${minutes}m`;
+                else el.innerText = `${elapsed}s`;
+            }
+        }
+    }, 1000);
+}
+    // ЗАМЕНИТЕ существующую функцию stopStudyTimer на эту:
+function stopStudyTimer() {
+    if (studyTimer) {
+        clearInterval(studyTimer);
+        studyTimer = null;
+    }
+    
+    if (sessionStartTime && currentUser) {
+        let addSeconds = Math.floor((Date.now() - sessionStartTime) / 1000);
+        
+        if (addSeconds > 0 && addSeconds < 86400) {
+            let userData = getUserData(currentUser);
+            let currentTime = userData.studyTime || 0;
+            let newTime = currentTime + addSeconds;
+            userData.studyTime = newTime;
+            saveUserData(currentUser, userData);
+            
+            // Обновляем в Firebase users
+            db.collection('users').doc(currentUser).update({ studyTime: newTime }).catch(e => console.log);
+            
+            let myTimeEl = document.getElementById('myTime');
+            if (myTimeEl) myTimeEl.innerText = formatTime(newTime);
+        }
+        
+        sessionStartTime = Date.now();
+        localStorage.setItem(`study_session_${currentUser}`, sessionStartTime);
+    }
+}
     
     function openRankModal() { updateRankTable(); document.getElementById('rankModal').classList.add('active'); }
     function closeRankModal() { document.getElementById('rankModal').classList.remove('active'); }
@@ -8072,9 +8567,13 @@ async function register() {
         return;
     }
 
-    // Добавляем пользователя
-    users.push({ username, email, password, bamboo: 0 });
-    await saveUsers(users);
+    // СОЗДАЁМ ПОЛЬЗОВАТЕЛЯ в Firebase
+    await db.collection('users').doc(username).set({
+        username: username,
+        email: email,
+        password: password,
+        bamboo: 0
+    });
 
     // Создаём данные пользователя
     let defaultData = {
@@ -8108,15 +8607,67 @@ async function register() {
         setTimeout(() => { if (le) le.innerHTML = ''; }, 3000);
     }
     await updateAllStats();
-    updateRankTable();
+    await updateRankTable();
 }
     
-    function logout() { stopStudyTimer(); currentUser = null; localStorage.removeItem('hsk_current_user'); showLogin(); }
+    // ЗАМЕНИТЕ существующую функцию logout на эту:
+function logout() {
+    if (sessionStartTime && currentUser) {
+        let addSeconds = Math.floor((Date.now() - sessionStartTime) / 1000);
+        if (addSeconds > 0 && addSeconds < 86400) {
+            let userData = getUserData(currentUser);
+            userData.studyTime = (userData.studyTime || 0) + addSeconds;
+            saveUserData(currentUser, userData);
+        }
+    }
+    
+    if (studyTimer) {
+        clearInterval(studyTimer);
+        studyTimer = null;
+    }
+    sessionStartTime = null;
+    if (currentUser) {
+        localStorage.removeItem(`study_session_${currentUser}`);
+    }
+    
+    currentUser = null;
+    localStorage.removeItem('hsk_current_user');
+    showLogin();
+}
     function showLogin() { document.getElementById('loginForm').classList.remove('hide'); document.getElementById('registerForm').classList.add('hide'); document.getElementById('mainPage').classList.add('hide'); document.getElementById('appContainer').classList.add('hide'); document.getElementById('authContainer').classList.remove('hide'); }
     function showRegister() { document.getElementById('loginForm').classList.add('hide'); document.getElementById('registerForm').classList.remove('hide'); document.getElementById('mainPage').classList.add('hide'); document.getElementById('appContainer').classList.add('hide'); document.getElementById('authContainer').classList.remove('hide'); }
     function showMainPage() { document.getElementById('authContainer').classList.add('hide'); document.getElementById('mainPage').classList.remove('hide'); document.getElementById('appContainer').classList.add('hide'); let w = document.getElementById('userWelcome'); if(w) w.innerHTML = `${t('welcomeUser')}, ${escapeHtml(currentUser)}!`; updateAllStats(); updateRecommendations(); }
     
-    function goHome() { stopStudyTimer(); document.getElementById('mainPage').classList.remove('hide'); document.getElementById('appContainer').classList.add('hide'); updateRankTable(); updateLevelProgressBars(); }
+    // ЗАМЕНИТЕ существующую функцию goHome на эту:
+function goHome() {
+    // СОХРАНЯЕМ ВРЕМЯ ПЕРЕД ВЫХОДОМ НА ГЛАВНУЮ
+    if (sessionStartTime && currentUser) {
+        let addSeconds = Math.floor((Date.now() - sessionStartTime) / 1000);
+        if (addSeconds > 0 && addSeconds < 86400) {
+            let userData = getUserData(currentUser);
+            userData.studyTime = (userData.studyTime || 0) + addSeconds;
+            saveUserData(currentUser, userData);
+            // Обновляем в Firebase для рейтинга
+            db.collection('users').doc(currentUser).update({ studyTime: userData.studyTime }).catch(e => console.log);
+        }
+        // Сбрасываем сессию, чтобы время не продолжало тикать на главной
+        sessionStartTime = Date.now();
+        localStorage.setItem(`study_session_${currentUser}`, sessionStartTime);
+    }
+    
+    document.getElementById('mainPage').classList.remove('hide');
+    document.getElementById('appContainer').classList.add('hide');
+    updateRankTable();
+    updateLevelProgressBars();
+    
+    // Обновляем отображение времени на главной
+    if (currentUser) {
+        let userData = getUserData(currentUser);
+        let totalTime = userData.studyTime || 0;
+        let el = document.getElementById('myTime');
+        if (el) el.innerText = formatTime(totalTime);
+    }
+}
     
     function updateRecommendations() {
         let data = getUserData(currentUser);
@@ -22484,27 +23035,178 @@ window.login = function() {
 console.log('✅ Статистика готова! Админ видит посетителей за день/неделю/месяц');
 </script>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
 
 <script>
-// Ваша конфигурация Firebase (скопированная с сайта)
-const firebaseConfig = {
-  apiKey: "AIzaSyCBkinl4NaplHa_6Sn4LlR20npuKI5ATmo",
-  authDomain: "hsk-study-app.firebaseapp.com",
-  projectId: "hsk-study-app",
-  storageBucket: "hsk-study-app.firebasestorage.app",
-  messagingSenderId:  "899976802884",
-  appId: "1:899976802884:web:08e22496069018e1e70211",
-  measurementId: "G-GF1Y1GC5MZ"
+// ========== БЫСТРАЯ АДМИН-ПАНЕЛЬ (С КЭШИРОВАНИЕМ) ==========
+
+// Кэш пользователей
+let cachedUsersList = [];
+let lastCacheTime = 0;
+
+// Быстрое получение пользователей (с кэшем)
+async function getUsersFast() {
+    // Если прошло меньше 10 секунд - берём из кэша
+    if (Date.now() - lastCacheTime < 10000 && cachedUsersList.length > 0) {
+        return cachedUsersList;
+    }
+    
+    try {
+        const snapshot = await db.collection('users').get();
+        cachedUsersList = snapshot.docs.map(doc => ({ 
+            username: doc.id, 
+            ...doc.data() 
+        }));
+        lastCacheTime = Date.now();
+        return cachedUsersList;
+    } catch(e) {
+        return cachedUsersList.length ? cachedUsersList : [];
+    }
+}
+
+// Открытие админ-панели (ОЧЕНЬ БЫСТРО)
+window.openAdminPanel = async function() {
+    if (!currentUser || currentUser !== 'admin') {
+        alert('Доступ запрещён!');
+        return;
+    }
+    
+    let isRu = currentLanguage !== 'en';
+    
+    // Показываем заглушку СРАЗУ
+    let modal = document.createElement('div');
+    modal.id = 'adminModal';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);backdrop-filter:blur(20px);z-index:20000;display:flex;justify-content:center;align-items:center;';
+    
+    modal.innerHTML = `
+        <div style="background:linear-gradient(145deg,rgba(30,30,60,0.98),rgba(20,20,50,0.98));border-radius:40px;max-width:600px;width:90%;max-height:80vh;padding:20px;border:1px solid rgba(255,255,255,0.15);display:flex;flex-direction:column;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+                <h2 style="margin:0;color:#ffd700;">👑 ${isRu ? 'Админ-панель' : 'Admin Panel'}</h2>
+                <button onclick="this.closest('#adminModal').remove()" style="background:#ff6b9d;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;color:white;">✖</button>
+            </div>
+            <div style="margin-bottom:15px;display:flex;gap:10px;">
+                <button onclick="adminAddBambooAllFast(10)" style="background:#4caf50;border:none;color:white;padding:8px 12px;border-radius:25px;cursor:pointer;">🎋 +10 всем</button>
+                <button onclick="adminResetAllFast()" style="background:#ff9800;border:none;color:white;padding:8px 12px;border-radius:25px;cursor:pointer;">🔄 Сброс</button>
+            </div>
+            <div id="adminUsersList" style="flex:1;overflow-y:auto;min-height:200px;">
+                <div style="text-align:center;padding:20px;color:#888;">⏳ ${isRu ? 'Загрузка...' : 'Loading...'}</div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Загружаем пользователей асинхронно (не блокируя интерфейс)
+    loadUsersToAdminPanel(modal, isRu);
 };
 
-// Инициализация Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+// Загрузка пользователей в панель (асинхронно)
+async function loadUsersToAdminPanel(modal, isRu) {
+    let usersList = await getUsersFast();
+    if (!Array.isArray(usersList)) {
+        usersList = Object.values(usersList);
+    }
+    
+    let regularUsers = usersList.filter(u => u.username !== 'admin');
+    
+    // Быстро получаем данные пользователей (параллельно)
+    let usersWithData = await Promise.all(regularUsers.map(async (user) => {
+        let userData = await getUserData(user.username);
+        return {
+            ...user,
+            learnedCount: userData.learnedWords?.length || 0,
+            studyTime: userData.studyTime || 0
+        };
+    }));
+    
+    let usersHtml = '';
+    for (let user of usersWithData) {
+        usersHtml += `
+            <div style="background:rgba(255,255,255,0.05);border-radius:12px;padding:8px 12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:5px;">
+                <span style="color:#ffd700;font-size:0.9rem;">👤 ${escapeHtml(user.username)}</span>
+                <div style="display:flex;gap:8px;font-size:0.8rem;">
+                    <span>🎋 ${user.bamboo || 0}</span>
+                    <span>📚 ${user.learnedCount}</span>
+                </div>
+                <div>
+                    <button onclick="quickEditUser('${user.username}', ${user.bamboo || 0})" style="background:#2196f3;border:none;color:white;padding:3px 10px;border-radius:15px;cursor:pointer;font-size:0.7rem;">✏️</button>
+                </div>
+            </div>
+        `;
+    }
+    
+    let container = modal.querySelector('#adminUsersList');
+    if (container) {
+        container.innerHTML = usersHtml || '<div style="text-align:center;padding:20px;">' + (isRu ? 'Нет пользователей' : 'No users') + '</div>';
+    }
+}
 
-console.log('✅ Firebase подключен!');
+// Быстрое добавление бамбуков
+window.adminAddBambooAllFast = async function(amount) {
+    let users = await getUsersFast();
+    if (!Array.isArray(users)) users = Object.values(users);
+    
+    for (let u of users) {
+        if (u.username === 'admin') continue;
+        let userRef = db.collection('users').doc(u.username);
+        let doc = await userRef.get();
+        let current = doc.exists ? (doc.data().bamboo || 0) : 0;
+        await userRef.update({ bamboo: current + amount });
+        
+        // Обновляем кэш
+        let cached = cachedUsersList.find(cu => cu.username === u.username);
+        if (cached) cached.bamboo = current + amount;
+    }
+    
+    alert(`✅ +${amount} бамбуков всем!`);
+    document.getElementById('adminModal')?.remove();
+    openAdminPanel();
+};
+
+// Быстрый сброс
+window.adminResetAllFast = async function() {
+    if (!confirm('Сбросить прогресс ВСЕХ пользователей?')) return;
+    let users = await getUsersFast();
+    if (!Array.isArray(users)) users = Object.values(users);
+    
+    for (let u of users) {
+        if (u.username === 'admin') continue;
+        await saveUserData(u.username, {
+            learnedWords: [],
+            unlockedLessons: getDefaultUnlockedLessons(),
+            bamboo: 0,
+            errors: [],
+            studyTime: 0,
+            favoriteWords: [],
+            userStats: { dailyQuests: {}, achievements: {}, streak: 0, lastLoginDate: null, level: 1, xp: 0, wordErrors: {} }
+        });
+        await db.collection('users').doc(u.username).update({ bamboo: 0 });
+        
+        // Обновляем кэш
+        let cached = cachedUsersList.find(cu => cu.username === u.username);
+        if (cached) cached.bamboo = 0;
+    }
+    alert('✅ Прогресс всех сброшен!');
+    document.getElementById('adminModal')?.remove();
+    openAdminPanel();
+};
+
+// Быстрое редактирование пользователя
+window.quickEditUser = function(username, currentBamboo) {
+    let newBamboo = prompt(`Изменить бамбуки для ${username}:`, currentBamboo);
+    if (newBamboo !== null && !isNaN(parseInt(newBamboo))) {
+        db.collection('users').doc(username).update({ bamboo: parseInt(newBamboo) });
+        // Обновляем кэш
+        let cached = cachedUsersList.find(cu => cu.username === username);
+        if (cached) cached.bamboo = parseInt(newBamboo);
+        alert(`✅ Бамбуки ${username} изменены на ${newBamboo}`);
+        document.getElementById('adminModal')?.remove();
+        openAdminPanel();
+    }
+};
+
+console.log('✅ Быстрая админ-панель загружена!');
 </script>
+
 </body>
 </html>
